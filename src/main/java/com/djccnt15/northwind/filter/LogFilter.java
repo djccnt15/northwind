@@ -1,10 +1,10 @@
 package com.djccnt15.northwind.filter;
 
+import com.djccnt15.northwind.annotation.AppFilter;
 import jakarta.servlet.*;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
 import org.springframework.core.annotation.Order;
-import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
@@ -12,8 +12,8 @@ import static java.lang.Integer.MIN_VALUE;
 import static java.util.UUID.randomUUID;
 
 @Slf4j
-@Component
-@Order(value = MIN_VALUE)
+@AppFilter
+@Order(MIN_VALUE)
 public class LogFilter implements Filter {
     
     @Override

@@ -1,5 +1,6 @@
 package com.djccnt15.northwind.filter;
 
+import com.djccnt15.northwind.annotation.AppFilter;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -15,7 +16,7 @@ import static java.lang.Integer.MIN_VALUE;
 import static org.springframework.util.PatternMatchUtils.simpleMatch;
 
 @Slf4j
-@Component
+@AppFilter
 @Order(MIN_VALUE + 1)
 public class ProcessTimeFilter implements Filter {
     
