@@ -13,4 +13,9 @@ public class HomeController {
     public String home() {
         return "redirect:swagger-ui/index.html";
     }
+    
+    @GetMapping("erd")
+    public String erd() {
+        return "redirect:/northwind-erd.png";
+    }
 }
