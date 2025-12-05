@@ -27,7 +27,6 @@ spring:
   sql.init:  # run `schema.sql`, `data.sql`
     mode: always
     platform: h2  # runs `schema-{platform}.sql`, `data-{platform}.sql` if exists
-    # data-locations: classpath:data-dev.sql  # point `data.sql` by path
 logging:
   level:
     root: info
