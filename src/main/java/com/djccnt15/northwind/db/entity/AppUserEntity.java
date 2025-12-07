@@ -3,6 +3,7 @@ package com.djccnt15.northwind.db.entity;
 import com.djccnt15.northwind.db.entity.id.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Index;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -14,7 +15,7 @@ import java.time.LocalDateTime;
 
 @Data
 @Entity
-@Table(name = "app_user")
+@Table(name = "app_user", indexes = @Index(columnList = "username"))
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
