@@ -1,10 +1,7 @@
 package com.djccnt15.northwind.db.entity;
 
 import com.djccnt15.northwind.db.entity.id.BaseEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Index;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -12,6 +9,7 @@ import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Data
 @Entity
@@ -40,4 +38,8 @@ public class AppUserEntity extends BaseEntity {
     @Column(updatable = false)
     @CreationTimestamp
     private LocalDateTime createdDatetime;
+    
+    @OneToMany(mappedBy = "appUser", cascade = CascadeType.REMOVE)
+    @ToString.Exclude
+    private Set<AppUserRoleEntity> appUserRole;
 }
