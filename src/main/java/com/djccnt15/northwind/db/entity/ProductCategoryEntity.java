@@ -1,15 +1,12 @@
 package com.djccnt15.northwind.db.entity;
 
 import com.djccnt15.northwind.db.entity.id.BaseEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
+
+import java.util.Set;
 
 @Data
 @Entity
@@ -30,4 +27,8 @@ public class ProductCategoryEntity extends BaseEntity {
     
     @Column
     private String description;
+    
+    @OneToMany(mappedBy = "productCategory", cascade = CascadeType.REMOVE)
+    @ToString.Exclude
+    private Set<ProductEntity> productEntitySet;
 }

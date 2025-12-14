@@ -1,9 +1,7 @@
 package com.djccnt15.northwind.db.entity;
 
 import com.djccnt15.northwind.db.entity.id.BaseEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -58,4 +56,8 @@ public class ProductEntity extends BaseEntity {
     @Column(name = "minimum_reorder_quantity", nullable = false)
     @NotNull
     private Integer minimumReorderQuantity;
+    
+    @JoinColumn(name = "product_category")
+    @ManyToOne
+    private ProductCategoryEntity productCategory;
 }
