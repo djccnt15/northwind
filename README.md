@@ -4,9 +4,37 @@ northwind study(feat. Spring)
 
 ## dependency
 
+### Backend
+
 - Java 17
 - gradle
 - check `build.gradle` for other dependency
+
+### Frontend
+
+- node v24.14.0
+- npm 11.9.0
+- check `frontend/package.json` for other dependency
+
+```sh
+npm i react-router-dom
+npm i styled-reset
+npm i styled-components
+npm i @types/styled-components -D
+npm i axios
+```
+
+### Run
+
+```sh
+npm run dev
+```
+
+### Build
+
+```sh
+npm run build
+```
 
 ## utils
 
