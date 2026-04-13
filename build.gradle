@@ -49,3 +49,15 @@ dependencies {
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
+task buildFrontend(type: Exec) {
+    workingDir 'frontend'
+
+    if (System.getProperty('os.name').toLowerCase().contains('windows')) {
+        commandLine 'npm.cmd', 'run', 'build'
+    } else {
+        commandLine 'npm', 'run', 'build'
+    }
+}
+
+processResources.dependsOn buildFrontend

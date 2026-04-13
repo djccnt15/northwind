@@ -43,5 +43,5 @@ npm run build
 
 ## ERD
 
-![northwind-erd](src/main/resources/static/northwind-erd.png)
+![northwind-erd](./northwind-erd.png)
 source: [Northwind database diagram](https://support.microsoft.com/en-us/office/northwind-database-diagram-cd422d47-e4e3-4819-8100-cdae6aaa0857)

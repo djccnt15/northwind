@@ -340,3 +340,6 @@ gradle-app.setting
 *.hprof
 
 # End of https://www.toptal.com/developers/gitignore/api/intellij,gradle,visualstudiocode,node,java,react
+
+# React build output
+/src/main/resources/static
