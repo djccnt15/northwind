@@ -6,9 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
-
-import java.time.LocalDateTime;
 
 @Data
 @Entity
@@ -28,8 +25,4 @@ public class AppUserRoleEntity {
     @JoinColumn(name = "user_role_id")
     @ManyToOne
     private UserRoleEntity userRole;
-    
-    @Column(updatable = false)
-    @CreationTimestamp
-    private LocalDateTime createdDatetime;
 }

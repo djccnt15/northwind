@@ -6,9 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.CreationTimestamp;
 
-import java.time.LocalDateTime;
 import java.util.Set;
 
 @Data
@@ -34,10 +32,6 @@ public class AppUserEntity extends BaseEntity {
     @Builder.Default  // annotation for lombok default
     @NotNull
     private boolean isVerified = false;
-    
-    @Column(updatable = false)
-    @CreationTimestamp
-    private LocalDateTime createdDatetime;
     
     @OneToMany(mappedBy = "appUser", cascade = CascadeType.REMOVE)
     @ToString.Exclude
