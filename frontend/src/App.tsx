@@ -1,5 +1,7 @@
 import styled, { createGlobalStyle } from "styled-components";
 import reset from "styled-reset";
+import { RouterProvider } from "react-router-dom";
+import { AppRouter } from "./app/router";
 
 const Wrapper = styled.div`
   height: 100vh;
@@ -29,7 +31,7 @@ function App() {
   return (
     <Wrapper>
       <GlobalStyles />
-      <>Hello World</>
+      <RouterProvider router={AppRouter} />
     </Wrapper>
   );
 }
