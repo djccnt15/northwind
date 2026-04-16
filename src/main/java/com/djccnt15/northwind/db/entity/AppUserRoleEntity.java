@@ -18,11 +18,11 @@ public class AppUserRoleEntity {
     
     @Id
     @JoinColumn(name = "app_user_id")
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private AppUserEntity appUser;
     
     @Id
     @JoinColumn(name = "user_role_id")
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private UserRoleEntity userRole;
 }

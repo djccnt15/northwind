@@ -10,7 +10,7 @@ import java.util.Set;
 
 @Data
 @Entity
-@Table
+@Table(name = "product_category")
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor

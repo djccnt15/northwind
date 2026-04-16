@@ -11,7 +11,7 @@ import lombok.experimental.SuperBuilder;
 
 @Data
 @Entity
-@Table
+@Table(name = "product")
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
@@ -58,6 +58,6 @@ public class ProductEntity extends BaseEntity {
     private Integer minimumReorderQuantity;
     
     @JoinColumn(name = "product_category")
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private ProductCategoryEntity productCategory;
 }

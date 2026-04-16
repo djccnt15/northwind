@@ -52,7 +52,7 @@ public class SpaWebFilter extends OncePerRequestFilter {
     }
     
     private boolean isStaticResource(String path) {
-        // 보통 점(.)이 포함된 경로는 파일 요청으로 간주합니다.
+        // 일반적으로 점(.)이 포함된 경로는 파일 요청으로 간주
         return path.contains(".");
     }
     
