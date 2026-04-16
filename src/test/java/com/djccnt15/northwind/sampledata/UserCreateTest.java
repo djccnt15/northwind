@@ -8,7 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @SpringBootTest
-public class UserCreatorTest {
+public class UserCreateTest {
     
     @Autowired private PasswordEncoder encoder;
     @Autowired private AppUserRepo repository;
@@ -20,5 +20,6 @@ public class UserCreatorTest {
             .password(encoder.encode("admin"))
             .email("admin@b.com")
             .build();
+        repository.save(admin);
     }
 }
