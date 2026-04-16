@@ -13,16 +13,14 @@ spring:
       format_sql: true
       highlight_sql: true
       use_sql_comment: true
-      dialect: org.hibernate.dialect.H2Dialect
+      dialect: org.hibernate.dialect.MySQL8Dialect
     # TODO. remove or disable for sql initialize option for production
     defer-datasource-initialization: true  # delays running `data.sql` after create JPA entity tables
-  # DATABASE
-  # test DB
   datasource:
-    url: jdbc:h2:mem:test;DB_CLOSE_DELAY=-1
-    driver-class-name: org.h2.Driver
-    username: sa
-    password:
+    url: jdbc:mysql://localhost:3306/northwind
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: { username }
+    password: { password }
   # H2 DB setting
   h2.console:
     enabled: true
