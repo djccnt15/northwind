@@ -1,3 +1,7 @@
+# server:
+#   # TODO. option for production deploy
+#   port: 8080
+#   address: 0.0.0.0
 spring:
   application.name: northwind
   output.ansi.enabled: always
