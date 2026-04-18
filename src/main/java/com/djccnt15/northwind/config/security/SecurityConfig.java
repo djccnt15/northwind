@@ -10,9 +10,7 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.web.cors.CorsConfiguration;
-
-import java.util.List;
+import org.springframework.web.cors.CorsConfigurationSource;
 
 @Configuration
 @RequiredArgsConstructor
@@ -20,17 +18,13 @@ public class SecurityConfig {
     
     private final PasswordEncoder encoder;
     private final AuthService authService;
+    private final CorsConfigurationSource corsConfig;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
             .csrf(csrf -> csrf.disable())  // TODO. 초기 개발 시에는 disable, 운영 시에는 설정 필요
-            .cors(cors -> cors.configurationSource(request -> {
-                var config = new CorsConfiguration();
-                config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-                config.setAllowCredentials(true);  // 쿠키 허용
-                return config;
-            }))
+            .cors(cors -> cors.configurationSource(corsConfig))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/", "/index.html", "/statics/**", "/assets/**").permitAll()
                 .requestMatchers("/api/login", "/api/signup").permitAll()
