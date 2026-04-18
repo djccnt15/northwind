@@ -23,10 +23,8 @@ public class SpaWebFilter extends OncePerRequestFilter {
         HttpServletRequest request,
         HttpServletResponse response,
         FilterChain filterChain
-    )
-        throws ServletException, IOException {
-        
-        String path = request.getRequestURI();
+    ) throws ServletException, IOException {
+        var path = request.getRequestURI();
         
         // 제외할 조건 설정
         // - /api로 시작하는 요청
