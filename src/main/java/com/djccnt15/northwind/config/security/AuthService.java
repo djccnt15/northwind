@@ -22,7 +22,7 @@ public class AuthService implements UserDetailsService {
             .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
         
         return UserSession.builder()
-            .userId(entity.getId())
+            .id(entity.getId())
             .username(entity.getUsername())
             .password(entity.getPassword())
             .build();

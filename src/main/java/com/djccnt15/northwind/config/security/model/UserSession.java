@@ -11,7 +11,7 @@ import java.util.Collection;
 @Builder
 public class UserSession implements UserDetails {
     
-    private Long userId;
+    private Long id;
     
     private String username;
     
