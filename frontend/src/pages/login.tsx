@@ -1,8 +1,9 @@
 import styled from "styled-components";
 import { CommBorderRadius } from "../shared/boder";
 import { useState } from "react";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useAuth } from "../shared/auth/auth";
+import { api } from "../shared/api";
 
 const Wrapper = styled.div`
   display: flex;
@@ -59,6 +60,8 @@ const ErrorMsg = styled.span`
 
 export default function Login() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const { setUser } = useAuth();
 
   const [errorMsg, setErrorMsg] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -74,7 +77,7 @@ export default function Login() {
     setPassword(e.target.value);
   };
 
-  const onSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
+  const onSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     setErrorMsg("");
@@ -84,14 +87,20 @@ export default function Login() {
     params.append("username", username);
     params.append("password", password);
 
-    axios
-      .post("/api/login", params, {
+    api
+      .post("/login", params, {
         headers: { "content-type": "application/x-www-form-urlencoded" },
       })
-      .then(() => {
-        navigate("/");
+      .then((response) => {
+        const data = response.data;
+        console.log("login response:", data);
+        setUser({ id: data.id, username: data.username, loggedIn: true });
+
+        const from = location.state?.from?.pathname || "/";
+        navigate(from, { replace: true });
       })
-      .catch(() => {
+      .catch((error) => {
+        console.error(error);
         setErrorMsg("Login failed. Please check your username and password.");
       })
       .finally(() => {
