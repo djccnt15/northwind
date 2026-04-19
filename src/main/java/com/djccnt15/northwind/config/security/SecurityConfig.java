@@ -27,8 +27,9 @@ public class SecurityConfig {
             .cors(cors -> cors.configurationSource(corsConfig))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/", "/index.html", "/statics/**", "/assets/**").permitAll()
-                .requestMatchers("/api/login", "/api/signup").permitAll()
-                .requestMatchers("swagger-ui/**", "v3/api-docs/**").permitAll()  // TODO. production에서는 관리자 권한 필요한 것으로 변경
+                .requestMatchers("/css/**", "/favicon.*", "/*.ico").permitAll()
+                .requestMatchers("/api/login", "/api/signup", "/api/auth/check-session").permitAll()
+                .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()  // TODO. production에서는 관리자 권한 필요한 것으로 변경
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form
