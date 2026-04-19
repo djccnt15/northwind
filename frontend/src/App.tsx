@@ -2,6 +2,7 @@ import styled, { createGlobalStyle } from "styled-components";
 import reset from "styled-reset";
 import { RouterProvider } from "react-router-dom";
 import { AppRouter } from "./app/router";
+import AuthProvider from "./app/provider/auth-provider";
 
 const Wrapper = styled.div`
   height: 100vh;
@@ -31,7 +32,9 @@ function App() {
   return (
     <Wrapper>
       <GlobalStyles />
-      <RouterProvider router={AppRouter} />
+      <AuthProvider>
+        <RouterProvider router={AppRouter} />
+      </AuthProvider>
     </Wrapper>
   );
 }
