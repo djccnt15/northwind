@@ -1,4 +1,5 @@
 export interface UserIfs {
-  id: string;
+  id: number;
+  username: string;
   loggedIn: boolean;
 }
