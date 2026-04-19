@@ -25,6 +25,7 @@ public class AuthConfig {
     private final AuthService authService;
     private final AuthSuccessHandler authSuccessHandler;
     private final AuthFailureHandler authFailureHandler;
+    private final LogoutHandler logoutHandler;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -34,7 +35,7 @@ public class AuthConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/", "/index.html", "/statics/**", "/assets/**").permitAll()
                 .requestMatchers("/css/**", "/favicon.*", "/*.ico").permitAll()
-                .requestMatchers("/api/login", "/api/signup", "/api/auth/check-session").permitAll()
+                .requestMatchers("/api/login", "/api/signup", "/api/auth/check-session", "/api/auth/logout").permitAll()
                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()  // TODO. production에서는 관리자 권한 필요한 것으로 변경
                 .anyRequest().authenticated()
             )
@@ -42,6 +43,10 @@ public class AuthConfig {
                 .loginProcessingUrl("/api/login")
                 .successHandler(authSuccessHandler)
                 .failureHandler(authFailureHandler)
+            )
+            .logout(logout -> logout
+                .logoutUrl("/api/logout")
+                .logoutSuccessHandler(logoutHandler)
             )
             .sessionManagement(session -> session
                 .maximumSessions(1) // 중복 로그인 제한
@@ -60,6 +65,7 @@ public class AuthConfig {
         var config = new CorsConfiguration();
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowCredentials(true);  // 쿠키 허용
+        config.setMaxAge(3600L);  // preflight 요청 캐싱 시간 (초)
         
         var source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);

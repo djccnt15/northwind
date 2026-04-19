@@ -1,5 +1,7 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import { useAuth } from "../shared/auth/auth";
+import { privateApi } from "../shared/api";
 
 const Wrapper = styled.div`
   display: grid;
@@ -18,10 +20,34 @@ const Nav = styled.nav`
   padding-left: 20px;
 `;
 
+const LogoutBtn = styled.button`
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  font-size: 16px;
+`;
+
 export default function Layout() {
+  const { user, setUser } = useAuth();
+  const navigate = useNavigate();
+
+  const onLogout = async () => {
+    privateApi
+      .get("/logout")
+      .then(() => {
+        setUser(null);
+        navigate("/login");
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
   return (
     <Wrapper>
-      <Nav></Nav>
+      <Nav>
+        {user?.username && <LogoutBtn onClick={onLogout}>Logout</LogoutBtn>}
+      </Nav>
       <Outlet />
     </Wrapper>
   );
