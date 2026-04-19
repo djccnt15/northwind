@@ -17,8 +17,8 @@ public class WebConfig implements WebMvcConfigurer {
             .order(MIN_VALUE)
             .addPathPatterns("/**")
             .excludePathPatterns("/swagger-ui/**", "/v3/api-docs/**")  // Swagger UI 및 API 문서 경로 제외
-            .excludePathPatterns("/index.html", "/favicon.ico", "/static/**", "/assets/**")  // SPA 필터에서 이미 제외한 경로들
-            .excludePathPatterns("/css/**", "/*.ico")  // 정적 자원 경로 추가 제외
+            .excludePathPatterns("/index.html", "/static/**", "/assets/**")  // SPA 앱에서 사용하는 경로들
+            .excludePathPatterns("/css/**", "/favicon.*", "/*.ico", "/error", "/error-page/**")  // 정적 자원 경로 추가 제외
         ;
     }
 }
