@@ -1,6 +1,5 @@
 package com.djccnt15.northwind.config.security;
 
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -8,6 +7,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -18,10 +18,13 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.List;
 
 @Configuration
+@EnableWebSecurity
 @RequiredArgsConstructor
 public class AuthConfig {
     
     private final AuthService authService;
+    private final AuthSuccessHandler authSuccessHandler;
+    private final AuthFailureHandler authFailureHandler;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -37,14 +40,8 @@ public class AuthConfig {
             )
             .formLogin(form -> form
                 .loginProcessingUrl("/api/login")
-                // 성공 시 리다이렉트하지 않고 200 응답만 반환
-                .successHandler((request, response, authentication) -> {
-                    response.setStatus(HttpServletResponse.SC_OK);
-                })
-                // 실패 시 401 응답 반환
-                .failureHandler((request, response, exception) -> {
-                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                })
+                .successHandler(authSuccessHandler)
+                .failureHandler(authFailureHandler)
             )
             .sessionManagement(session -> session
                 .maximumSessions(1) // 중복 로그인 제한
