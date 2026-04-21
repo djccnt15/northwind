@@ -20,7 +20,7 @@ const Wrapper = styled.div`
   padding-bottom: 50px;
 `;
 
-export default function Login() {
+export default function Signup() {
   const navigate = useNavigate();
   const location = useLocation();
   const { setUser } = useAuth();
@@ -29,14 +29,24 @@ export default function Login() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const [username, setUsername] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [confirmPassword, setConfirmPassword] = useState<string>("");
 
   const onChangeUsername = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUsername(e.target.value);
   };
 
+  const onChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(e.target.value);
+  };
+
   const onChangePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
+  };
+
+  const onChangeConfirmPassword = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setConfirmPassword(e.target.value);
   };
 
   const onSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
@@ -45,17 +55,11 @@ export default function Login() {
     setErrorMsg("");
     setIsLoading(true);
 
-    const params = new URLSearchParams();
-    params.append("username", username);
-    params.append("password", password);
-
     api
-      .post("/v1/login", params, {
-        headers: { "content-type": "application/x-www-form-urlencoded" },
-      })
+      .post("/v1/signup", { username, email, password, confirmPassword })
       .then((response) => {
         const data = response.data;
-        console.log("login response:", data);
+        console.log("signup response:", data);
         setUser({ id: data.id, username: data.username, loggedIn: true });
 
         const from = location.state?.from?.pathname || "/";
@@ -63,7 +67,7 @@ export default function Login() {
       })
       .catch((error) => {
         console.error(error);
-        setErrorMsg("Login failed. Please check your username and password.");
+        setErrorMsg("Signup failed. Please contact the admin.");
       })
       .finally(() => {
         setIsLoading(false);
@@ -72,7 +76,7 @@ export default function Login() {
 
   return (
     <Wrapper>
-      <H1>Please Sign In</H1>
+      <H1>Please Sign Up</H1>
       <Form onSubmit={onSubmit}>
         <Input
           type="text"
@@ -82,21 +86,35 @@ export default function Login() {
           required
         />
         <Input
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={onChangeEmail}
+          required
+        />
+        <Input
           type="password"
           placeholder="Password"
           value={password}
           onChange={onChangePassword}
           required
         />
+        <Input
+          type="password"
+          placeholder="Confirm Password"
+          value={confirmPassword}
+          onChange={onChangeConfirmPassword}
+          required
+        />
         <SubmitBtn
           type="submit"
-          value={isLoading ? "Loading..." : "Login"}
+          value={isLoading ? "Loading..." : "Sign Up"}
           disabled={isLoading}
         />
       </Form>
       {errorMsg && <ErrorMsg>{errorMsg}</ErrorMsg>}
       <Switcher>
-        Don't have an account? <Link to="/signup">Create one &rarr;</Link>
+        Already have an account? <Link to="/login">Log in &rarr;</Link>
       </Switcher>
     </Wrapper>
   );

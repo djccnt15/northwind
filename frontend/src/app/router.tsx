@@ -7,6 +7,7 @@ import {
   NotFoundRoute,
   ProtectedRoute,
 } from "./provider/redirect-route";
+import Signup from "../pages/signup";
 
 export const AppRouter = createBrowserRouter([
   {
@@ -24,12 +25,18 @@ export const AppRouter = createBrowserRouter([
     ],
   },
   {
-    path: "/login",
-    element: (
-      <AuthRedirectRoute>
-        <Login />
-      </AuthRedirectRoute>
-    ),
+    path: "",
+    element: <AuthRedirectRoute />,
+    children: [
+      {
+        path: "/login",
+        element: <Login />,
+      },
+      {
+        path: "/signup",
+        element: <Signup />,
+      },
+    ],
   },
   {
     path: "*",

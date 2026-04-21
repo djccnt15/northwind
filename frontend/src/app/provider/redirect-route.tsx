@@ -1,4 +1,4 @@
-import { Navigate, useLocation } from "react-router-dom";
+import { Navigate, Outlet, useLocation } from "react-router-dom";
 import type { ChildNodeIfs } from "../../entities/app/app";
 import { useAuth } from "../../shared/auth/auth-context";
 
@@ -14,12 +14,12 @@ export function ProtectedRoute({ children }: ChildNodeIfs) {
   return <>{children}</>;
 }
 
-export function AuthRedirectRoute({ children }: ChildNodeIfs) {
+export function AuthRedirectRoute() {
   // 이미 로그인한 사용자 접근시 홈 페이지로 리다이렉트
   const { user } = useAuth();
   if (user) return <Navigate to="/" replace />;
 
-  return <>{children}</>;
+  return <Outlet />;
 }
 
 export function NotFoundRoute() {
