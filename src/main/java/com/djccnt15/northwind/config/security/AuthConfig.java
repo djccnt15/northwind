@@ -37,6 +37,7 @@ public class AuthConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(PUBLIC_PATHS).permitAll()
                 .requestMatchers(PUBLIC_AUTH_PATHS).permitAll()
+                .requestMatchers(SESSION_CHECK_PATHS).permitAll()
                 .requestMatchers(SWAGGER_PATHS).permitAll()  // TODO. production에서는 관리자 권한 필요한 것으로 변경
                 .anyRequest().authenticated()
             )
