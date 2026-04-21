@@ -17,7 +17,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.List;
 
-import static com.djccnt15.northwind.constants.RouteConst.API_VER_1;
+import static com.djccnt15.northwind.constants.RouteConst.*;
 
 @Configuration
 @EnableWebSecurity
@@ -28,17 +28,16 @@ public class AuthConfig {
     private final AuthSuccessHandler authSuccessHandler;
     private final AuthFailureHandler authFailureHandler;
     private final LogoutHandler logoutHandler;
-
+    
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
             .csrf(csrf -> csrf.disable())  // TODO. 초기 개발 시에는 disable, 운영 시에는 설정 필요
             .cors(cors -> cors.configurationSource(corsConfig()))
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/", "/index.html", "/statics/**", "/assets/**").permitAll()
-                .requestMatchers("/css/**", "/favicon.*", "/*.ico").permitAll()
-                .requestMatchers(API_VER_1 + "/login", API_VER_1 + "/signup", API_VER_1 + "/auth/check-session", API_VER_1 + "/auth/login/fail", API_VER_1 + "/auth/logout").permitAll()
-                .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()  // TODO. production에서는 관리자 권한 필요한 것으로 변경
+                .requestMatchers(PUBLIC_PATHS).permitAll()
+                .requestMatchers(PUBLIC_AUTH_PATHS).permitAll()
+                .requestMatchers(SWAGGER_PATHS).permitAll()  // TODO. production에서는 관리자 권한 필요한 것으로 변경
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form
