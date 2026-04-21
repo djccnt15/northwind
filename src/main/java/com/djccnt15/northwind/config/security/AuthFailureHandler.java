@@ -16,6 +16,7 @@ public class AuthFailureHandler implements AuthenticationFailureHandler {
     public void onAuthenticationFailure(
         HttpServletRequest request, HttpServletResponse response, AuthenticationException exception
     ) throws IOException, ServletException {
-        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        request.setAttribute("exception", exception);
+        request.getRequestDispatcher("/api/auth/login/fail").forward(request, response);
     }
 }
