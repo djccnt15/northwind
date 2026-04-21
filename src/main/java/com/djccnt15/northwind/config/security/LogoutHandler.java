@@ -9,6 +9,8 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
+import static com.djccnt15.northwind.constants.RouteConst.API_VER_1;
+
 @Component
 public class LogoutHandler implements LogoutSuccessHandler {
     
@@ -16,6 +18,6 @@ public class LogoutHandler implements LogoutSuccessHandler {
     public void onLogoutSuccess(
         HttpServletRequest request, HttpServletResponse response, Authentication authentication
     ) throws IOException, ServletException {
-        request.getRequestDispatcher("/api/auth/logout").forward(request, response);
+        request.getRequestDispatcher(API_VER_1 + "/auth/logout").forward(request, response);
     }
 }

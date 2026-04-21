@@ -88,7 +88,7 @@ export default function Login() {
     params.append("password", password);
 
     api
-      .post("/login", params, {
+      .post("/v1/login", params, {
         headers: { "content-type": "application/x-www-form-urlencoded" },
       })
       .then((response) => {

@@ -15,8 +15,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import static com.djccnt15.northwind.constants.RouteConst.API_VER_1;
+
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping(API_VER_1 + "/auth")
 public class AuthApiController {
     
     @GetMapping("/check-session")

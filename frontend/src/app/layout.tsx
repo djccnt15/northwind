@@ -33,7 +33,7 @@ export default function Layout() {
 
   const onLogout = async () => {
     privateApi
-      .get("/logout")
+      .get("/v1/logout")
       .then(() => {
         setUser(null);
         navigate("/login");

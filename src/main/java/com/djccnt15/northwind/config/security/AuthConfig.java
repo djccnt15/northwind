@@ -17,6 +17,8 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.List;
 
+import static com.djccnt15.northwind.constants.RouteConst.API_VER_1;
+
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -35,17 +37,17 @@ public class AuthConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/", "/index.html", "/statics/**", "/assets/**").permitAll()
                 .requestMatchers("/css/**", "/favicon.*", "/*.ico").permitAll()
-                .requestMatchers("/api/login", "/api/signup", "/api/auth/check-session", "/api/auth/login/fail", "/api/auth/logout").permitAll()
+                .requestMatchers(API_VER_1 + "/login", API_VER_1 + "/signup", API_VER_1 + "/auth/check-session", API_VER_1 + "/auth/login/fail", API_VER_1 + "/auth/logout").permitAll()
                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()  // TODO. production에서는 관리자 권한 필요한 것으로 변경
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form
-                .loginProcessingUrl("/api/login")
+                .loginProcessingUrl(API_VER_1 + "/login")
                 .successHandler(authSuccessHandler)
                 .failureHandler(authFailureHandler)
             )
             .logout(logout -> logout
-                .logoutUrl("/api/logout")
+                .logoutUrl(API_VER_1 + "/logout")
                 .logoutSuccessHandler(logoutHandler)
             )
             .sessionManagement(session -> session

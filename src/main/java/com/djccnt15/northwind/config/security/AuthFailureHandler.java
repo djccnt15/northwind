@@ -9,6 +9,8 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
+import static com.djccnt15.northwind.constants.RouteConst.API_VER_1;
+
 @Component
 public class AuthFailureHandler implements AuthenticationFailureHandler {
     
@@ -17,6 +19,6 @@ public class AuthFailureHandler implements AuthenticationFailureHandler {
         HttpServletRequest request, HttpServletResponse response, AuthenticationException exception
     ) throws IOException, ServletException {
         request.setAttribute("exception", exception);
-        request.getRequestDispatcher("/api/auth/login/fail").forward(request, response);
+        request.getRequestDispatcher(API_VER_1 + "/auth/login/fail").forward(request, response);
     }
 }

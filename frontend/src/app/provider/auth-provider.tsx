@@ -11,7 +11,7 @@ export default function AuthProvider({ children }: ChildNodeIfs) {
   useEffect(() => {
     const initializeAuth = () => {
       privateApi
-        .get("/auth/check-session")
+        .get("/v1/auth/check-session")
         .then((response) => {
           const data = response.data;
           console.log("Session check response:", data);
