@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { useAuth } from "../shared/auth/auth";
+import { useAuth } from "../shared/auth/auth-context";
 
 const Wrapper = styled.div``;
 

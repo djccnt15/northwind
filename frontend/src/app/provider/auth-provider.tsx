@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import type { ChildNodeIfs } from "../../entities/app/app";
 import type { UserIfs } from "../../entities/app/auth";
 import { privateApi } from "../../shared/api";
-import { AuthContext } from "../../shared/auth/auth";
+import { AuthContext } from "../../shared/auth/auth-context";
 
 export default function AuthProvider({ children }: ChildNodeIfs) {
   const [user, setUser] = useState<UserIfs | null>(null);

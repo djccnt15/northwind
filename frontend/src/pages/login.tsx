@@ -1,8 +1,8 @@
 import styled from "styled-components";
-import { CommBorderRadius } from "../shared/boder";
+import { commBorderRadius } from "../shared/global-styles";
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useAuth } from "../shared/auth/auth";
+import { useAuth } from "../shared/auth/auth-context";
 import { api } from "../shared/api";
 
 const Wrapper = styled.div`
@@ -29,7 +29,7 @@ const Form = styled.form`
 `;
 
 const Input = styled.input`
-  ${CommBorderRadius}
+  ${commBorderRadius}
   padding: 10px;
   width: 100%;
   border: 1px solid #ccc;
@@ -38,7 +38,7 @@ const Input = styled.input`
 `;
 
 const SubmitBtn = styled.input`
-  ${CommBorderRadius}
+  ${commBorderRadius}
   width: 100%;
   height: 40px;
   padding: 10px 20px;

@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/auth")
-public class AuthController {
+public class AuthApiController {
     
     @GetMapping("/check-session")
     public ResponseEntity<?> checkSession(@AuthenticationPrincipal UserSession userSession) {

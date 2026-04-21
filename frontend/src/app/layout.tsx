@@ -1,6 +1,6 @@
 import { Outlet, useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { useAuth } from "../shared/auth/auth";
+import { useAuth } from "../shared/auth/auth-context";
 import { privateApi } from "../shared/api";
 
 const Wrapper = styled.div`

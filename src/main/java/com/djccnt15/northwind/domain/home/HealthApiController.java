@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RestController
 @RequestMapping("/api")
-public class HealthController {
+public class HealthApiController {
     
     @GetMapping("/health")
     public ResponseEntity<?> health() {

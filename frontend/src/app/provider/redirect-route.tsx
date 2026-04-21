@@ -1,6 +1,6 @@
 import { Navigate, useLocation } from "react-router-dom";
 import type { ChildNodeIfs } from "../../entities/app/app";
-import { useAuth } from "../../shared/auth/auth";
+import { useAuth } from "../../shared/auth/auth-context";
 
 export function ProtectedRoute({ children }: ChildNodeIfs) {
   const { user } = useAuth();
