@@ -3,6 +3,7 @@ package com.djccnt15.northwind.domain.auth;
 import com.djccnt15.northwind.config.security.model.UserSession;
 import com.djccnt15.northwind.domain.auth.model.UserInfo;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -19,7 +20,10 @@ import static com.djccnt15.northwind.constants.RouteConst.API_VER_1;
 
 @RestController
 @RequestMapping(API_VER_1 + "/auth")
+@RequiredArgsConstructor
 public class AuthApiController {
+    
+    private final UserService service;
     
     @GetMapping("/check-session")
     public ResponseEntity<?> checkSession(@AuthenticationPrincipal UserSession userSession) {
@@ -27,20 +31,12 @@ public class AuthApiController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("No active session");
         }
         
-        var userInfo = UserInfo.builder()
-            .id(userSession.getId())
-            .username(userSession.getUsername())
-            .build();
-        return ResponseEntity.ok().body(userInfo);
+        return ResponseEntity.ok(service.getUserInfo(userSession));
     }
     
     @PostMapping("/login/success")
     public ResponseEntity<UserInfo> loginSuccess(@AuthenticationPrincipal UserSession userSession) {
-        var userInfo = UserInfo.builder()
-            .id(userSession.getId())
-            .username(userSession.getUsername())
-            .build();
-        return ResponseEntity.ok(userInfo);
+        return ResponseEntity.ok(service.getUserInfo(userSession));
     }
     
     @PostMapping("/login/fail")
