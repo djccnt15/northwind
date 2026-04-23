@@ -20,9 +20,7 @@ public class SpaWebFilter extends OncePerRequestFilter {
     
     @Override
     protected void doFilterInternal(
-        HttpServletRequest request,
-        HttpServletResponse response,
-        FilterChain filterChain
+        HttpServletRequest request, HttpServletResponse response, FilterChain filterChain
     ) throws ServletException, IOException {
         var path = request.getRequestURI();
         
@@ -50,8 +48,7 @@ public class SpaWebFilter extends OncePerRequestFilter {
     }
     
     private boolean isStaticResource(String path) {
-        // 일반적으로 점(.)이 포함된 경로는 파일 요청으로 간주
-        return path.contains(".");
+        return path.contains(".");  // 일반적으로 점(.)이 포함된 경로는 파일 요청으로 간주
     }
     
     private boolean isForwarded(String path) {
