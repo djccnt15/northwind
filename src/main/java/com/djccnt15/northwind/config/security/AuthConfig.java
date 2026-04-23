@@ -3,14 +3,17 @@ package com.djccnt15.northwind.config.security;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -28,17 +31,23 @@ public class AuthConfig {
     private final AuthSuccessHandler authSuccessHandler;
     private final AuthFailureHandler authFailureHandler;
     private final LogoutHandler logoutHandler;
+    private final UnauthorizedHandler unauthorizedHandler;
+    private final ForbiddenHandler forbiddenHandler;
     
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    @Order(1)
+    public SecurityFilterChain apiSecurityFilterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(csrf -> csrf.disable())  // TODO. 초기 개발 시에는 disable, 운영 시에는 설정 필요
+            .securityMatcher(API_ALL_PATTERN)
+            .csrf(AbstractHttpConfigurer::disable)  // TODO. 초기 개발 시에는 disable, 운영 시에는 설정 필요
             .cors(cors -> cors.configurationSource(corsConfig()))
+            .exceptionHandling(ex -> ex
+                .defaultAuthenticationEntryPointFor(unauthorizedHandler, getRequestMatcher())
+                .defaultAccessDeniedHandlerFor(forbiddenHandler, getRequestMatcher())
+            )
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers(PUBLIC_PATHS).permitAll()
-                .requestMatchers(PUBLIC_AUTH_PATHS).permitAll()
+                .requestMatchers(PUBLIC_API_PATHS).permitAll()
                 .requestMatchers(SESSION_CHECK_PATHS).permitAll()
-                .requestMatchers(SWAGGER_PATHS).permitAll()  // TODO. production에서는 관리자 권한 필요한 것으로 변경
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form
@@ -51,9 +60,27 @@ public class AuthConfig {
                 .logoutSuccessHandler(logoutHandler)
             )
             .sessionManagement(session -> session
-                .maximumSessions(1) // 중복 로그인 제한
+                .maximumSessions(1)  // 중복 로그인 제한
             );
-        
+        return http.build();
+    }
+    
+    private static RequestMatcher getRequestMatcher() {
+        return request -> request.getRequestURI().startsWith(API_URI_PREFIX);
+    }
+    
+    @Bean
+    @Order(2)
+    public SecurityFilterChain webSecurityFilterChain(HttpSecurity http) throws Exception {
+        http
+            .securityMatcher(WEB_ALL_PATTERN)
+            .csrf(AbstractHttpConfigurer::disable)    // TODO. 초기 개발 시에는 disable, 운영 시에는 설정 필요
+            .cors(cors -> cors.configurationSource(corsConfig()))
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers(PUBLIC_PATHS).permitAll()
+                .requestMatchers(SWAGGER_PATHS).permitAll()  // TODO. production에서는 관리자 권한 필요한 것으로 변경
+                .anyRequest().permitAll()
+            );
         return http.build();
     }
     
@@ -70,7 +97,7 @@ public class AuthConfig {
         config.setMaxAge(3600L);  // preflight 요청 캐싱 시간 (초)
         
         var source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", config);
+        source.registerCorsConfiguration(WEB_ALL_PATTERN, config);
         return source;
     }
     
