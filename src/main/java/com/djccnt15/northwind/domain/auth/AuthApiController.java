@@ -1,14 +1,13 @@
 package com.djccnt15.northwind.domain.auth;
 
-import com.djccnt15.northwind.comm.api.Api;
 import com.djccnt15.northwind.comm.code.StatusCode;
 import com.djccnt15.northwind.config.security.model.UserSession;
 import com.djccnt15.northwind.domain.auth.model.UserInfo;
+import com.djccnt15.northwind.exception.exceptions.ApiException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.LockedException;
@@ -30,10 +29,6 @@ public class AuthApiController {
     
     @GetMapping("/check-session")
     public ResponseEntity<?> checkSession(@AuthenticationPrincipal UserSession userSession) {
-        if (userSession == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("No active session");
-        }
-        
         return ResponseEntity.ok(service.getUserInfo(userSession));
     }
     
@@ -64,20 +59,12 @@ public class AuthApiController {
     }
     
     @GetMapping("/unauthorized")
-    public ResponseEntity<?> unauthorized(HttpServletRequest request) {
-        var exception = (AuthenticationException) request.getAttribute("exception");
-        var message = exception != null ? exception.getMessage() : "Authentication is required";
-        return ResponseEntity
-            .status(HttpStatus.UNAUTHORIZED)
-            .body(Api.ERROR(StatusCode.UNAUTHORIZED, message));
+    public ResponseEntity<?> unauthorized() {
+        throw new ApiException(StatusCode.UNAUTHORIZED, "Authentication is required");
     }
     
     @GetMapping("/forbidden")
-    public ResponseEntity<?> forbidden(HttpServletRequest request) {
-        var exception = (AccessDeniedException) request.getAttribute("exception");
-        var message = exception != null ? exception.getMessage() : "Access denied";
-        return ResponseEntity
-            .status(HttpStatus.FORBIDDEN)
-            .body(Api.ERROR(StatusCode.FORBIDDEN, message));
+    public ResponseEntity<?> forbidden() {
+        throw new ApiException(StatusCode.FORBIDDEN, "Access denied");
     }
 }
