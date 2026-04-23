@@ -1,5 +1,6 @@
 package com.djccnt15.northwind.config.security;
 
+import com.djccnt15.northwind.config.security.handler.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,9 +11,15 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -27,12 +34,12 @@ import static com.djccnt15.northwind.constants.RouteConst.*;
 @RequiredArgsConstructor
 public class AuthConfig {
     
-    private final AuthService authService;
-    private final AuthSuccessHandler authSuccessHandler;
-    private final AuthFailureHandler authFailureHandler;
-    private final LogoutHandler logoutHandler;
-    private final UnauthorizedHandler unauthorizedHandler;
-    private final ForbiddenHandler forbiddenHandler;
+    private final UserDetailsService authService;
+    private final AuthenticationSuccessHandler authSuccessHandler;
+    private final AuthenticationFailureHandler authFailureHandler;
+    private final LogoutSuccessHandler logoutHandler;
+    private final AuthenticationEntryPoint unauthorizedHandler;
+    private final AccessDeniedHandler forbiddenHandler;
     
     @Bean
     @Order(1)

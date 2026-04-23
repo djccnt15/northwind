@@ -1,4 +1,4 @@
-package com.djccnt15.northwind.config.security;
+package com.djccnt15.northwind.config.security.handler;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
