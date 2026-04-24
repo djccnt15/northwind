@@ -8,7 +8,8 @@ import lombok.experimental.SuperBuilder;
 
 import java.util.Set;
 
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name = "product_category")
 @EqualsAndHashCode(callSuper = true)

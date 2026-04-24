@@ -9,7 +9,8 @@ import org.hibernate.annotations.ColumnDefault;
 
 import java.util.Set;
 
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name = "app_user", indexes = @Index(columnList = "username"))
 @EqualsAndHashCode(callSuper = true)

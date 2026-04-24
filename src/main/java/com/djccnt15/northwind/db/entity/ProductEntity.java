@@ -3,13 +3,11 @@ package com.djccnt15.northwind.db.entity;
 import com.djccnt15.northwind.db.entity.id.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name = "product")
 @EqualsAndHashCode(callSuper = true)

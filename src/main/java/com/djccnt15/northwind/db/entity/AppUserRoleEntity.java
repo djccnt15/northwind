@@ -2,12 +2,10 @@ package com.djccnt15.northwind.db.entity;
 
 import com.djccnt15.northwind.db.entity.id.AppUserRoleId;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name = "app_user_role")
 @IdClass(AppUserRoleId.class)
