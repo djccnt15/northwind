@@ -30,6 +30,7 @@ public class Api<T> {
     
     public static Api<Object> ERROR(Result result) {
         var api = new Api<Object>();
+        api.serverTime = currentTimeMillis();
         api.result = result;
         return api;
     }
