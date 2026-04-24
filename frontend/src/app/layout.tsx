@@ -6,11 +6,19 @@ import { privateApi } from "../shared/api";
 const Wrapper = styled.div`
   display: grid;
   gap: 20px;
-  grid-template-columns: 1fr 7fr;
-  height: 100%;
-  padding: 50px 0px;
+  grid-template-columns: auto 1fr;
   width: 100%;
+  height: 100%;
+  min-height: 0;
   max-width: 100%;
+  padding: 50px 0px;
+`;
+
+const ContentArea = styled.div`
+  overflow-y: auto;
+  height: 100%;
+  min-height: 0;
+  min-width: 0;
 `;
 
 const Nav = styled.nav`
@@ -48,7 +56,9 @@ export default function Layout() {
       <Nav>
         {user?.username && <LogoutBtn onClick={onLogout}>Logout</LogoutBtn>}
       </Nav>
-      <Outlet />
+      <ContentArea>
+        <Outlet />
+      </ContentArea>
     </Wrapper>
   );
 }

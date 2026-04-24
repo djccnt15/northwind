@@ -4,11 +4,19 @@ import reset from "styled-reset";
 export const GlobalStyles = createGlobalStyle`
   ${reset};
 
+  html,
+  body,
+  #root {
+    width: 100%;
+    height: 100%;
+  }
+
   * {
     box-sizing: border-box;
   };
 
   body {
+    min-height: 100dvh;
     background-color: white;
     color: black;
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
