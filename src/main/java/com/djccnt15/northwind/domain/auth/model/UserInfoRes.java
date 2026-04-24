@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class UserInfo {
+public class UserInfoRes {
     
     private Long id;
     

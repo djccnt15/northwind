@@ -3,7 +3,7 @@ package com.djccnt15.northwind.domain.auth;
 import com.djccnt15.northwind.comm.api.Api;
 import com.djccnt15.northwind.comm.code.StatusCode;
 import com.djccnt15.northwind.config.security.model.UserSession;
-import com.djccnt15.northwind.domain.auth.model.UserInfo;
+import com.djccnt15.northwind.domain.auth.model.UserInfoRes;
 import com.djccnt15.northwind.exception.exceptions.ApiException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +33,7 @@ public class AuthApiController {
     }
     
     @PostMapping("/login/success")
-    public ResponseEntity<Api<UserInfo>> loginSuccess(@AuthenticationPrincipal UserSession userSession) {
+    public ResponseEntity<Api<UserInfoRes>> loginSuccess(@AuthenticationPrincipal UserSession userSession) {
         return ResponseEntity.ok(Api.OK(service.getUserInfo(userSession)));
     }
     
