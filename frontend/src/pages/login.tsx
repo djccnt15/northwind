@@ -11,6 +11,7 @@ import {
   Switcher,
 } from "../shared/auth-ui";
 import { useAuth } from "../shared/auth/auth-context";
+import type { ApiIfs } from "../entities/app/api";
 
 const Wrapper = styled.div`
   display: flex;
@@ -53,16 +54,21 @@ export default function Login() {
       .post("/v1/login", params, {
         headers: { "content-type": "application/x-www-form-urlencoded" },
       })
-      .then((response) => {
-        const data = response.data;
+      .then((res) => {
+        const data: ApiIfs = res.data;
         console.log("login response:", data);
-        setUser({ id: data.id, username: data.username, loggedIn: true });
+        setUser({
+          id: data.body.id,
+          username: data.body.username,
+          loggedIn: true,
+        });
 
         const from = location.state?.from?.pathname || "/";
         navigate(from, { replace: true });
       })
-      .catch((error) => {
-        console.error(error);
+      .catch((err) => {
+        const data: ApiIfs = err.response?.data;
+        console.error(data || err);
         setErrorMsg("Login failed. Please check your username and password.");
       })
       .finally(() => {

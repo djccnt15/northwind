@@ -3,6 +3,7 @@ import type { ChildNodeIfs } from "../../entities/app/app";
 import type { UserIfs } from "../../entities/app/auth";
 import { privateApi } from "../../shared/api";
 import { AuthContext } from "../../shared/auth/auth-context";
+import type { ApiIfs } from "../../entities/app/api";
 
 export default function AuthProvider({ children }: ChildNodeIfs) {
   const [user, setUser] = useState<UserIfs | null>(null);
@@ -12,13 +13,18 @@ export default function AuthProvider({ children }: ChildNodeIfs) {
     const initializeAuth = () => {
       privateApi
         .get("/v1/auth/check-session")
-        .then((response) => {
-          const data = response.data;
+        .then((res) => {
+          const data: ApiIfs = res.data;
           console.log("Session check response:", data);
-          setUser({ id: data.id, username: data.username, loggedIn: true });
+          setUser({
+            id: data.body.id,
+            username: data.body.username,
+            loggedIn: true,
+          });
         })
         .catch((err) => {
-          console.error(err);
+          const data: ApiIfs = err.response?.data;
+          console.error(data || err);
           setUser(null);
         })
         .finally(() => {

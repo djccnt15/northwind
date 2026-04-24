@@ -1,5 +1,6 @@
 package com.djccnt15.northwind.domain.home;
 
+import com.djccnt15.northwind.comm.api.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,12 +15,12 @@ import static com.djccnt15.northwind.constants.RouteConst.API_VER_1;
 public class HealthApiController {
     
     @GetMapping("/health")
-    public ResponseEntity<?> health() {
-        return ResponseEntity.ok(1);
+    public ResponseEntity<Api<?>> health() {
+        return ResponseEntity.ok(Api.OK(1));
     }
     
     @GetMapping("/ping")
-    public ResponseEntity<?> ping() {
-        return ResponseEntity.ok("pong");
+    public ResponseEntity<Api<?>> ping() {
+        return ResponseEntity.ok(Api.OK("pong"));
     }
 }

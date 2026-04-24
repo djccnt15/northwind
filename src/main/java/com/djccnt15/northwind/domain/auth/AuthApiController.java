@@ -1,12 +1,12 @@
 package com.djccnt15.northwind.domain.auth;
 
+import com.djccnt15.northwind.comm.api.Api;
 import com.djccnt15.northwind.comm.code.StatusCode;
 import com.djccnt15.northwind.config.security.model.UserSession;
 import com.djccnt15.northwind.domain.auth.model.UserInfo;
 import com.djccnt15.northwind.exception.exceptions.ApiException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
@@ -28,17 +28,17 @@ public class AuthApiController {
     private final UserService service;
     
     @GetMapping("/check-session")
-    public ResponseEntity<?> checkSession(@AuthenticationPrincipal UserSession userSession) {
-        return ResponseEntity.ok(service.getUserInfo(userSession));
+    public ResponseEntity<Api<?>> checkSession(@AuthenticationPrincipal UserSession userSession) {
+        return ResponseEntity.ok(Api.OK(service.getUserInfo(userSession)));
     }
     
     @PostMapping("/login/success")
-    public ResponseEntity<UserInfo> loginSuccess(@AuthenticationPrincipal UserSession userSession) {
-        return ResponseEntity.ok(service.getUserInfo(userSession));
+    public ResponseEntity<Api<UserInfo>> loginSuccess(@AuthenticationPrincipal UserSession userSession) {
+        return ResponseEntity.ok(Api.OK(service.getUserInfo(userSession)));
     }
     
     @PostMapping("/login/fail")
-    public ResponseEntity<?> loginFail(HttpServletRequest request) {
+    public ResponseEntity<Api<?>> loginFail(HttpServletRequest request) {
         var exception = (AuthenticationException) request.getAttribute("exception");
         String message;
         if (exception instanceof BadCredentialsException) {
@@ -50,12 +50,12 @@ public class AuthApiController {
         } else {
             message = exception != null ? exception.getMessage() : "Authentication failed";
         }
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(message);
+        throw new ApiException(StatusCode.UNAUTHORIZED, message);
     }
     
     @GetMapping("/logout")
-    public ResponseEntity<?> logout() {
-        return ResponseEntity.ok().build();
+    public ResponseEntity<Api<?>> logout() {
+        return ResponseEntity.ok(Api.OK(null));
     }
     
     @GetMapping("/unauthorized")
