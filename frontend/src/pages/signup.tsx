@@ -60,7 +60,14 @@ export default function Signup() {
       .then((response) => {
         const data = response.data;
         console.log("signup response:", data);
-        setUser({ id: data.id, username: data.username, loggedIn: true });
+        setUser({
+          id: data.id,
+          username: data.username,
+          authorities: Array.isArray(data.body.authorities)
+            ? data.body.authorities.map(String)
+            : [],
+          loggedIn: true,
+        });
 
         const from = location.state?.from?.pathname || "/";
         navigate(from, { replace: true });

@@ -58,8 +58,11 @@ export default function Login() {
         const data: ApiIfs = res.data;
         console.log("login response:", data);
         setUser({
-          id: data.body.id,
-          username: data.body.username,
+          id: Number(data.body.id) || 0,
+          username: String(data.body.username),
+          authorities: Array.isArray(data.body.authorities)
+            ? data.body.authorities.map(String)
+            : [],
           loggedIn: true,
         });
 
@@ -69,7 +72,11 @@ export default function Login() {
       .catch((err) => {
         const data: ApiIfs = err.response?.data;
         console.error(data || err);
-        setErrorMsg("Login failed. Please check your username and password.");
+        const description = data?.result?.description;
+        const message = description
+          ? `Login failed. ${description}`
+          : "Login failed. Please check your username and password.";
+        setErrorMsg(message);
       })
       .finally(() => {
         setIsLoading(false);
