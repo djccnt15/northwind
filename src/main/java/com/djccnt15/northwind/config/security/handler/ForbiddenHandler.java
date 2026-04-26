@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
-import static com.djccnt15.northwind.constants.RouteConst.API_VER_1;
+import static com.djccnt15.northwind.constants.RouteConst.PUBLIC_API_V1;
 
 @Component
 public class ForbiddenHandler implements AccessDeniedHandler {
@@ -19,6 +19,6 @@ public class ForbiddenHandler implements AccessDeniedHandler {
         HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException
     ) throws IOException, ServletException {
         request.setAttribute("exception", accessDeniedException);
-        request.getRequestDispatcher(API_VER_1 + "/auth/forbidden").forward(request, response);
+        request.getRequestDispatcher(PUBLIC_API_V1 + "/auth/forbidden").forward(request, response);
     }
 }

@@ -1,15 +1,24 @@
 import axios from "axios";
 
 const apiConfig = {
-  baseURL: "/api",
   headers: {
     "Content-Type": "application/json",
   },
 };
 
-export const api = axios.create(apiConfig);
+const publicApiConfig = {
+  ...apiConfig,
+  baseURL: "/api/public",
+};
+
+const privateApiConfig = {
+  ...apiConfig,
+  baseURL: "/api",
+};
+
+export const api = axios.create(publicApiConfig);
 
 export const privateApi = axios.create({
-  ...apiConfig,
+  ...privateApiConfig,
   withCredentials: true,
 });

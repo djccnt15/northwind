@@ -1,6 +1,5 @@
 package com.djccnt15.northwind.config.security;
 
-import com.djccnt15.northwind.config.security.handler.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -47,7 +46,7 @@ public class AuthConfig {
     @Order(1)
     public SecurityFilterChain apiSecurityFilterChain(HttpSecurity http) throws Exception {
         http
-            .securityMatcher(API_ALL_PATTERN)
+            .securityMatcher(API_ALL)
             .csrf(AbstractHttpConfigurer::disable)  // TODO. 초기 개발 시에는 disable, 운영 시에는 설정 필요
             .cors(cors -> cors.configurationSource(corsConfig()))
             .exceptionHandling(ex -> ex
@@ -55,16 +54,16 @@ public class AuthConfig {
                 .defaultAccessDeniedHandlerFor(forbiddenHandler, getRequestMatcher())
             )
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers(PUBLIC_API_PATHS).permitAll()
+                .requestMatchers(PUBLIC_ALL).permitAll()
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form
-                .loginProcessingUrl(API_VER_1 + "/login")
+                .loginProcessingUrl(PUBLIC_API_V1 + "/login")
                 .successHandler(authSuccessHandler)
                 .failureHandler(authFailureHandler)
             )
             .logout(logout -> logout
-                .logoutUrl(API_VER_1 + "/logout")
+                .logoutUrl(API_V1 + "/logout")
                 .logoutSuccessHandler(logoutHandler)
             )
             .sessionManagement(session -> session
@@ -74,14 +73,14 @@ public class AuthConfig {
     }
     
     private static RequestMatcher getRequestMatcher() {
-        return request -> request.getRequestURI().startsWith(API_URI_PREFIX);
+        return request -> request.getRequestURI().startsWith(API);
     }
     
     @Bean
     @Order(2)
-    public SecurityFilterChain webSecurityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain spaSecurityFilterChain(HttpSecurity http) throws Exception {
         http
-            .securityMatcher(WEB_ALL_PATTERN)
+            .securityMatcher(ALL)
             .csrf(AbstractHttpConfigurer::disable)    // TODO. 초기 개발 시에는 disable, 운영 시에는 설정 필요
             .cors(cors -> cors.configurationSource(corsConfig()))
             .authorizeHttpRequests(auth -> auth
@@ -105,7 +104,7 @@ public class AuthConfig {
         config.setMaxAge(3600L);  // preflight 요청 캐싱 시간 (초)
         
         var source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration(WEB_ALL_PATTERN, config);
+        source.registerCorsConfiguration(ALL, config);
         return source;
     }
     

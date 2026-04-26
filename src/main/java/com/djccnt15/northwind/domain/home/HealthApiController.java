@@ -7,11 +7,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import static com.djccnt15.northwind.constants.RouteConst.API_VER_1;
+import static com.djccnt15.northwind.constants.RouteConst.PUBLIC_API_V1;
 
 @Slf4j
 @RestController
-@RequestMapping(API_VER_1)
+@RequestMapping(PUBLIC_API_V1)
 public class HealthApiController {
     
     @GetMapping("/health")

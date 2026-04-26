@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
-import static com.djccnt15.northwind.constants.RouteConst.API_VER_1;
+import static com.djccnt15.northwind.constants.RouteConst.API_V1;
 
 @Component
 public class AuthSuccessHandler implements AuthenticationSuccessHandler {
@@ -18,6 +18,6 @@ public class AuthSuccessHandler implements AuthenticationSuccessHandler {
     public void onAuthenticationSuccess(
         HttpServletRequest request, HttpServletResponse response, Authentication authentication
     ) throws IOException, ServletException {
-        request.getRequestDispatcher(API_VER_1 + "/auth/login/success").forward(request, response);
+        request.getRequestDispatcher(API_V1 + "/auth/login/success").forward(request, response);
     }
 }
