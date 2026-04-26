@@ -46,8 +46,8 @@ export default function Layout() {
         setUser(null);
         navigate("/login");
       })
-      .catch((error) => {
-        console.error(error);
+      .catch((err) => {
+        console.error(err);
       });
   };
 

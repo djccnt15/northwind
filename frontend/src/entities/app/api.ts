@@ -7,5 +7,5 @@ interface ResultIfs {
 export interface ApiIfs {
   serverTime: number;
   result: ResultIfs;
-  body: Record<string, unknown>;
+  body: Record<string, unknown> | null;
 }

@@ -57,8 +57,8 @@ export default function Signup() {
 
     api
       .post("/v1/signup", { username, email, password, confirmPassword })
-      .then((response) => {
-        const data = response.data;
+      .then((res) => {
+        const data = res.data;
         console.log("signup response:", data);
         setUser({
           id: data.id,
@@ -72,8 +72,8 @@ export default function Signup() {
         const from = location.state?.from?.pathname || "/";
         navigate(from, { replace: true });
       })
-      .catch((error) => {
-        console.error(error);
+      .catch((err) => {
+        console.error(err);
         setErrorMsg("Signup failed. Please contact the admin.");
       })
       .finally(() => {

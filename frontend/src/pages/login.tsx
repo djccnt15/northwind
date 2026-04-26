@@ -58,9 +58,9 @@ export default function Login() {
         const data: ApiIfs = res.data;
         console.log("login response:", data);
         setUser({
-          id: Number(data.body.id) || 0,
-          username: String(data.body.username),
-          authorities: Array.isArray(data.body.authorities)
+          id: Number(data.body?.id) || 0,
+          username: String(data.body?.username),
+          authorities: Array.isArray(data.body?.authorities)
             ? data.body.authorities.map(String)
             : [],
           loggedIn: true,
