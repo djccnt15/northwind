@@ -43,6 +43,10 @@ export const commBtnSkyBlueBoxShadow = css`
   box-shadow: 0 0 0 1px #006885;
 `;
 
+export const commLinkSkyBlue = css`
+  color: #17c1ff;
+`;
+
 export const ModalOverlay = styled.div`
   position: fixed;
   top: 0;

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { api } from "../shared/api";
 import {
@@ -12,12 +12,14 @@ import {
   SubmitBtnWrapper,
   Switcher,
 } from "../shared/auth-ui";
-import { useAuth } from "../shared/auth/auth-context";
 import {
   commBorderRadius,
   commBtnSkyBlue,
   commBtnHoverSkyBlue,
   commBtnSkyBlueBoxShadow,
+  ModalOverlay,
+  commLinkSkyBlue,
+  ModalFadeInAnimation,
 } from "../shared/global-styles";
 import type { ApiIfs } from "../entities/app/api";
 
@@ -54,14 +56,25 @@ const CheckEmailBtn = styled.div`
   }
 `;
 
-export default function Signup() {
-  const navigate = useNavigate();
-  const location = useLocation();
-  const { setUser } = useAuth();
+const SuccessModal = styled.div`
+  ${commBorderRadius}
+  background-color: white;
+  padding: 50px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  font-size: 18px;
+  font-weight: 600;
+  a {
+    ${commLinkSkyBlue}
+  }
+  ${ModalFadeInAnimation}
+`;
 
+export default function Signup() {
   const [errorMsg, setErrorMsg] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isEmailChecked, setIsEmailChecked] = useState<boolean>(false);
+  const [isSignupSuccess, setIsSignupSuccess] = useState<boolean>(false);
 
   const [username, setUsername] = useState<string>("");
   const [email, setEmail] = useState<string>("");
@@ -111,29 +124,29 @@ export default function Signup() {
   const onSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    if (password !== confirmPassword) {
+      alert("Password and confirm password do not match.");
+      return;
+    }
+
     setErrorMsg("");
     setIsLoading(true);
 
     api
       .post("/v1/signup", { username, email, password, confirmPassword })
       .then((res) => {
-        const data = res.data;
+        const data: ApiIfs = res.data;
         console.log("signup response:", data);
-        setUser({
-          id: data.id,
-          username: data.username,
-          authorities: Array.isArray(data.body.authorities)
-            ? data.body.authorities.map(String)
-            : [],
-          loggedIn: true,
-        });
-
-        const from = location.state?.from?.pathname || "/";
-        navigate(from, { replace: true });
+        setIsSignupSuccess(true);
       })
       .catch((err) => {
         console.error(err);
-        setErrorMsg("Signup failed. Please contact the admin.");
+        const data: ApiIfs = err.response?.data;
+        const description = data?.result?.description;
+        const message = description
+          ? `Signup failed. ${description}`
+          : "Signup failed. Please contact the admin.";
+        setErrorMsg(message);
       })
       .finally(() => {
         setIsLoading(false);
@@ -205,6 +218,13 @@ export default function Signup() {
       <Switcher>
         Already have an account? <Link to="/login">Log in &rarr;</Link>
       </Switcher>
+      {isSignupSuccess && (
+        <ModalOverlay>
+          <SuccessModal>
+            Sign Up Success! Go to <Link to="/login">Log in &rarr;</Link>
+          </SuccessModal>
+        </ModalOverlay>
+      )}
     </Wrapper>
   );
 }
