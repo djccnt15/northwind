@@ -30,3 +30,11 @@ export const GlobalStyles = createGlobalStyle`
 export const commBorderRadius = css`
   border-radius: 4px;
 `;
+
+export const commBtnSkyBlue = css`
+  background-color: #17c1ff;
+`;
+
+export const commBtnHoverSkyBlue = css`
+  background-color: #2397c9;
+`;

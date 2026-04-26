@@ -1,5 +1,9 @@
 import styled from "styled-components";
-import { commBorderRadius } from "./global-styles";
+import {
+  commBorderRadius,
+  commBtnSkyBlue,
+  commBtnHoverSkyBlue,
+} from "./global-styles";
 
 export const H1 = styled.h1`
   margin: 20px 0px;
@@ -12,7 +16,7 @@ export const Form = styled.form`
   flex-direction: column;
   align-items: center;
   gap: 15px;
-  width: 250px;
+  width: 300px;
   margin-bottom: 20px;
 `;
 
@@ -27,16 +31,16 @@ export const Input = styled.input`
 
 export const SubmitBtn = styled.input`
   ${commBorderRadius}
+  ${commBtnSkyBlue}
   width: 100%;
   height: 40px;
   padding: 10px 20px;
   border: none;
-  background-color: #17c1ff;
   color: white;
   font-size: 16px;
   cursor: pointer;
   &:hover {
-    background-color: #2397c9;
+    ${commBtnHoverSkyBlue}
   }
 `;
 
