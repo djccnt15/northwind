@@ -40,16 +40,13 @@ public class AuthApiController {
     @PostMapping("/login/fail")
     public ResponseEntity<Api<?>> loginFail(HttpServletRequest request) {
         var exception = (AuthenticationException) request.getAttribute("exception");
-        String message;
-        if (exception instanceof BadCredentialsException) {
-            message = "Invalid username or password";
-        } else if (exception instanceof DisabledException) {
-            message = "Account is disabled";
-        } else if (exception instanceof LockedException) {
-            message = "Account is locked";
-        } else {
-            message = exception != null ? exception.getMessage() : "Authentication failed";
-        }
+        var message = switch (exception) {
+            case null -> "Authentication failed";
+            case BadCredentialsException ignored -> "Invalid username or password";
+            case DisabledException ignored -> "Account is disabled";
+            case LockedException ignored -> "Account is locked";
+            default -> exception.getMessage();
+        };
         throw new ApiException(StatusCode.UNAUTHORIZED, message);
     }
     
