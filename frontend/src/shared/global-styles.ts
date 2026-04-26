@@ -38,3 +38,7 @@ export const commBtnSkyBlue = css`
 export const commBtnHoverSkyBlue = css`
   background-color: #2397c9;
 `;
+
+export const commBtnSkyBlueBoxShadow = css`
+  box-shadow: 0 0 0 1px #006885;
+`;

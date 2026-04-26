@@ -8,9 +8,18 @@ import {
   H1,
   Input,
   SubmitBtn,
+  SubmitBtnHoverMsg,
+  SubmitBtnWrapper,
   Switcher,
 } from "../shared/auth-ui";
 import { useAuth } from "../shared/auth/auth-context";
+import {
+  commBorderRadius,
+  commBtnSkyBlue,
+  commBtnHoverSkyBlue,
+  commBtnSkyBlueBoxShadow,
+} from "../shared/global-styles";
+import type { ApiIfs } from "../entities/app/api";
 
 const Wrapper = styled.div`
   display: flex;
@@ -20,6 +29,31 @@ const Wrapper = styled.div`
   padding-bottom: 50px;
 `;
 
+const EmailCheckWrapper = styled.div`
+  display: grid;
+  grid-template-columns: 5fr 1fr;
+  width: 100%;
+  gap: 10px;
+`;
+
+const CheckEmailBtn = styled.div`
+  ${commBorderRadius}
+  ${commBtnSkyBlue}
+  height: 40px;
+  border: none;
+  color: white;
+  font-size: 10px;
+  padding: 10px;
+  cursor: pointer;
+  &:hover {
+    ${commBtnHoverSkyBlue}
+  }
+  &:focus {
+    outline: none;
+    ${commBtnSkyBlueBoxShadow}
+  }
+`;
+
 export default function Signup() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -27,6 +61,7 @@ export default function Signup() {
 
   const [errorMsg, setErrorMsg] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isEmailChecked, setIsEmailChecked] = useState<boolean>(false);
 
   const [username, setUsername] = useState<string>("");
   const [email, setEmail] = useState<string>("");
@@ -38,6 +73,7 @@ export default function Signup() {
   };
 
   const onChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setIsEmailChecked(false);
     setEmail(e.target.value);
   };
 
@@ -47,6 +83,29 @@ export default function Signup() {
 
   const onChangeConfirmPassword = (e: React.ChangeEvent<HTMLInputElement>) => {
     setConfirmPassword(e.target.value);
+  };
+
+  const onClickCheckEmail = () => {
+    if (!email) {
+      alert("Please enter an email.");
+      return;
+    }
+
+    api
+      .get("/v1/check-email", { params: { email } })
+      .then((res) => {
+        console.log("check email response:", res.status);
+        setIsEmailChecked(true);
+      })
+      .catch((err) => {
+        console.error(err);
+        const data: ApiIfs = err.response?.data;
+        const description = data?.result?.description;
+        const message = description
+          ? `Failed to check email. ${description}`
+          : "Failed to check email. Please try again.";
+        alert(message);
+      });
   };
 
   const onSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
@@ -81,6 +140,13 @@ export default function Signup() {
       });
   };
 
+  const isSubmitDisabled = isLoading || !isEmailChecked;
+  const submitDisabledMessage = isLoading
+    ? "Signing up..."
+    : !isEmailChecked
+      ? "Please check your email before signing up."
+      : "";
+
   return (
     <Wrapper>
       <H1>Please Sign Up</H1>
@@ -92,13 +158,24 @@ export default function Signup() {
           onChange={onChangeUsername}
           required
         />
-        <Input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={onChangeEmail}
-          required
-        />
+        <EmailCheckWrapper>
+          <Input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={onChangeEmail}
+            required
+          />
+          <CheckEmailBtn
+            onClick={onClickCheckEmail}
+            tabIndex={0}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") onClickCheckEmail();
+            }}
+          >
+            Check Email
+          </CheckEmailBtn>
+        </EmailCheckWrapper>
         <Input
           type="password"
           placeholder="Password"
@@ -113,11 +190,16 @@ export default function Signup() {
           onChange={onChangeConfirmPassword}
           required
         />
-        <SubmitBtn
-          type="submit"
-          value={isLoading ? "Loading..." : "Sign Up"}
-          disabled={isLoading}
-        />
+        <SubmitBtnWrapper>
+          <SubmitBtn
+            type="submit"
+            value={isLoading ? "Loading..." : "Sign Up"}
+            disabled={isSubmitDisabled}
+          />
+          {isSubmitDisabled && (
+            <SubmitBtnHoverMsg>{submitDisabledMessage}</SubmitBtnHoverMsg>
+          )}
+        </SubmitBtnWrapper>
       </Form>
       {errorMsg && <ErrorMsg>{errorMsg}</ErrorMsg>}
       <Switcher>
