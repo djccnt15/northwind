@@ -10,6 +10,7 @@ import {
 } from "./provider/redirect-route";
 import Signup from "../pages/signup";
 import AdminUser from "../pages/admin-user";
+import Profile from "../pages/profile";
 
 export const AppRouter = createBrowserRouter([
   {
@@ -19,7 +20,10 @@ export const AppRouter = createBrowserRouter([
         <Layout />
       </ProtectedRoute>
     ),
-    children: [{ path: "/", element: <Home /> }],
+    children: [
+      { path: "/", element: <Home /> },
+      { path: "/profile", element: <Profile /> },
+    ],
   },
   {
     path: "/admin",
