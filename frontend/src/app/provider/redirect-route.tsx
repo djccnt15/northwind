@@ -14,6 +14,16 @@ export function ProtectedRoute({ children }: ChildNodeIfs) {
   return <>{children}</>;
 }
 
+export function AdminRoute({ children }: ChildNodeIfs) {
+  const { user } = useAuth();
+
+  if (!user || !user.authorities.includes("admin")) {
+    return <Navigate to="/" replace />;
+  }
+
+  return <>{children}</>;
+}
+
 export function AuthRedirectRoute() {
   // 이미 로그인한 사용자 접근시 홈 페이지로 리다이렉트
   const { user } = useAuth();
