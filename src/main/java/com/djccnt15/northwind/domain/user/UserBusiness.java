@@ -1,9 +1,9 @@
-package com.djccnt15.northwind.domain.auth;
+package com.djccnt15.northwind.domain.user;
 
 import com.djccnt15.northwind.annotation.Business;
 import com.djccnt15.northwind.config.security.model.UserSession;
-import com.djccnt15.northwind.domain.auth.model.SignupReq;
-import com.djccnt15.northwind.domain.auth.model.UserInfoRes;
+import com.djccnt15.northwind.domain.user.model.SignupReq;
+import com.djccnt15.northwind.domain.user.model.UserInfoRes;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 

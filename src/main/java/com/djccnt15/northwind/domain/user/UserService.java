@@ -1,7 +1,7 @@
-package com.djccnt15.northwind.domain.auth;
+package com.djccnt15.northwind.domain.user;
 
 import com.djccnt15.northwind.db.repository.AppUserRepo;
-import com.djccnt15.northwind.domain.auth.model.SignupReq;
+import com.djccnt15.northwind.domain.user.model.SignupReq;
 import com.djccnt15.northwind.exception.exceptions.ApiException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

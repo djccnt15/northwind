@@ -1,4 +1,4 @@
-package com.djccnt15.northwind.domain.auth.model;
+package com.djccnt15.northwind.domain.user.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

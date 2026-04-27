@@ -1,7 +1,7 @@
-package com.djccnt15.northwind.domain.auth;
+package com.djccnt15.northwind.domain.user;
 
 import com.djccnt15.northwind.comm.api.Api;
-import com.djccnt15.northwind.domain.auth.model.SignupReq;
+import com.djccnt15.northwind.domain.user.model.SignupReq;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;

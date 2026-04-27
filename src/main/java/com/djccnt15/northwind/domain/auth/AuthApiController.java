@@ -2,7 +2,8 @@ package com.djccnt15.northwind.domain.auth;
 
 import com.djccnt15.northwind.comm.api.Api;
 import com.djccnt15.northwind.config.security.model.UserSession;
-import com.djccnt15.northwind.domain.auth.model.UserInfoRes;
+import com.djccnt15.northwind.domain.user.UserBusiness;
+import com.djccnt15.northwind.domain.user.model.UserInfoRes;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -20,15 +21,15 @@ import static com.djccnt15.northwind.constants.RouteConst.API_V1;
 @RequiredArgsConstructor
 public class AuthApiController {
     
-    private final UserBusiness service;
+    private final UserBusiness business;
     
     @GetMapping("/check-session")
     public ResponseEntity<Api<?>> checkSession(@AuthenticationPrincipal UserSession userSession) {
-        return ResponseEntity.ok(Api.OK(service.getUserInfo(userSession)));
+        return ResponseEntity.ok(Api.OK(business.getUserInfo(userSession)));
     }
     
     @PostMapping("/login/success")
     public ResponseEntity<Api<UserInfoRes>> loginSuccess(@AuthenticationPrincipal UserSession userSession) {
-        return ResponseEntity.ok(Api.OK(service.getUserInfo(userSession)));
+        return ResponseEntity.ok(Api.OK(business.getUserInfo(userSession)));
     }
 }
