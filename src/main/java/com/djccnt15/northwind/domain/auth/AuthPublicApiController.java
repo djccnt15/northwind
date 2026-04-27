@@ -24,17 +24,14 @@ import static com.djccnt15.northwind.constants.RouteConst.PUBLIC_API_V1;
 @RequiredArgsConstructor
 public class AuthPublicApiController {
     
-    private final UserService service;
-    
     @PostMapping("/login/fail")
     public ResponseEntity<Api<?>> loginFail(HttpServletRequest request) {
         var exception = (AuthenticationException) request.getAttribute("exception");
         var message = switch (exception) {
-            case null -> "Authentication failed";
             case BadCredentialsException ignored -> "Invalid username or password";
             case DisabledException ignored -> "Account is disabled";
             case LockedException ignored -> "Account is locked";
-            default -> exception.getMessage();
+            case null, default -> "Authentication failed, Please contact to admin";
         };
         throw new ApiException(StatusCode.UNAUTHORIZED, message);
     }
