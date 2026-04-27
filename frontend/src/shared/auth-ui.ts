@@ -54,6 +54,10 @@ export const SubmitBtn = styled.input`
     cursor: default;
     pointer-events: none; // 마우스 이벤트를 받지 않도록 설정
   }
+  &:focus {
+    outline: none;
+    ${commBtnSkyBlueBoxShadow}
+  }
 `;
 
 export const SubmitBtnWrapper = styled.div`
