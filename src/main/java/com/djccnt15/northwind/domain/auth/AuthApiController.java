@@ -20,7 +20,7 @@ import static com.djccnt15.northwind.constants.RouteConst.API_V1;
 @RequiredArgsConstructor
 public class AuthApiController {
     
-    private final UserService service;
+    private final UserBusiness service;
     
     @GetMapping("/check-session")
     public ResponseEntity<Api<?>> checkSession(@AuthenticationPrincipal UserSession userSession) {

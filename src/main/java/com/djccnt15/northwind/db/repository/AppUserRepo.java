@@ -11,5 +11,7 @@ public interface AppUserRepo extends JpaRepository<AppUserEntity, Long> {
     @EntityGraph(attributePaths = {"appUserRole", "appUserRole.userRole"})
     Optional<AppUserEntity> findFirstByUsername(String username);
     
+    Optional<AppUserEntity> findSimpleFirstByUsername(String username);
+    
     Optional<AppUserEntity> findFirstByEmail(String email);
 }

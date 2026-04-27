@@ -15,17 +15,17 @@ import static com.djccnt15.northwind.constants.RouteConst.PUBLIC_API_V1;
 @RequiredArgsConstructor
 public class UserApiController {
     
-    private final UserService userService;
+    private final UserBusiness userBusiness;
     
     @GetMapping("/check-email")
     public ResponseEntity<Api<?>> checkEmail(@RequestParam String email) {
-        userService.checkEmailExists(email);
+        userBusiness.checkEmailExists(email);
         return ResponseEntity.ok(Api.OK(null));
     }
     
     @PostMapping("/signup")
-    public ResponseEntity<Api<?>> signup(@RequestBody SignupReq request) {
-        userService.signup(request);
+    public ResponseEntity<Api<?>> createUser(@RequestBody SignupReq request) {
+        userBusiness.createUser(request);
         return ResponseEntity.ok(Api.CREATED(null));
     }
 }
