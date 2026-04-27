@@ -99,6 +99,8 @@ export default function Signup() {
   };
 
   const onClickCheckEmail = () => {
+    if (isLoading) return;
+
     if (!email) {
       alert("Please enter an email.");
       return;
@@ -123,6 +125,7 @@ export default function Signup() {
 
   const onSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (isLoading) return;
 
     if (password !== confirmPassword) {
       alert("Password and confirm password do not match.");

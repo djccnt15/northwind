@@ -8,6 +8,8 @@ import {
   H1,
   Input,
   SubmitBtn,
+  SubmitBtnHoverMsg,
+  SubmitBtnWrapper,
   Switcher,
 } from "../shared/auth-ui";
 import { useAuth } from "../shared/auth/auth-context";
@@ -42,6 +44,7 @@ export default function Login() {
 
   const onSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (isLoading) return;
 
     setErrorMsg("");
     setIsLoading(true);
@@ -101,11 +104,14 @@ export default function Login() {
           onChange={onChangePassword}
           required
         />
-        <SubmitBtn
-          type="submit"
-          value={isLoading ? "Loading..." : "Login"}
-          disabled={isLoading}
-        />
+        <SubmitBtnWrapper>
+          <SubmitBtn
+            type="submit"
+            value={isLoading ? "Loading..." : "Login"}
+            disabled={isLoading}
+          />
+          {isLoading && <SubmitBtnHoverMsg>Signing in...</SubmitBtnHoverMsg>}
+        </SubmitBtnWrapper>
       </Form>
       {errorMsg && <ErrorMsg>{errorMsg}</ErrorMsg>}
       <Switcher>
