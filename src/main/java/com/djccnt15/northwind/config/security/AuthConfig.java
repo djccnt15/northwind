@@ -65,6 +65,8 @@ public class AuthConfig {
             .logout(logout -> logout
                 .logoutUrl(API_V1 + "/logout")
                 .logoutSuccessHandler(logoutHandler)
+                .invalidateHttpSession(true)  // default: true. only for explicitly setting
+                .deleteCookies("JSESSIONID")
             )
             .sessionManagement(session -> session
                 .maximumSessions(1)  // 중복 로그인 제한
