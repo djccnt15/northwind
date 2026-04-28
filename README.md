@@ -6,7 +6,7 @@ northwind study(feat. Spring)
 
 ### Backend
 
-- Java 17
+- Java 21
 - gradle
 - check `build.gradle` for other dependency
 
@@ -24,16 +24,24 @@ npm i @types/styled-components -D
 npm i axios
 ```
 
-### Run
+#### Commands
+
+- Run
 
 ```sh
 npm run dev
 ```
 
-### Build
+- Build
 
 ```sh
 npm run build
+```
+
+- Sync dependencies with `package.json`
+
+```sh
+npm install
 ```
 
 ## utils
