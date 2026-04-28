@@ -23,6 +23,13 @@ const Wrapper = styled.div`
   padding-bottom: 50px;
 `;
 
+const CheckBoxArea = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+`;
+
 const CheckBoxWrapper = styled.div`
   display: flex;
   align-items: center;
@@ -44,9 +51,16 @@ export default function Login() {
   const [errorMsg, setErrorMsg] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const [username, setUsername] = useState<string>("");
+  const [username, setUsername] = useState<string>(() => {
+    const rememberedId = localStorage.getItem("rememberedId");
+    return rememberedId || "";
+  });
   const [password, setPassword] = useState<string>("");
   const [rememberMe, setRememberMe] = useState<boolean>(false);
+  const [rememberId, setRememberId] = useState<boolean>(() => {
+    const rememberedId = localStorage.getItem("rememberedId");
+    return !!rememberedId;
+  });
 
   const onChangeUsername = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUsername(e.target.value);
@@ -87,6 +101,12 @@ export default function Login() {
             : [],
           loggedIn: true,
         });
+
+        if (rememberId) {
+          localStorage.setItem("rememberedId", username);
+        } else {
+          localStorage.removeItem("rememberedId");
+        }
 
         const from = location.state?.from?.pathname || "/";
         navigate(from, { replace: true });
@@ -131,15 +151,26 @@ export default function Login() {
           />
           {isLoading && <SubmitBtnHoverMsg>Signing in...</SubmitBtnHoverMsg>}
         </SubmitBtnWrapper>
-        <CheckBoxWrapper>
-          <CheckBoxInput
-            type="checkbox"
-            id="rememberMe"
-            checked={rememberMe}
-            onChange={onChangeRememberMe}
-          />
-          <Label htmlFor="rememberMe">Remember Me</Label>
-        </CheckBoxWrapper>
+        <CheckBoxArea>
+          <CheckBoxWrapper>
+            <CheckBoxInput
+              type="checkbox"
+              id="rememberMe"
+              checked={rememberMe}
+              onChange={onChangeRememberMe}
+            />
+            <Label htmlFor="rememberMe">Remember Me</Label>
+          </CheckBoxWrapper>
+          <CheckBoxWrapper>
+            <CheckBoxInput
+              type="checkbox"
+              id="rememberId"
+              checked={rememberId}
+              onChange={(e) => setRememberId(e.target.checked)}
+            />
+            <Label htmlFor="rememberId">Remember ID</Label>
+          </CheckBoxWrapper>
+        </CheckBoxArea>
       </Form>
       {errorMsg && <ErrorMsg>{errorMsg}</ErrorMsg>}
       <Switcher>
