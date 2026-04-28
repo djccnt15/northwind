@@ -38,7 +38,7 @@ const EmailCheckWrapper = styled.div`
   gap: 10px;
 `;
 
-const CheckEmailBtn = styled.div`
+const CheckEmailBtn = styled.button`
   ${commBorderRadius}
   ${commBtnSkyBlue}
   height: 40px;
@@ -182,15 +182,7 @@ export default function Signup() {
             onChange={onChangeEmail}
             required
           />
-          <CheckEmailBtn
-            onClick={onClickCheckEmail}
-            tabIndex={0}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" || e.key === " ") onClickCheckEmail();
-            }}
-          >
-            Check Email
-          </CheckEmailBtn>
+          <CheckEmailBtn onClick={onClickCheckEmail}>Check Email</CheckEmailBtn>
         </EmailCheckWrapper>
         <Input
           type="password"
@@ -207,11 +199,9 @@ export default function Signup() {
           required
         />
         <SubmitBtnWrapper>
-          <SubmitBtn
-            type="submit"
-            value={isLoading ? "Loading..." : "Sign Up"}
-            disabled={isSubmitDisabled}
-          />
+          <SubmitBtn disabled={isSubmitDisabled}>
+            {isLoading ? "Loading..." : "Sign Up"}
+          </SubmitBtn>
           {isSubmitDisabled && (
             <SubmitBtnHoverMsg>{submitDisabledMessage}</SubmitBtnHoverMsg>
           )}

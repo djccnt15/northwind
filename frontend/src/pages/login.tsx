@@ -145,11 +145,9 @@ export default function Login() {
           required
         />
         <SubmitBtnWrapper>
-          <SubmitBtn
-            type="submit"
-            value={isLoading ? "Loading..." : "Login"}
-            disabled={isLoading}
-          />
+          <SubmitBtn disabled={isLoading}>
+            {isLoading ? "Loading..." : "Login"}
+          </SubmitBtn>
           {isLoading && <SubmitBtnHoverMsg>Signing in...</SubmitBtnHoverMsg>}
         </SubmitBtnWrapper>
         <CheckBoxArea>

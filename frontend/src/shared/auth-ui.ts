@@ -35,7 +35,7 @@ export const Input = styled.input`
   }
 `;
 
-export const SubmitBtn = styled.input`
+export const SubmitBtn = styled.button`
   ${commBorderRadius}
   ${commBtnSkyBlue}
   width: 100%;
