@@ -6,6 +6,7 @@ import com.djccnt15.northwind.domain.user.model.SignupReq;
 import com.djccnt15.northwind.domain.user.model.UserInfoRes;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Business
@@ -23,10 +24,12 @@ public class UserBusiness {
         userService.validateEmailNotExists(email);
     }
     
+    @Transactional
     public void createUser(SignupReq request) {
         userService.validatePasswordsMatch(request.getPassword(), request.getConfirmPassword());
         userService.validateEmailNotExists(request.getEmail());
         userService.validateUsernameNotExists(request.getUsername());
-        userService.createUser(request);
+        var userEntity = userService.createUser(request);
+        userService.setUserBasicRole(userEntity);
     }
 }
