@@ -39,7 +39,7 @@ public class AuthService implements UserDetailsService {
         var roleName = role.getUserRole().getName();
         return switch (roleName) {
             case "superadmin", "admin" -> "admin";
-            case "user" -> "user";
+            case null -> "user";
             default -> roleName;
         };
     }
