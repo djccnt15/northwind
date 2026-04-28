@@ -30,8 +30,9 @@ public class AuthService implements UserDetailsService {
         return UserSession.builder()
             .id(entity.getId())
             .username(entity.getUsername())
-            .authorities(authorities)
             .password(entity.getPassword())
+            .email(entity.getEmail())
+            .authorities(authorities)
             .build();
     }
     

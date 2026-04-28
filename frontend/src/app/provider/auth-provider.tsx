@@ -19,8 +19,9 @@ export default function AuthProvider({ children }: ChildNodeIfs) {
           setUser({
             id: Number(data.body?.id) || 0,
             username: String(data.body?.username),
+            email: String(data.body?.email),
             authorities: Array.isArray(data.body?.authorities)
-              ? data.body.authorities.map(String)
+              ? data.body.authorities?.map(String)
               : [],
             loggedIn: true,
           });

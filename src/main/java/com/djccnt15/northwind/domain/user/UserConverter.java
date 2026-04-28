@@ -21,6 +21,7 @@ public class UserConverter {
         return UserInfoRes.builder()
             .id(userSession.getId())
             .username(userSession.getUsername())
+            .email(userSession.getEmail())
             .authorities(userSession.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority).toList())
             .build();

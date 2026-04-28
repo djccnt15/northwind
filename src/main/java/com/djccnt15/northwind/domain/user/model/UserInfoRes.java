@@ -13,5 +13,7 @@ public class UserInfoRes {
     
     private String username;
     
+    private String email;
+    
     private List<String> authorities;
 }

@@ -17,5 +17,7 @@ public class UserSession implements UserDetails {
     
     private String password;
     
+    private String email;
+    
     private Collection<? extends GrantedAuthority> authorities;
 }
