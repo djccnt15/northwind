@@ -41,3 +41,7 @@ springdoc.swagger-ui:
   docExpansion: none
   tagsSorter: alpha
   operationsSorter: alpha
+app:
+  remember-me:
+    key: northwind-remember-me-key  # TODO. change to random value for production
+    tokenValiditySeconds: 1209600  # 14 days

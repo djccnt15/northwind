@@ -23,6 +23,19 @@ const Wrapper = styled.div`
   padding-bottom: 50px;
 `;
 
+const CheckBoxWrapper = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const CheckBoxInput = styled.input`
+  margin-right: 5px;
+`;
+
+const Label = styled.label`
+  font-size: 14px;
+`;
+
 export default function Login() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -33,6 +46,7 @@ export default function Login() {
 
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [rememberMe, setRememberMe] = useState<boolean>(false);
 
   const onChangeUsername = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUsername(e.target.value);
@@ -40,6 +54,10 @@ export default function Login() {
 
   const onChangePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
+  };
+
+  const onChangeRememberMe = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setRememberMe(e.target.checked);
   };
 
   const onSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
@@ -52,6 +70,7 @@ export default function Login() {
     const params = new URLSearchParams();
     params.append("username", username);
     params.append("password", password);
+    params.append("remember-me", String(rememberMe));
 
     api
       .post("/v1/login", params, {
@@ -112,6 +131,15 @@ export default function Login() {
           />
           {isLoading && <SubmitBtnHoverMsg>Signing in...</SubmitBtnHoverMsg>}
         </SubmitBtnWrapper>
+        <CheckBoxWrapper>
+          <CheckBoxInput
+            type="checkbox"
+            id="rememberMe"
+            checked={rememberMe}
+            onChange={onChangeRememberMe}
+          />
+          <Label htmlFor="rememberMe">Remember Me</Label>
+        </CheckBoxWrapper>
       </Form>
       {errorMsg && <ErrorMsg>{errorMsg}</ErrorMsg>}
       <Switcher>
