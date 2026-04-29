@@ -42,8 +42,5 @@ export const AppRouter = createBrowserRouter([
       { path: "/signup", element: <Signup /> },
     ],
   },
-  {
-    path: "*",
-    element: <NotFoundRoute />,
-  },
+  { path: "*", element: <NotFoundRoute /> },
 ]);
