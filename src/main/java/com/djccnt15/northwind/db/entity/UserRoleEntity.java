@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Getter
@@ -23,6 +24,7 @@ public class UserRoleEntity extends BaseEntity {
     private String name;
     
     @OneToMany(mappedBy = "userRole", cascade = CascadeType.REMOVE)
+    @Builder.Default
     @ToString.Exclude
-    private Set<AppUserRoleEntity> appUserRole;
+    private Set<AppUserRoleEntity> appUserRole = new HashSet<>();
 }

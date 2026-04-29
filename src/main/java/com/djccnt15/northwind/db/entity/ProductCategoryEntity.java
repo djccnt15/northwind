@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Getter
@@ -30,6 +31,7 @@ public class ProductCategoryEntity extends BaseEntity {
     private String description;
     
     @OneToMany(mappedBy = "productCategory", cascade = CascadeType.REMOVE)
+    @Builder.Default
     @ToString.Exclude
-    private Set<ProductEntity> productEntitySet;
+    private Set<ProductEntity> productEntitySet = new HashSet<>();
 }

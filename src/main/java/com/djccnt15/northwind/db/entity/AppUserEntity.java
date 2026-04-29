@@ -7,6 +7,7 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.ColumnDefault;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Getter
@@ -35,6 +36,7 @@ public class AppUserEntity extends BaseEntity {
     private boolean isVerified = false;
     
     @OneToMany(mappedBy = "appUser", cascade = CascadeType.REMOVE)
+    @Builder.Default
     @ToString.Exclude
-    private Set<AppUserRoleEntity> appUserRole;
+    private Set<AppUserRoleEntity> appUserRole = new HashSet<>();
 }
