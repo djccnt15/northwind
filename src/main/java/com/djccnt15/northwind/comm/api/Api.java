@@ -55,4 +55,8 @@ public class Api<T> {
         api.result = Result.ERROR(statusCodeIfs, description);
         return api;
     }
+    
+    public static <T> Api<T> ERROR(StatusCodeIfs statusCodeIfs, String description, T data) {
+        return new Api<>(currentTimeMillis(), Result.ERROR(statusCodeIfs, description), data);
+    }
 }
