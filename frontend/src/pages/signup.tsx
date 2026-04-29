@@ -182,7 +182,9 @@ export default function Signup() {
             onChange={onChangeEmail}
             required
           />
-          <CheckEmailBtn onClick={onClickCheckEmail}>Check Email</CheckEmailBtn>
+          <CheckEmailBtn type="button" onClick={onClickCheckEmail}>
+            Check Email
+          </CheckEmailBtn>
         </EmailCheckWrapper>
         <Input
           type="password"
