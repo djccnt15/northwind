@@ -106,6 +106,8 @@ export default function Signup() {
       return;
     }
 
+    setIsLoading(true);
+
     api
       .get("/v1/check-email", { params: { email } })
       .then((res) => {
@@ -120,6 +122,9 @@ export default function Signup() {
           ? `Failed to check email. ${description}`
           : "Failed to check email. Please try again.";
         alert(message);
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   };
 
