@@ -53,9 +53,9 @@ public class UserService {
                 return new ApiException(SERVER_ERROR, "Please contact administrator");
             });
         var appUserRoleEntity = AppUserRoleEntity.builder()
-            .appUser(userEntity)
             .userRole(role)
             .build();
+        userEntity.addAppUserRole(appUserRoleEntity);
         appUserRoleRepo.save(appUserRoleEntity);
     }
 }

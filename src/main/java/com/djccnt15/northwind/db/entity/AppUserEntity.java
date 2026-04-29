@@ -39,4 +39,18 @@ public class AppUserEntity extends BaseEntity {
     @Builder.Default
     @ToString.Exclude
     private Set<AppUserRoleEntity> appUserRole = new HashSet<>();
+
+    public void addAppUserRole(AppUserRoleEntity roleLink) {
+        if (roleLink == null) return;
+        appUserRole.add(roleLink);
+        roleLink.setAppUser(this);
+    }
+
+    public void removeAppUserRole(AppUserRoleEntity roleLink) {
+        if (roleLink == null) return;
+        appUserRole.remove(roleLink);
+        if (roleLink.getAppUser() == this) {
+            roleLink.setAppUser(null);
+        }
+    }
 }
