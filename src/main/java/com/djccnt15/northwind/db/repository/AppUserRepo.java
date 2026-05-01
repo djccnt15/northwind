@@ -13,5 +13,9 @@ public interface AppUserRepo extends JpaRepository<AppUserEntity, Long> {
     
     Optional<AppUserEntity> findSimpleFirstByUsername(String username);
     
+    Optional<AppUserEntity> findFirstByUsernameAndIdNot(String username, Long id);
+    
     Optional<AppUserEntity> findFirstByEmail(String email);
+    
+    Optional<AppUserEntity> findFirstByEmailAndIdNot(String email, Long id);
 }

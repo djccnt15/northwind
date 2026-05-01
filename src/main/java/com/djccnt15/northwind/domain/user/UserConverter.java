@@ -10,6 +10,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.Collections;
+import java.util.Optional;
+
+import static com.djccnt15.northwind.util.UserUtil.getRoleName;
+
 @Slf4j
 @Converter
 @RequiredArgsConstructor
@@ -24,6 +29,19 @@ public class UserConverter {
             .email(userSession.getEmail())
             .authorities(userSession.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority).toList())
+            .build();
+    }
+    
+    public UserInfoRes toResponse(AppUserEntity entity) {
+        var authorities = Optional.ofNullable(entity.getAppUserRole())
+            .orElse(Collections.emptySet()).stream()
+            .map(it -> getRoleName(it.getUserRole().getName())).toList();
+        
+        return UserInfoRes.builder()
+            .id(entity.getId())
+            .username(entity.getUsername())
+            .email(entity.getEmail())
+            .authorities(authorities)
             .build();
     }
     

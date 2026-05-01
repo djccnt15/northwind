@@ -70,3 +70,11 @@ export const ModalFadeInAnimation = css`
     }
   }
 `;
+
+export const Title = styled.h1`
+  font-size: 24px;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 20px;
+  margin-bottom: 10px;
+`;

@@ -26,7 +26,9 @@ public class UserApiController {
     }
     
     @PostMapping("/signup")
-    public ResponseEntity<Api<?>> createUser(@Validated @RequestBody SignupReq request) {
+    public ResponseEntity<Api<?>> createUser(
+        @Validated(SignupReq.CreateCheck.class) @RequestBody SignupReq request
+    ) {
         userBusiness.createUser(request);
         return ResponseEntity.ok(Api.CREATED(null));
     }

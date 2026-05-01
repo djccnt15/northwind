@@ -8,15 +8,31 @@ import lombok.Data;
 @AllArgsConstructor
 public class SignupReq {
     
-    @NotBlank(message = "username is required value")
+    public interface CreateCheck {}
+    public interface ProfileUpdate {}
+    public interface PasswordUpdate {}
+    
+    @NotBlank(
+        message = "username is required value",
+        groups = {CreateCheck.class, ProfileUpdate.class}
+    )
     private String username;
     
-    @NotBlank(message = "email is required value")
+    @NotBlank(
+        message = "email is required value",
+        groups = {CreateCheck.class, ProfileUpdate.class}
+    )
     private String email;
     
-    @NotBlank(message = "password is required value")
+    @NotBlank(
+        message = "password is required value",
+        groups = {CreateCheck.class, PasswordUpdate.class}
+    )
     private String password;
     
-    @NotBlank(message = "confirmPassword is required value")
+    @NotBlank(
+        message = "confirmPassword is required value",
+        groups = {CreateCheck.class, PasswordUpdate.class}
+    )
     private String confirmPassword;
 }

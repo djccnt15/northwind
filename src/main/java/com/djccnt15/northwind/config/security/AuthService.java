@@ -1,7 +1,6 @@
 package com.djccnt15.northwind.config.security;
 
 import com.djccnt15.northwind.config.security.model.UserSession;
-import com.djccnt15.northwind.db.entity.AppUserRoleEntity;
 import com.djccnt15.northwind.db.repository.AppUserRepo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +12,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.Optional;
+
+import static com.djccnt15.northwind.util.UserUtil.getRoleName;
 
 @Slf4j
 @Service
@@ -29,7 +30,7 @@ public class AuthService implements UserDetailsService {
         var authorities = Optional.ofNullable(entity.getAppUserRole())
             .orElse(Collections.emptySet())
             .stream()
-            .map(AuthService::getRoleName)
+            .map(it -> getRoleName(it.getUserRole().getName()))
             .map(SimpleGrantedAuthority::new).toList();
         
         return UserSession.builder()
@@ -39,17 +40,5 @@ public class AuthService implements UserDetailsService {
             .email(entity.getEmail())
             .authorities(authorities)
             .build();
-    }
-    
-    private static String getRoleName(AppUserRoleEntity role) {
-        if (role == null || role.getUserRole() == null) {
-            return "user";
-        }
-        var roleName = role.getUserRole().getName();
-        return switch (roleName) {
-            case "superadmin", "admin" -> "admin";
-            case null -> "user";
-            default -> roleName;
-        };
     }
 }

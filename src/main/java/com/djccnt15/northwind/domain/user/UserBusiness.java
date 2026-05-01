@@ -32,4 +32,30 @@ public class UserBusiness {
         var userEntity = userService.createUser(request);
         userService.setUserBasicRole(userEntity);
     }
+    
+    public UserInfoRes updateProfile(
+        UserSession userSession,
+        Long userId,
+        SignupReq request
+    ) {
+        userService.validateUserId(userSession, userId);
+        userService.validateEmailNotExists(request.getEmail(), userSession.getId());
+        userService.validateUsernameNotExists(request.getUsername(), userSession.getId());
+        var userEntity = userService.updateProfile(userSession.getId(), request);
+        userSession.setUsername(userEntity.getUsername());
+        userSession.setEmail(userEntity.getEmail());
+        return userConverter.toResponse(userEntity);
+    }
+    
+    public UserInfoRes updatePassword(
+        UserSession userSession,
+        Long userId,
+        SignupReq request
+    ) {
+        userService.validateUserId(userSession, userId);
+        userService.validatePasswordsMatch(request.getPassword(), request.getConfirmPassword());
+        var userEntity = userService.updatePassword(userSession.getId(), request.getPassword());
+        userSession.setPassword(userEntity.getPassword());
+        return userConverter.toResponse(userEntity);
+    }
 }
