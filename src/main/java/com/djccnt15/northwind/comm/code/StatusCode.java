@@ -15,7 +15,10 @@ public enum StatusCode implements StatusCodeIfs {
     FORBIDDEN(HttpStatus.FORBIDDEN, 403, "Forbidden"),
     NOT_FOUND(HttpStatus.NOT_FOUND, 404, "Not Found"),
     SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, 500, "Internal Server Error"),
-    NULL_POINT(HttpStatus.INTERNAL_SERVER_ERROR, 512, "Null Point");
+    NULL_POINT(HttpStatus.INTERNAL_SERVER_ERROR, 512, "Null Point"),
+    
+    VALIDATION_ERROR(HttpStatus.BAD_REQUEST, 1400, "Validation Error"),
+    ;
     
     private final HttpStatus httpStatusCode;
     private final Integer statusCode;

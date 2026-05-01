@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.HashMap;
 
-import static com.djccnt15.northwind.comm.code.StatusCode.BAD_REQUEST;
+import static com.djccnt15.northwind.comm.code.StatusCode.VALIDATION_ERROR;
 
 @Slf4j
 @RestControllerAdvice
@@ -42,7 +42,7 @@ public class ApiExceptionHandler {
         });
         
         return ResponseEntity
-            .status(BAD_REQUEST.getHttpStatusCode())
-            .body(Api.ERROR(BAD_REQUEST, "Validation Failed", errors));
+            .status(VALIDATION_ERROR.getHttpStatusCode())
+            .body(Api.ERROR(VALIDATION_ERROR, "Validation Failed", errors));
     }
 }
