@@ -42,12 +42,12 @@ public class AuthPublicApiController {
     }
     
     @GetMapping("/unauthorized")
-    public ResponseEntity<?> unauthorized() {
+    public ResponseEntity<Api<?>> unauthorized() {
         throw new ApiException(StatusCode.UNAUTHORIZED, "Authentication is required");
     }
     
     @GetMapping("/forbidden")
-    public ResponseEntity<?> forbidden() {
+    public ResponseEntity<Api<?>> forbidden() {
         throw new ApiException(StatusCode.FORBIDDEN, "Access denied");
     }
 }

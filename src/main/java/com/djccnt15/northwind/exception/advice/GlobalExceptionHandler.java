@@ -11,11 +11,11 @@ import static com.djccnt15.northwind.comm.code.StatusCode.SERVER_ERROR;
 
 @Slf4j
 @RestControllerAdvice
-@Order(value = Integer.MAX_VALUE)  // max value is explicit of default
+@Order(Integer.MAX_VALUE)  // max value is explicit of default
 public class GlobalExceptionHandler {
     
-    @ExceptionHandler(value = Exception.class)
-    public ResponseEntity<Api<Object>> exception(Exception exception) {
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<Api<?>> exception(Exception exception) {
         log.error("", exception);
         
         return ResponseEntity

@@ -15,12 +15,12 @@ import static com.djccnt15.northwind.constants.RouteConst.PUBLIC_API_V1;
 public class HealthApiController {
     
     @GetMapping("/health")
-    public ResponseEntity<Api<?>> health() {
+    public ResponseEntity<Api<Integer>> health() {
         return ResponseEntity.ok(Api.OK(1));
     }
     
     @GetMapping("/ping")
-    public ResponseEntity<Api<?>> ping() {
+    public ResponseEntity<Api<String>> ping() {
         return ResponseEntity.ok(Api.OK("pong"));
     }
 }

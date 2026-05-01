@@ -24,12 +24,14 @@ public class AuthApiController {
     private final UserBusiness business;
     
     @GetMapping("/check-session")
-    public ResponseEntity<Api<?>> checkSession(@AuthenticationPrincipal UserSession userSession) {
-        return ResponseEntity.ok(Api.OK(business.getUserInfo(userSession)));
+    public ResponseEntity<Api<UserInfoRes>> checkSession(@AuthenticationPrincipal UserSession userSession) {
+        var response = business.getUserInfo(userSession);
+        return ResponseEntity.ok(Api.OK(response));
     }
     
     @PostMapping("/login/success")
     public ResponseEntity<Api<UserInfoRes>> loginSuccess(@AuthenticationPrincipal UserSession userSession) {
-        return ResponseEntity.ok(Api.OK(business.getUserInfo(userSession)));
+        var response = business.getUserInfo(userSession);
+        return ResponseEntity.ok(Api.OK(response));
     }
 }

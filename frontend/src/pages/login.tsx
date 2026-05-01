@@ -52,14 +52,12 @@ export default function Login() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const [username, setUsername] = useState<string>(() => {
-    const rememberedId = localStorage.getItem("rememberedId");
-    return rememberedId || "";
+    return localStorage.getItem("rememberedId") || "";
   });
   const [password, setPassword] = useState<string>("");
   const [rememberMe, setRememberMe] = useState<boolean>(false);
   const [rememberId, setRememberId] = useState<boolean>(() => {
-    const rememberedId = localStorage.getItem("rememberedId");
-    return !!rememberedId;
+    return !!localStorage.getItem("rememberedId");
   });
 
   const onChangeUsername = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -132,7 +130,7 @@ export default function Login() {
       <Form onSubmit={onSubmit}>
         <Input
           type="text"
-          placeholder="Username"
+          placeholder="ID"
           value={username}
           onChange={onChangeUsername}
           required

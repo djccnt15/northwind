@@ -40,8 +40,8 @@ public class UserService {
             .ifPresent(u -> {throw new ApiException(BAD_REQUEST, "Username already exists");});
     }
     
-    public AppUserEntity createUser(SignupReq req) {
-        var userEntity = userConverter.toEntity(req);
+    public AppUserEntity createUser(SignupReq request) {
+        var userEntity = userConverter.toEntity(request);
         userRepo.save(userEntity);
         return userEntity;
     }
@@ -52,6 +52,7 @@ public class UserService {
                 log.error("Default role USER not found in database");
                 return new ApiException(SERVER_ERROR, "Please contact administrator");
             });
+        
         var appUserRoleEntity = AppUserRoleEntity.builder()
             .userRole(role)
             .build();

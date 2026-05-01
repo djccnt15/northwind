@@ -132,6 +132,11 @@ export default function Signup() {
     e.preventDefault();
     if (isLoading) return;
 
+    if (username.trim() === "" || email.trim() === "") {
+      alert("Username and Email cannot be empty.");
+      return;
+    }
+
     if (password !== confirmPassword) {
       alert("Password and confirm password do not match.");
       return;
@@ -174,7 +179,7 @@ export default function Signup() {
       <Form onSubmit={onSubmit}>
         <Input
           type="text"
-          placeholder="Username"
+          placeholder="ID"
           value={username}
           onChange={onChangeUsername}
           required

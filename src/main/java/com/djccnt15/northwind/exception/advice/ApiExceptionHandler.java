@@ -16,11 +16,11 @@ import static com.djccnt15.northwind.comm.code.StatusCode.BAD_REQUEST;
 
 @Slf4j
 @RestControllerAdvice
-@Order(value = Integer.MIN_VALUE)
+@Order(Integer.MIN_VALUE)
 public class ApiExceptionHandler {
     
-    @ExceptionHandler(value = ApiException.class)
-    public ResponseEntity<Api<Object>> apiException(ApiException apiException) {
+    @ExceptionHandler(ApiException.class)
+    public ResponseEntity<Api<?>> apiException(ApiException apiException) {
         log.error("", apiException);
         
         var errorCode = apiException.getStatusCode();
@@ -35,7 +35,7 @@ public class ApiExceptionHandler {
         log.error("", ex);
         
         var errors = new HashMap<String, String>();
-        ex.getBindingResult().getAllErrors().forEach((error) -> {
+        ex.getBindingResult().getAllErrors().forEach(error -> {
             var fieldName = ((FieldError) error).getField();
             var errorMessage = error.getDefaultMessage(); // 여기에 커스텀 메시지가 들어감
             errors.put(fieldName, errorMessage);
