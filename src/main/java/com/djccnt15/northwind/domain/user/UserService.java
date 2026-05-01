@@ -50,7 +50,7 @@ public class UserService {
     }
     
     public void validateUsernameNotExists(String username) {
-        userRepo.findSimpleFirstByUsername(username)
+        userRepo.findFirstByUsername(username)
             .ifPresent(u -> {throw new ApiException(BAD_REQUEST, "Username already exists");});
     }
     

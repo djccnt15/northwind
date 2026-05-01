@@ -9,9 +9,9 @@ import java.util.Optional;
 public interface AppUserRepo extends JpaRepository<AppUserEntity, Long> {
     
     @EntityGraph(attributePaths = {"appUserRole", "appUserRole.userRole"})
-    Optional<AppUserEntity> findFirstByUsername(String username);
+    Optional<AppUserEntity> findWithRoleFirstByUsername(String username);
     
-    Optional<AppUserEntity> findSimpleFirstByUsername(String username);
+    Optional<AppUserEntity> findFirstByUsername(String username);
     
     Optional<AppUserEntity> findFirstByUsernameAndIdNot(String username, Long id);
     

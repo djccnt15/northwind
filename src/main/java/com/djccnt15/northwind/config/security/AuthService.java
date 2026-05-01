@@ -24,7 +24,7 @@ public class AuthService implements UserDetailsService {
     
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        var entity = repository.findFirstByUsername(username)
+        var entity = repository.findWithRoleFirstByUsername(username)
             .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
         
         var authorities = Optional.ofNullable(entity.getAppUserRole())
