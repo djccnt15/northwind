@@ -118,7 +118,7 @@ export default function Layout() {
             </Link>
           </NavItem>
         )}
-        {user?.authorities.includes("admin") && (
+        {user?.authorities.includes("ADMIN") && (
           <NavItem>
             <Link to="/admin/user">
               <svg

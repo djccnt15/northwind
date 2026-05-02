@@ -7,8 +7,8 @@ public class UserUtil {
     
     public static String getRoleName(String role) {
         return switch (role) {
-            case "superadmin", "admin" -> "admin";
-            case null -> "user";
+            case "SUPERADMIN", "ADMIN" -> "ADMIN";
+            case null -> "USER";
             default -> role;
         };
     }
