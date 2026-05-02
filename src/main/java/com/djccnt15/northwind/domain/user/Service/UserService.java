@@ -11,8 +11,12 @@ import com.djccnt15.northwind.domain.user.model.SignupReq;
 import com.djccnt15.northwind.exception.exceptions.ApiException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 import static com.djccnt15.northwind.comm.code.StatusCode.BAD_REQUEST;
 import static com.djccnt15.northwind.comm.code.StatusCode.SERVER_ERROR;
@@ -103,5 +107,11 @@ public class UserService {
         userEntity.setPassword(encoder.encode(password));
         userRepo.save(userEntity);
         return userEntity;
+    }
+    
+    public List<AppUserEntity> getAllUsers(int page, int size, String kw) {
+        var pageable = PageRequest.of(page, size, Sort.by("id"));
+        var keyword = "%%%s%%".formatted(kw);
+        return userRepo.findByUsernameLikeOrEmailLike(pageable, keyword, keyword);
     }
 }
