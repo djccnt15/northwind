@@ -1,4 +1,4 @@
-package com.djccnt15.northwind.domain.user;
+package com.djccnt15.northwind.domain.user.Service;
 
 import com.djccnt15.northwind.config.security.model.UserSession;
 import com.djccnt15.northwind.db.entity.AppUserEntity;
@@ -6,6 +6,7 @@ import com.djccnt15.northwind.db.entity.AppUserRoleEntity;
 import com.djccnt15.northwind.db.repository.AppUserRepo;
 import com.djccnt15.northwind.db.repository.AppUserRoleRepo;
 import com.djccnt15.northwind.db.repository.UserRoleRepo;
+import com.djccnt15.northwind.domain.user.converter.UserConverter;
 import com.djccnt15.northwind.domain.user.model.SignupReq;
 import com.djccnt15.northwind.exception.exceptions.ApiException;
 import lombok.RequiredArgsConstructor;

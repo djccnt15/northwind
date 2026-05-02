@@ -2,7 +2,7 @@ package com.djccnt15.northwind.domain.auth;
 
 import com.djccnt15.northwind.comm.api.Api;
 import com.djccnt15.northwind.config.security.model.UserSession;
-import com.djccnt15.northwind.domain.user.UserBusiness;
+import com.djccnt15.northwind.domain.user.business.UserBusiness;
 import com.djccnt15.northwind.domain.user.model.UserInfoRes;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

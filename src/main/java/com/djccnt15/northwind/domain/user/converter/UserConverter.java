@@ -1,4 +1,4 @@
-package com.djccnt15.northwind.domain.user;
+package com.djccnt15.northwind.domain.user.converter;
 
 import com.djccnt15.northwind.annotation.Converter;
 import com.djccnt15.northwind.config.security.model.UserSession;
