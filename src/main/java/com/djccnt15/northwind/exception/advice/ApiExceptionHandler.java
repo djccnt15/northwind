@@ -5,6 +5,8 @@ import com.djccnt15.northwind.exception.exceptions.ApiException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.HashMap;
 
+import static com.djccnt15.northwind.comm.code.StatusCode.FORBIDDEN;
 import static com.djccnt15.northwind.comm.code.StatusCode.VALIDATION_ERROR;
 
 @Slf4j
@@ -28,6 +31,15 @@ public class ApiExceptionHandler {
         return ResponseEntity
             .status(errorCode.getHttpStatusCode())
             .body(Api.ERROR(errorCode, apiException.getDescription()));
+    }
+    
+    @ExceptionHandler({AccessDeniedException.class, AuthorizationDeniedException.class})
+    public ResponseEntity<Api<?>> accessDeniedException(AccessDeniedException exception) {
+        log.error("", exception);
+        
+        return ResponseEntity
+            .status(FORBIDDEN.getHttpStatusCode())
+            .body(Api.ERROR(FORBIDDEN, "Access Denied"));
     }
     
     @ExceptionHandler(MethodArgumentNotValidException.class)
