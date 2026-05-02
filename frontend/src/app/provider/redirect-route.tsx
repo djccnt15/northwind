@@ -17,7 +17,7 @@ export function ProtectedRoute({ children }: ChildNodeIfs) {
 export function AdminRoute({ children }: ChildNodeIfs) {
   const { user } = useAuth();
 
-  if (!user || !user.authorities.includes("admin")) {
+  if (!user || !user.authorities.includes("ADMIN")) {
     return <Navigate to="/" replace />;
   }
 

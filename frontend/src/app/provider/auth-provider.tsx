@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import type { ChildNodeIfs } from "../../entities/app/app";
-import type { UserIfs } from "../../entities/app/auth";
+import type { UserIfs } from "../../entities/app/user";
 import { privateApi } from "../../shared/api";
 import { AuthContext } from "../../shared/auth/auth-context";
 import type { ApiIfs } from "../../entities/app/api";

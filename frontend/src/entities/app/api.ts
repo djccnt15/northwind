@@ -4,8 +4,13 @@ interface ResultIfs {
   description: string;
 }
 
-export interface ApiIfs {
+export interface ListCountIfs<T = Record<string, unknown>> {
+  totalCounts: number;
+  list: T[];
+}
+
+export interface ApiIfs<TBody = Record<string, unknown>> {
   serverTime: number;
   result: ResultIfs;
-  body: Record<string, unknown> | null;
+  body: TBody | null;
 }
