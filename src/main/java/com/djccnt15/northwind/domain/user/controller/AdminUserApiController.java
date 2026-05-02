@@ -2,6 +2,8 @@ package com.djccnt15.northwind.domain.user.controller;
 
 import com.djccnt15.northwind.comm.api.Api;
 import com.djccnt15.northwind.domain.user.business.AdminUserBusiness;
+import com.djccnt15.northwind.domain.model.ListCountRes;
+import com.djccnt15.northwind.domain.user.model.UserInfoRes;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -23,12 +25,12 @@ public class AdminUserApiController {
     private final AdminUserBusiness business;
     
     @GetMapping("/users")
-    public ResponseEntity<Api<?>> getAllUsers(
+    public ResponseEntity<Api<ListCountRes<UserInfoRes>>> getAllUsers(
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "10") int size,
-        @RequestParam(defaultValue = "") String kw
+        @RequestParam(defaultValue = "") String keyword
     ) {
-        var response = business.getAllUsers(page, size, kw);
+        var response = business.getAllUsers(page, size, keyword);
         return ResponseEntity.ok(Api.OK(response));
     }
 }
