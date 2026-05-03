@@ -69,6 +69,25 @@ const initialState = {
   },
 };
 
+const onEdit = async (updatedRow: UserIfs, originalRow: UserIfs) => {
+  return privateApi
+    .patch(`/v1/admin/user/${originalRow.id}/profile`, {
+      username: updatedRow.username,
+      email: updatedRow.email,
+    })
+    .then((res) => {
+      const data: ApiIfs<UserIfs> = res.data;
+      return data.body;
+    })
+    .catch((err) => {
+      const data: ApiIfs<null> = err.response?.data;
+      const message = data?.result?.description || "Unknown error";
+      console.error("Failed to update user:", message);
+      alert(`Failed to update user: ${message}`);
+      return originalRow;
+    });
+};
+
 export default function AdminUser() {
   const [isLoading, setIsLoading] = useState(false);
 
@@ -76,7 +95,7 @@ export default function AdminUser() {
     getRows: async (params: GridGetRowsParams) => {
       setIsLoading(true);
       const res = await privateApi
-        .get("/v1/admin/user/users", {
+        .get("/v1/admin/user/all", {
           params: {
             page: params?.paginationModel?.page || 0,
             size: params?.paginationModel?.pageSize || 10,
@@ -110,6 +129,10 @@ export default function AdminUser() {
         dataSource={customDataSource}
         loading={isLoading}
         initialState={initialState}
+        editMode="row"
+        processRowUpdate={(updatedRow, originalRow) =>
+          onEdit(updatedRow, originalRow)
+        }
         pagination
         pageSizeOptions={[10, 20, 50, 100]}
         showToolbar
