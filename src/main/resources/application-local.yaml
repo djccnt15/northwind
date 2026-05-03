@@ -1,0 +1,20 @@
+server:
+  servlet.session.timeout: 2h  # default: 30m
+  port: 8080
+  address: 127.0.0.1
+logging:
+  logback.rollingpolicy:
+    max-history: 30
+    max-file-size: 100MB
+    total-size-cap: 300MB
+    file-name-pattern: ${LOG_FILE}.%d{yyyy-MM-dd}-%i.log
+  file.name: D:\log\spring\logFile.log
+  pattern.dateformat: yyyy-MM-dd HH:mm:ss.SSS,Asia/Seoul
+springdoc.swagger-ui:
+  docExpansion: none
+  operationsSorter: alpha
+  tagsSorter: alpha
+app:
+  remember-me:
+    key: northwind-remember-me-key
+    tokenValiditySeconds: 1209600  # 14 days

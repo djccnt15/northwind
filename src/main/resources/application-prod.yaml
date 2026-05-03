@@ -1,0 +1,17 @@
+server:
+  servlet.session.timeout: 30m  # default: 30m
+  port: 80  # TODO. change to 443 for production https
+  address: 0.0.0.0
+spring:
+  jpa:
+    hibernate.ddl-auto: validate
+    properties.hibernate.dialect: org.hibernate.dialect.MySQL8Dialect
+  datasource:  # prod DB
+    url: { DB_URL }
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: { username }
+    password: { password }
+app:
+  remember-me:
+    key: { remember-me-key }
+    tokenValiditySeconds: 604800  # 7 days
