@@ -28,17 +28,20 @@ public class UserCreateTest {
     @Test
     void createUserRole() {
         var superAdmin = UserRoleEntity.builder()
-            .name("superadmin")
+            .name("SUPERADMIN")
             .build();
         var admin = UserRoleEntity.builder()
-            .name("admin")
+            .name("ADMIN")
+            .build();
+        var manager = UserRoleEntity.builder()
+            .name("MANAGER")
             .build();
         var user = UserRoleEntity.builder()
-            .name("user")
+            .name("USER")
             .build();
-        userRoleRepo.saveAll(List.of(superAdmin, admin, user));
+        userRoleRepo.saveAll(List.of(superAdmin, admin, manager, user));
     }
-    
+
     @Test
     void createAdmin() {
         var superAdmin = AppUserEntity.builder()
@@ -48,12 +51,31 @@ public class UserCreateTest {
             .isVerified(true)
             .build();
         userRepo.save(superAdmin);
-        
-        var userRole = userRoleRepo.findFirstByName("superadmin").orElseThrow();
+
+        var userRole = userRoleRepo.findFirstByName("SUPERADMIN").orElseThrow();
         var appUserRole = AppUserRoleEntity.builder()
             .appUser(superAdmin)
             .userRole(userRole)
             .build();
         appUserRoleRepo.save(appUserRole);
+    }
+
+    @Test
+    void createTestUsers() {
+        var userRole = userRoleRepo.findFirstByName("USER").orElseThrow();
+        for (int i = 0; i < 300; i++) {
+            var user = AppUserEntity.builder()
+                .username("user%s".formatted(i))
+                .password(encoder.encode("user"))
+                .email("user%s@user.com".formatted(i))
+                .isVerified(true)
+                .build();
+            var appUserRole = AppUserRoleEntity.builder()
+                .appUser(user)
+                .userRole(userRole)
+                .build();
+            userRepo.save(user);
+            appUserRoleRepo.save(appUserRole);
+        }
     }
 }
