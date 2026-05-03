@@ -1,0 +1,9 @@
+spring:
+  jpa:
+    hibernate.ddl-auto: validate
+    properties.hibernate.dialect: org.hibernate.dialect.MySQL8Dialect
+  datasource:  # local Dev DB
+    url: jdbc:mysql://localhost:3306/northwind
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: { username }
+    password: { password }

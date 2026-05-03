@@ -3,27 +3,7 @@ spring:
   profiles.active: test
   jpa:
     # show-sql: true
-    hibernate.ddl-auto: update
     properties.hibernate:
       format_sql: true
       highlight_sql: true
       use_sql_comment: true
-      dialect: org.hibernate.dialect.H2Dialect
-      # dialect: org.hibernate.dialect.MySQL8Dialect
-    defer-datasource-initialization: true  # delays running `data.sql` after create JPA entity tables
-  # DATABASE
-  datasource:
-    # test DB
-    url: jdbc:h2:mem:test;DB_CLOSE_DELAY=-1
-    driver-class-name: org.h2.Driver
-    username: sa
-    password:
-    # local Dev DB
-    # url: jdbc:mysql://localhost:3306/northwind
-    # driver-class-name: com.mysql.cj.jdbc.Driver
-    # username: { username }
-    # password: { password }
-  sql.init:  # run `schema.sql`, `data.sql`
-    mode: always
-    platform: h2  # runs `schema-{platform}.sql`, `data-{platform}.sql` if exists
-    # data-locations: classpath:data-dev.sql  # point `data.sql` by path
