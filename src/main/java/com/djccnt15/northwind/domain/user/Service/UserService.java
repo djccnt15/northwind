@@ -28,8 +28,6 @@ public class UserService {
     
     private final UserConverter userConverter;
     private final AppUserRepo userRepo;
-    private final UserRoleRepo userRoleRepo;
-    private final AppUserRoleRepo appUserRoleRepo;
     private final PasswordEncoder encoder;
     
     public void validateUserId(UserSession userSession, Long userId) {
@@ -70,43 +68,24 @@ public class UserService {
         return userEntity;
     }
     
-    public void setUserBasicRole(AppUserEntity userEntity) {
-        var role = userRoleRepo.findFirstByName("USER")
-            .orElseThrow(() -> {
-                log.error("Default role USER not found in database");
-                return new ApiException(SERVER_ERROR, "Please contact administrator");
-            });
-        
-        var appUserRoleEntity = AppUserRoleEntity.builder()
-            .userRole(role)
-            .build();
-        userEntity.addAppUserRole(appUserRoleEntity);
-        appUserRoleRepo.save(appUserRoleEntity);
+    public AppUserEntity getUser(Long userId) {
+        return userRepo.findById(userId).orElseThrow(() -> {
+            log.error("User with id {} not found", userId);
+            return new ApiException(BAD_REQUEST, "User not found");
+        });
     }
     
-    public AppUserEntity updateProfile(Long userId, SignupReq request) {
-        var userEntity = userRepo.findById(userId)
-            .orElseThrow(() -> {
-                log.error("User with id {} not found", userId);
-                return new ApiException(BAD_REQUEST, "User not found");
-            });
-        
-        userEntity.setUsername(request.getUsername());
-        userEntity.setEmail(request.getEmail());
-        userRepo.save(userEntity);
-        return userEntity;
+    public AppUserEntity updateProfile(AppUserEntity entity, SignupReq request) {
+        entity.setUsername(request.getUsername());
+        entity.setEmail(request.getEmail());
+        userRepo.save(entity);
+        return entity;
     }
     
-    public AppUserEntity updatePassword(Long userId, String password) {
-        var userEntity = userRepo.findById(userId)
-            .orElseThrow(() -> {
-                log.error("User with id {} not found", userId);
-                return new ApiException(BAD_REQUEST, "User not found");
-            });
-        
-        userEntity.setPassword(encoder.encode(password));
-        userRepo.save(userEntity);
-        return userEntity;
+    public AppUserEntity updatePassword(AppUserEntity entity, String password) {
+        entity.setPassword(encoder.encode(password));
+        userRepo.save(entity);
+        return entity;
     }
     
     public List<AppUserEntity> getAllUsers(int page, int size, String keyword) {

@@ -3,6 +3,7 @@ package com.djccnt15.northwind.domain.user.business;
 import com.djccnt15.northwind.annotation.Business;
 import com.djccnt15.northwind.config.security.model.UserSession;
 import com.djccnt15.northwind.domain.user.converter.UserConverter;
+import com.djccnt15.northwind.domain.user.Service.UserRoleService;
 import com.djccnt15.northwind.domain.user.Service.UserService;
 import com.djccnt15.northwind.domain.user.model.SignupReq;
 import com.djccnt15.northwind.domain.user.model.UserInfoRes;
@@ -17,6 +18,7 @@ public class UserBusiness {
     
     private final UserConverter userConverter;
     private final UserService userService;
+    private final UserRoleService userRoleService;
     
     public UserInfoRes getUserInfo(UserSession userSession) {
         return userConverter.toResponse(userSession);
@@ -27,12 +29,14 @@ public class UserBusiness {
     }
     
     @Transactional
-    public void createUser(SignupReq request) {
+    public UserInfoRes createUser(SignupReq request) {
         userService.validatePasswordsMatch(request.getPassword(), request.getConfirmPassword());
         userService.validateEmailNotExists(request.getEmail());
         userService.validateUsernameNotExists(request.getUsername());
         var userEntity = userService.createUser(request);
-        userService.setUserBasicRole(userEntity);
+        var userRoleEntity = userRoleService.getUserRole("USER");
+        userRoleService.assignRoleToUser(userEntity, userRoleEntity);
+        return userConverter.toResponse(userEntity);
     }
     
     public UserInfoRes updateProfile(
@@ -43,10 +47,13 @@ public class UserBusiness {
         userService.validateUserId(userSession, userId);
         userService.validateEmailNotExists(request.getEmail(), userSession.getId());
         userService.validateUsernameNotExists(request.getUsername(), userSession.getId());
-        var userEntity = userService.updateProfile(userSession.getId(), request);
-        userSession.setUsername(userEntity.getUsername());
-        userSession.setEmail(userEntity.getEmail());
-        return userConverter.toResponse(userEntity);
+        
+        var entity = userService.getUser(userSession.getId());
+        userService.updateProfile(entity, request);
+        
+        userSession.setUsername(entity.getUsername());
+        userSession.setEmail(entity.getEmail());
+        return userConverter.toResponse(entity);
     }
     
     public UserInfoRes updatePassword(
@@ -56,8 +63,11 @@ public class UserBusiness {
     ) {
         userService.validateUserId(userSession, userId);
         userService.validatePasswordsMatch(request.getPassword(), request.getConfirmPassword());
-        var userEntity = userService.updatePassword(userSession.getId(), request.getPassword());
-        userSession.setPassword(userEntity.getPassword());
-        return userConverter.toResponse(userEntity);
+        
+        var entity = userService.getUser(userSession.getId());
+        userService.updatePassword(entity, request.getPassword());
+        
+        userSession.setPassword(entity.getPassword());
+        return userConverter.toResponse(entity);
     }
 }

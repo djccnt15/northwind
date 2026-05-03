@@ -3,6 +3,7 @@ package com.djccnt15.northwind.domain.user.controller;
 import com.djccnt15.northwind.comm.api.Api;
 import com.djccnt15.northwind.domain.user.business.UserBusiness;
 import com.djccnt15.northwind.domain.user.model.SignupReq;
+import com.djccnt15.northwind.domain.user.model.UserInfoRes;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -26,10 +27,10 @@ public class UserApiController {
     }
     
     @PostMapping("/signup")
-    public ResponseEntity<Api<?>> createUser(
+    public ResponseEntity<Api<UserInfoRes>> createUser(
         @Validated(SignupReq.CreateCheck.class) @RequestBody SignupReq request
     ) {
-        userBusiness.createUser(request);
-        return ResponseEntity.ok(Api.CREATED(null));
+        var response = userBusiness.createUser(request);
+        return ResponseEntity.ok(Api.CREATED(response));
     }
 }
