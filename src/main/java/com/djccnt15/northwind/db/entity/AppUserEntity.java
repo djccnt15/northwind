@@ -37,7 +37,7 @@ public class AppUserEntity extends BaseEntity {
     
     @OneToMany(mappedBy = "appUser", cascade = CascadeType.REMOVE)
     @Builder.Default
-    @ToString.Exclude
+    @ToString.Exclude @EqualsAndHashCode.Exclude
     private Set<AppUserRoleEntity> appUserRole = new HashSet<>();
 
     public void addAppUserRole(AppUserRoleEntity roleLink) {

@@ -17,10 +17,12 @@ public class AppUserRoleEntity {
     @Id
     @JoinColumn(name = "app_user_id")
     @ManyToOne(fetch = FetchType.LAZY)
+    @ToString.Exclude @EqualsAndHashCode.Exclude
     private AppUserEntity appUser;
     
     @Id
     @JoinColumn(name = "user_role_id")
     @ManyToOne(fetch = FetchType.LAZY)
+    @ToString.Exclude @EqualsAndHashCode.Exclude
     private UserRoleEntity userRole;
 }

@@ -19,12 +19,12 @@ import java.util.Set;
 @SuperBuilder
 public class UserRoleEntity extends BaseEntity {
     
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     @NotNull
     private String name;
     
     @OneToMany(mappedBy = "userRole", cascade = CascadeType.REMOVE)
     @Builder.Default
-    @ToString.Exclude
+    @ToString.Exclude @EqualsAndHashCode.Exclude
     private Set<AppUserRoleEntity> appUserRole = new HashSet<>();
 }

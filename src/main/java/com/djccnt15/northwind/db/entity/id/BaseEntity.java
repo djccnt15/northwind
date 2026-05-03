@@ -26,5 +26,6 @@ public abstract class BaseEntity {
     
     @Column(insertable = false)
     @UpdateTimestamp
+    @EqualsAndHashCode.Exclude
     private LocalDateTime updatedAt;
 }
