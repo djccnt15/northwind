@@ -4,3 +4,8 @@ export const dataGridInitialState = {
     rowCount: 0,
   },
 };
+
+export const defaultColOptions = {
+  sortable: false,
+  filterable: false,
+};

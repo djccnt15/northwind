@@ -58,12 +58,14 @@ const StyledTextField = styled(TextField)<{
 }));
 
 type QuickToolbarProps = GridToolbarProps & {
+  toolbarName?: string;
   debounceMs?: number;
   defaultExpanded?: boolean;
   expanded?: boolean;
 };
 
 export default function QuickToolbar({
+  toolbarName = "Toolbar",
   debounceMs = 1000,
   defaultExpanded = false,
   expanded = undefined,
@@ -74,7 +76,7 @@ export default function QuickToolbar({
   return (
     <Toolbar>
       <Typography sx={{ fontWeight: "medium", flex: 1, mx: 0.5 }}>
-        Toolbar
+        {toolbarName}
       </Typography>
       <Tooltip title="Columns">
         <ColumnsPanelTrigger render={<ToolbarButton />}>

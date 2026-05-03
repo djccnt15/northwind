@@ -15,16 +15,17 @@ import type { ApiIfs } from "../entities/app/api";
 const Wrapper = styled.div`
   width: 100%;
   height: 100%;
-  padding-left: 20px;
   display: flex;
   flex-direction: column;
+`;
+
+const ContentWrapper = styled.div`
+  padding-left: 20px;
   gap: 30px;
 `;
 
-const ContentWrapper = styled.div``;
-
-const GapDiv = styled.div`
-  padding: 15px;
+const GapDiv = styled.div<{ padding?: string }>`
+  padding: ${(props) => props.padding || "15px"};
 `;
 
 const Form = styled.form`
@@ -206,8 +207,8 @@ export default function Profile() {
 
   return (
     <Wrapper>
+      <Title>Profile</Title>
       <ContentWrapper>
-        <Title>Profile</Title>
         <Form onSubmit={onSubmitProfile}>
           <FieldWrapper>
             <Label>ID</Label>
@@ -256,8 +257,9 @@ export default function Profile() {
           </PasswordWrapper>
         </Form>
       </ContentWrapper>
+      <GapDiv />
+      <Title>Authorities</Title>
       <ContentWrapper>
-        <Title>Authorities</Title>
         <AuthList>
           {user?.authorities.map((auth, index) => (
             <AuthItem key={index}>{auth}</AuthItem>

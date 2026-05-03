@@ -10,7 +10,10 @@ import {
 import type { GridColDef } from "@mui/x-data-grid";
 import type { ApiIfs, ListCountIfs } from "../entities/app/api";
 import { useState } from "react";
-import { dataGridInitialState } from "../features/data-grid/constants";
+import {
+  dataGridInitialState,
+  defaultColOptions,
+} from "../features/data-grid/constants";
 import QuickToolbar from "../features/data-grid/custom-toolbar";
 
 const Wrapper = styled.div`
@@ -22,16 +25,32 @@ const Wrapper = styled.div`
 
 const columns: GridColDef[] = [
   {
+    ...defaultColOptions,
     field: "id",
     headerName: "DB ID",
-    width: 70,
-    filterable: false,
-    sortable: false,
+    flex: 0.2,
     editable: false,
   },
-  { field: "username", headerName: "ID", width: 130 },
-  { field: "email", headerName: "Email", width: 200 },
-  { field: "authorities", headerName: "Role", width: 200 },
+  {
+    ...defaultColOptions,
+    field: "username",
+    headerName: "ID",
+    flex: 0.5,
+    editable: true,
+  },
+  {
+    ...defaultColOptions,
+    field: "email",
+    headerName: "Email",
+    flex: 1,
+    editable: true,
+  },
+  {
+    ...defaultColOptions,
+    field: "authorities",
+    headerName: "Role",
+    flex: 1,
+  },
 ];
 
 const initialState = {
@@ -90,6 +109,7 @@ export default function AdminUser() {
         slots={{ toolbar: QuickToolbar }}
         slotProps={{
           toolbar: {
+            toolbarName: "User Management",
             debounceMs: 1000,
             expanded: true,
           },
