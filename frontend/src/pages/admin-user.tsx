@@ -51,6 +51,13 @@ const columns: GridColDef[] = [
     headerName: "Role",
     flex: 1,
   },
+  {
+    ...defaultColOptions,
+    field: "enabled",
+    headerName: "Enabled",
+    flex: 0.5,
+    editable: true,
+  },
 ];
 
 const initialState = {

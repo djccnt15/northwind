@@ -39,6 +39,7 @@ public class AuthService implements UserDetailsService {
             .password(entity.getPassword())
             .email(entity.getEmail())
             .authorities(authorities)
+            .isEnabled(entity.isVerified())
             .build();
     }
 }

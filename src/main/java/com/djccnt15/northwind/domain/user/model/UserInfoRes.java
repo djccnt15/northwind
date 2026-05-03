@@ -16,4 +16,6 @@ public class UserInfoRes {
     private String email;
     
     private List<String> authorities;
+    
+    private boolean isEnabled;
 }

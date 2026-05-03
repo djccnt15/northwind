@@ -98,6 +98,7 @@ export default function Login() {
           authorities: Array.isArray(data.body?.authorities)
             ? data.body.authorities.map(String)
             : [],
+          enabled: !!data.body?.enabled,
           loggedIn: true,
         });
 

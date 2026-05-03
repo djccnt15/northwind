@@ -29,6 +29,7 @@ public class UserConverter {
             .email(userSession.getEmail())
             .authorities(userSession.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority).toList())
+            .isEnabled(userSession.isEnabled())
             .build();
     }
     
@@ -42,6 +43,7 @@ public class UserConverter {
             .username(entity.getUsername())
             .email(entity.getEmail())
             .authorities(authorities)
+            .isEnabled(entity.isVerified())
             .build();
     }
     

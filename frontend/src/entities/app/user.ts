@@ -3,5 +3,6 @@ export interface UserIfs {
   username: string;
   email: string;
   authorities: string[];
+  enabled: boolean;
   loggedIn: boolean;
 }
