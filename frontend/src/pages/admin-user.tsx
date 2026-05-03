@@ -9,6 +9,9 @@ import {
 } from "@mui/x-data-grid";
 import type { GridColDef } from "@mui/x-data-grid";
 import type { ApiIfs, ListCountIfs } from "../entities/app/api";
+import { useState } from "react";
+import { dataGridInitialState } from "../features/data-grid/constants";
+import QuickToolbar from "../features/data-grid/custom-toolbar";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -18,19 +21,53 @@ const Wrapper = styled.div`
 `;
 
 const columns: GridColDef[] = [
-  { field: "id", headerName: "DB ID", width: 70 },
+  {
+    field: "id",
+    headerName: "DB ID",
+    width: 70,
+    filterable: false,
+    sortable: false,
+    editable: false,
+  },
   { field: "username", headerName: "ID", width: 130 },
   { field: "email", headerName: "Email", width: 200 },
-  { field: "authorities", headerName: "Role", width: 100 },
+  { field: "authorities", headerName: "Role", width: 200 },
 ];
 
+const initialState = {
+  ...dataGridInitialState,
+  columns: {
+    columnVisibilityModel: {
+      id: false,
+    },
+  },
+};
+
 export default function AdminUser() {
+  const [isLoading, setIsLoading] = useState(false);
+
   const customDataSource: GridDataSource = {
     getRows: async (params: GridGetRowsParams) => {
-      const res = await privateApi.get("/v1/admin/user/users", { params });
-      const data: ApiIfs<ListCountIfs<UserIfs>> = res.data;
-      const users = data.body?.list ?? [];
-      const totalCounts = data.body?.totalCounts ?? 0;
+      setIsLoading(true);
+      const res = await privateApi
+        .get("/v1/admin/user/users", {
+          params: {
+            page: params?.paginationModel?.page || 0,
+            size: params?.paginationModel?.pageSize || 10,
+            keyword: params?.filterModel?.quickFilterValues?.[0] || "",
+          },
+        })
+        .catch((err) => {
+          console.error("Failed to fetch users:", err);
+          return null;
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
+
+      const data: ApiIfs<ListCountIfs<UserIfs>> = res?.data;
+      const users = data?.body?.list ?? [];
+      const totalCounts = data?.body?.totalCounts ?? 0;
 
       return {
         rows: users,
@@ -41,18 +78,22 @@ export default function AdminUser() {
 
   return (
     <Wrapper>
-      <Title>Admin User</Title>
+      <Title>Admin - User Management</Title>
       <DataGrid
         columns={columns}
         dataSource={customDataSource}
+        loading={isLoading}
+        initialState={initialState}
         pagination
-        initialState={{
-          pagination: {
-            paginationModel: { pageSize: 10, page: 0 },
-            rowCount: 0,
+        pageSizeOptions={[10, 20, 50, 100]}
+        showToolbar
+        slots={{ toolbar: QuickToolbar }}
+        slotProps={{
+          toolbar: {
+            debounceMs: 1000,
+            expanded: true,
           },
         }}
-        pageSizeOptions={[10, 20, 50]}
       />
     </Wrapper>
   );

@@ -1,0 +1,6 @@
+export const dataGridInitialState = {
+  pagination: {
+    paginationModel: { pageSize: 10, page: 0 },
+    rowCount: 0,
+  },
+};

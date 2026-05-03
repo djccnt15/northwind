@@ -111,7 +111,7 @@ public class UserService {
     
     public List<AppUserEntity> getAllUsers(int page, int size, String keyword) {
         var pageable = PageRequest.of(page, size, Sort.by("id"));
-        return userRepo.findWithRoleByUsernameLikeOrEmailLike(pageable, keyword, keyword);
+        return userRepo.findWithRoleByUsernameLikeOrEmailLike(keyword, keyword, pageable);
     }
     
     public Integer getUserCount(String keyword) {

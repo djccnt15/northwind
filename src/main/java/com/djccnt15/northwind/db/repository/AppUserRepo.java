@@ -22,7 +22,7 @@ public interface AppUserRepo extends JpaRepository<AppUserEntity, Long> {
     Optional<AppUserEntity> findFirstByEmailAndIdNot(String email, Long id);
     
     @EntityGraph(attributePaths = {"appUserRole", "appUserRole.userRole"})
-    List<AppUserEntity> findWithRoleByUsernameLikeOrEmailLike(Pageable pageable, String usernameKw, String emailKw);
+    List<AppUserEntity> findWithRoleByUsernameLikeOrEmailLike(String usernameKw, String emailKw, Pageable pageable);
     
     Integer countByUsernameLikeOrEmailLike(String usernameKw, String emailKw);
 }
