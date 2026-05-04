@@ -4,6 +4,7 @@ import {
   commBtnHoverSkyBlue,
   commBtnSkyBlue,
   commBtnSkyBlueBoxShadow,
+  globalTransition,
   Title,
 } from "../shared/global-styles";
 import { SubmitBtn } from "../shared/auth-ui";
@@ -69,6 +70,7 @@ const PasswordWrapper = styled.div`
 const SubmitPwBtn = styled.button`
   ${commBorderRadius}
   ${commBtnSkyBlue}
+  ${globalTransition}
   height: 40px;
   width: 50px;
   border: none;
@@ -78,6 +80,7 @@ const SubmitPwBtn = styled.button`
   cursor: pointer;
   &:hover {
     ${commBtnHoverSkyBlue}
+    ${globalTransition}
   }
   &:focus {
     outline: none;

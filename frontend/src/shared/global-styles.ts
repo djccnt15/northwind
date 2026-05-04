@@ -25,6 +25,10 @@ export const GlobalStyles = createGlobalStyle`
   } */
 `;
 
+export const globalTransition = css`
+  transition: background-color 0.2s ease-in-out;
+`;
+
 export const commBorderRadius = css`
   border-radius: 4px;
 `;

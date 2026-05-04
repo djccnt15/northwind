@@ -20,6 +20,7 @@ import {
   ModalOverlay,
   commLinkSkyBlue,
   ModalFadeInAnimation,
+  globalTransition,
 } from "../shared/global-styles";
 import type { ApiIfs } from "../entities/app/api";
 
@@ -41,6 +42,7 @@ const EmailCheckWrapper = styled.div`
 const CheckEmailBtn = styled.button`
   ${commBorderRadius}
   ${commBtnSkyBlue}
+  ${globalTransition}
   height: 40px;
   border: none;
   color: white;
@@ -49,6 +51,7 @@ const CheckEmailBtn = styled.button`
   cursor: pointer;
   &:hover {
     ${commBtnHoverSkyBlue}
+    ${globalTransition}
   }
   &:focus {
     outline: none;

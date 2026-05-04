@@ -5,6 +5,7 @@ import {
   commBtnHoverSkyBlue,
   commBtnSkyBlueBoxShadow,
   commLinkSkyBlue,
+  globalTransition,
 } from "./global-styles";
 
 export const H1 = styled.h1`
@@ -38,6 +39,7 @@ export const Input = styled.input`
 export const SubmitBtn = styled.button`
   ${commBorderRadius}
   ${commBtnSkyBlue}
+  ${globalTransition}
   width: 100%;
   display: block;
   height: 40px;
@@ -48,6 +50,7 @@ export const SubmitBtn = styled.button`
   cursor: pointer;
   &:hover {
     ${commBtnHoverSkyBlue}
+    ${globalTransition}
   }
   &:disabled {
     background-color: #9eb6c2;

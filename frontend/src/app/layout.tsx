@@ -2,6 +2,7 @@ import { Link, Outlet, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { useAuth } from "../shared/auth/auth-context";
 import { privateApi } from "../shared/api";
+import { globalTransition } from "../shared/global-styles";
 
 const Wrapper = styled.div`
   display: grid;
@@ -34,6 +35,7 @@ const NavItem = styled.div`
   padding: 10px 20px;
   width: 100%;
   cursor: pointer;
+  ${globalTransition}
 
   a {
     color: black;
@@ -49,7 +51,7 @@ const NavItem = styled.div`
 
   &:hover {
     background-color: #d4d4d4;
-    transition: background-color 0.3s ease-in-out;
+    ${globalTransition}
   }
 
   &.log-out {
