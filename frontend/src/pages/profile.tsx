@@ -258,6 +258,10 @@ export default function Profile() {
             </FieldWrapper>
             <SubmitPwBtn>Change</SubmitPwBtn>
           </PasswordWrapper>
+          <FieldWrapper>
+            <Label>Live Until</Label>
+            <Input type="datetime-local" value={user?.liveUntil} disabled />
+          </FieldWrapper>
         </Form>
       </ContentWrapper>
       <GapDiv />
