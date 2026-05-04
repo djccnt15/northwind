@@ -4,5 +4,7 @@ export interface UserIfs {
   email: string;
   authorities: string[];
   enabled: boolean;
+  liveUntil: string;
+  passwordChangedAt: string;
   loggedIn: boolean;
 }

@@ -40,6 +40,8 @@ public class AuthService implements UserDetailsService {
             .email(entity.getEmail())
             .authorities(authorities)
             .isEnabled(entity.isVerified())
+            .liveUntil(entity.getLiveUntil())
+            .passwordChangedAt(entity.getPasswordChangedAt())
             .build();
     }
 }

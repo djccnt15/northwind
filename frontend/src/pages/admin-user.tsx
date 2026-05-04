@@ -53,10 +53,28 @@ const columns: GridColDef[] = [
   },
   {
     ...defaultColOptions,
+    field: "liveUntil",
+    headerName: "Live Until",
+    editable: true,
+    flex: 1,
+    type: "dateTime",
+    valueGetter: (value) => value && new Date(value),
+  },
+  {
+    ...defaultColOptions,
+    field: "passwordChangedAt",
+    headerName: "Password Changed At",
+    flex: 1,
+    type: "dateTime",
+    valueGetter: (value) => value && new Date(value),
+  },
+  {
+    ...defaultColOptions,
     field: "enabled",
     headerName: "Enabled",
-    flex: 0.5,
+    flex: 0.2,
     editable: true,
+    type: "boolean",
   },
 ];
 
@@ -69,15 +87,22 @@ const initialState = {
   },
 };
 
-const onEdit = async (updatedRow: UserIfs, originalRow: UserIfs) => {
-  return privateApi
+const onEdit = async (
+  updatedRow: UserIfs,
+  originalRow: UserIfs,
+): Promise<UserIfs> => {
+  return await privateApi
     .patch(`/v1/admin/user/${originalRow.id}/profile`, {
       username: updatedRow.username,
       email: updatedRow.email,
+      isEnabled: updatedRow.enabled,
+      liveUntil: updatedRow.liveUntil
+        ? new Date(updatedRow.liveUntil).toISOString()
+        : null,
     })
     .then((res) => {
       const data: ApiIfs<UserIfs> = res.data;
-      return data.body;
+      return data.body ?? updatedRow;
     })
     .catch((err) => {
       const data: ApiIfs<null> = err.response?.data;
@@ -86,6 +111,13 @@ const onEdit = async (updatedRow: UserIfs, originalRow: UserIfs) => {
       alert(`Failed to update user: ${message}`);
       return originalRow;
     });
+};
+
+const processRowUpdate = async (
+  updatedRow: UserIfs,
+  originalRow: UserIfs,
+): Promise<UserIfs> => {
+  return await onEdit(updatedRow, originalRow);
 };
 
 export default function AdminUser() {
@@ -130,9 +162,7 @@ export default function AdminUser() {
         loading={isLoading}
         initialState={initialState}
         editMode="row"
-        processRowUpdate={(updatedRow, originalRow) =>
-          onEdit(updatedRow, originalRow)
-        }
+        processRowUpdate={processRowUpdate}
         pagination
         pageSizeOptions={[10, 20, 50, 100]}
         showToolbar

@@ -2,10 +2,7 @@ package com.djccnt15.northwind.domain.user.Service;
 
 import com.djccnt15.northwind.config.security.model.UserSession;
 import com.djccnt15.northwind.db.entity.AppUserEntity;
-import com.djccnt15.northwind.db.entity.AppUserRoleEntity;
 import com.djccnt15.northwind.db.repository.AppUserRepo;
-import com.djccnt15.northwind.db.repository.AppUserRoleRepo;
-import com.djccnt15.northwind.db.repository.UserRoleRepo;
 import com.djccnt15.northwind.domain.user.converter.UserConverter;
 import com.djccnt15.northwind.domain.user.model.SignupReq;
 import com.djccnt15.northwind.exception.exceptions.ApiException;
@@ -19,7 +16,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 import static com.djccnt15.northwind.comm.code.StatusCode.BAD_REQUEST;
-import static com.djccnt15.northwind.comm.code.StatusCode.SERVER_ERROR;
 
 @Slf4j
 @Service
@@ -78,6 +74,8 @@ public class UserService {
     public AppUserEntity updateProfile(AppUserEntity entity, SignupReq request) {
         entity.setUsername(request.getUsername());
         entity.setEmail(request.getEmail());
+        entity.setVerified(request.isEnabled());
+        entity.setLiveUntil(request.getLiveUntil());
         userRepo.save(entity);
         return entity;
     }

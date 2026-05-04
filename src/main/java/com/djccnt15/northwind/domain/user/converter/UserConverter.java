@@ -30,6 +30,8 @@ public class UserConverter {
             .authorities(userSession.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority).toList())
             .isEnabled(userSession.isEnabled())
+            .liveUntil(userSession.getLiveUntil())
+            .passwordChangedAt(userSession.getPasswordChangedAt())
             .build();
     }
     
@@ -44,6 +46,8 @@ public class UserConverter {
             .email(entity.getEmail())
             .authorities(authorities)
             .isEnabled(entity.isVerified())
+            .liveUntil(entity.getLiveUntil())
+            .passwordChangedAt(entity.getPasswordChangedAt())
             .build();
     }
     

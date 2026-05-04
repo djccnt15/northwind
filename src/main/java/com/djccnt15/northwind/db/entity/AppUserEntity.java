@@ -2,11 +2,11 @@ package com.djccnt15.northwind.db.entity;
 
 import com.djccnt15.northwind.db.entity.id.BaseEntity;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.ColumnDefault;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -20,10 +20,10 @@ import java.util.Set;
 @SuperBuilder
 public class AppUserEntity extends BaseEntity {
     
-    @Column(unique = true, length = 25)
+    @Column(unique = true, length = 25, nullable = false)
     private String username;
     
-    @Column
+    @Column(nullable = false)
     private String password;
     
     @Column(unique = true)
@@ -32,8 +32,13 @@ public class AppUserEntity extends BaseEntity {
     @Column(name = "is_verified", nullable = false)
     @ColumnDefault(value = "false")  // annotation for ddl-auto
     @Builder.Default  // annotation for lombok default
-    @NotNull
     private boolean isVerified = false;
+    
+    @Column(name = "live_until")
+    private LocalDateTime liveUntil;
+    
+    @Column(name = "password_changed_at")
+    private LocalDateTime passwordChangedAt;
     
     @OneToMany(mappedBy = "appUser", cascade = CascadeType.REMOVE)
     @Builder.Default

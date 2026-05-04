@@ -36,7 +36,7 @@ public class AdminUserApiController {
     @PatchMapping("{userId}/profile")
     public ResponseEntity<Api<UserInfoRes>> updateUser(
         @PathVariable Long userId,
-        @Validated(SignupReq.ProfileUpdate.class) @RequestBody SignupReq req
+        @Validated(SignupReq.AdminUpdate.class) @RequestBody SignupReq req
     ) {
         var response = business.updateUser(userId, req);
         return ResponseEntity.ok(Api.OK(response));

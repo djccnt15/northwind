@@ -24,6 +24,8 @@ export default function AuthProvider({ children }: ChildNodeIfs) {
               ? data.body.authorities?.map(String)
               : [],
             enabled: !!data.body?.enabled,
+            liveUntil: String(data.body?.liveUntil),
+            passwordChangedAt: String(data.body?.passwordChangedAt),
             loggedIn: true,
           });
         })
