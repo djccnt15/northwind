@@ -4,24 +4,31 @@ import { privateApi } from "../shared/api";
 import {
   commBorderRadius,
   commBtnHoverSkyBlue,
+  commBtnHoverTomatoRed,
   commBtnSkyBlue,
   commBtnSkyBlueBoxShadow,
+  commBtnTomatoRed,
+  commBtnTomatoRedBoxShadow,
   globalTransition,
+  ModalDefault,
+  ModalOverlay,
   Title,
 } from "../shared/global-styles";
 import {
   DataGrid,
   type GridDataSource,
   type GridGetRowsParams,
+  useGridApiRef,
 } from "@mui/x-data-grid";
 import type { GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
 import type { ApiIfs, ListCountIfs } from "../entities/app/api";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   dataGridInitialState,
   defaultColOptions,
 } from "../features/data-grid/constants";
 import QuickToolbar from "../features/data-grid/custom-toolbar";
+import { useKeyDown } from "../shared/useKeyDown";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -51,6 +58,67 @@ const CellBlueButton = styled.button`
     ${commBtnSkyBlueBoxShadow}
   }
 `;
+
+const CellRedButton = styled.button`
+  ${commBtnTomatoRed}
+  ${globalTransition}
+  ${commBorderRadius}
+  height: 30px;
+  width: 40px;
+  border: none;
+  color: white;
+  font-size: 10px;
+  cursor: pointer;
+
+  &:hover {
+    ${commBtnHoverTomatoRed}
+    ${globalTransition}
+  }
+
+  &:focus {
+    outline: none;
+    ${commBtnTomatoRedBoxShadow}
+  }
+`;
+
+const RoleModal = styled(ModalDefault)`
+  width: 400px;
+  background-color: white;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  padding: 20px;
+  gap: 20px;
+  max-height: 50vh;
+`;
+
+const ModalTitleArea = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+const ModalTitle = styled.div`
+  font-size: 18px;
+  font-weight: 600;
+`;
+
+const ModalBtnArea = styled.div`
+  display: flex;
+  gap: 10px;
+`;
+
+const RoleForm = styled.form`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow-y: scroll;
+`;
+
+const FormField = styled.div``;
+
+const FormLabel = styled.label``;
+
+const FormInput = styled.input``;
 
 const onResetPassword = (params: GridRenderCellParams<UserIfs>) => {
   const { id, username } = params.row;
@@ -85,6 +153,7 @@ const onResetPassword = (params: GridRenderCellParams<UserIfs>) => {
 
 const createColumns = (
   onReset: (params: GridRenderCellParams<UserIfs>) => void,
+  onRoleClick: (params: GridRenderCellParams<UserIfs>) => void,
 ): GridColDef[] => [
   {
     ...defaultColOptions,
@@ -106,6 +175,17 @@ const createColumns = (
     headerName: "Email",
     flex: 1,
     editable: true,
+  },
+  {
+    ...defaultColOptions,
+    field: "roles",
+    headerName: "Manage Roles",
+    flex: 0.2,
+    headerAlign: "center",
+    align: "center",
+    renderCell: (params: GridRenderCellParams<UserIfs>) => (
+      <CellBlueButton onClick={() => onRoleClick(params)}>Roles</CellBlueButton>
+    ),
   },
   {
     ...defaultColOptions,
@@ -143,6 +223,8 @@ const createColumns = (
     field: "reset",
     headerName: "Reset Password",
     flex: 0.2,
+    headerAlign: "center",
+    align: "center",
     renderCell: (params: GridRenderCellParams<UserIfs>) => (
       <CellBlueButton onClick={() => onReset(params)}>Reset</CellBlueButton>
     ),
@@ -192,9 +274,85 @@ const processRowUpdate = async (
 };
 
 export default function AdminUser() {
+  const apiRef = useGridApiRef();
   const [isLoading, setIsLoading] = useState(false);
+  const [roles, setRoles] = useState<string[]>([]);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
+  const [selectedRoles, setSelectedRoles] = useState<string[]>([]);
 
-  const columns = createColumns((params) => onResetPassword(params));
+  const closeModal = useCallback(() => {
+    setShowModal(false);
+    setSelectedRoles([]);
+    setSelectedUserId(null);
+  }, []);
+
+  useKeyDown("Escape", closeModal);
+
+  const handleContentClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.stopPropagation();
+  };
+
+  const toggleRole = (role: string, checked: boolean) => {
+    setSelectedRoles((prev) => {
+      if (checked) {
+        return prev.includes(role) ? prev : [...prev, role];
+      }
+      return prev.filter((item) => item !== role);
+    });
+  };
+
+  const onRoleUpdate = (e: React.SubmitEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (selectedUserId === null) {
+      alert("No user selected");
+      return;
+    }
+
+    privateApi
+      .patch(`/v1/admin/user/${selectedUserId}/roles`, {
+        list: selectedRoles,
+      })
+      .then((res) => {
+        const data: ApiIfs<UserIfs> = res.data;
+
+        apiRef.current?.updateRows([
+          {
+            id: data.body?.id ?? selectedUserId,
+            authorities: data.body?.authorities ?? selectedRoles,
+          },
+        ]);
+
+        alert("Roles updated successfully");
+        closeModal();
+      })
+      .catch((err) => {
+        console.error("Failed to update roles:", err);
+        alert("Failed to update roles");
+      });
+  };
+
+  useEffect(() => {
+    privateApi
+      .get("/v1/admin/role/all")
+      .then((res) => {
+        const data: ApiIfs<string[]> = res.data;
+        setRoles(data.body ?? []);
+      })
+      .catch((err) => {
+        console.error("Failed to fetch roles:", err);
+      });
+  }, []);
+
+  const columns = createColumns(
+    (params) => onResetPassword(params),
+    (params) => {
+      setSelectedUserId(params.row.id);
+      setSelectedRoles(params.row.authorities ?? []);
+      setShowModal(true);
+    },
+  );
 
   const customDataSource: GridDataSource = {
     getRows: async (params: GridGetRowsParams) => {
@@ -230,6 +388,7 @@ export default function AdminUser() {
     <Wrapper>
       <Title>Admin - User Management</Title>
       <DataGrid
+        apiRef={apiRef}
         columns={columns}
         dataSource={customDataSource}
         loading={isLoading}
@@ -248,6 +407,39 @@ export default function AdminUser() {
           },
         }}
       />
+      {showModal && (
+        <ModalOverlay onClick={closeModal}>
+          <RoleModal onClick={handleContentClick}>
+            <ModalTitleArea>
+              <ModalTitle>Role Management</ModalTitle>
+              <ModalBtnArea>
+                <CellBlueButton form="role-form">저장</CellBlueButton>
+                <CellRedButton type="button" onClick={closeModal}>
+                  취소
+                </CellRedButton>
+              </ModalBtnArea>
+            </ModalTitleArea>
+            <RoleForm id="role-form" onSubmit={onRoleUpdate}>
+              <input type="hidden" name="userId" value={selectedUserId ?? ""} />
+              {Array.isArray(roles) && roles.length > 0 ? (
+                roles.map((role) => (
+                  <FormField key={role}>
+                    <FormInput
+                      type="checkbox"
+                      id={role}
+                      checked={selectedRoles.includes(role)}
+                      onChange={(e) => toggleRole(role, e.target.checked)}
+                    />
+                    <FormLabel htmlFor={role}>{role}</FormLabel>
+                  </FormField>
+                ))
+              ) : (
+                <FormLabel>No roles available</FormLabel>
+              )}
+            </RoleForm>
+          </RoleModal>
+        </ModalOverlay>
+      )}
     </Wrapper>
   );
 }

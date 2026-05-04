@@ -37,12 +37,24 @@ export const commBtnSkyBlue = css`
   background-color: #17c1ff;
 `;
 
+export const commBtnTomatoRed = css`
+  background-color: #ff4d4f;
+`;
+
 export const commBtnHoverSkyBlue = css`
   background-color: #2397c9;
 `;
 
+export const commBtnHoverTomatoRed = css`
+  background-color: #d9363e;
+`;
+
 export const commBtnSkyBlueBoxShadow = css`
   box-shadow: 0 0 0 1px #006885;
+`;
+
+export const commBtnTomatoRedBoxShadow = css`
+  box-shadow: 0 0 0 1px #a8071a;
 `;
 
 export const commLinkSkyBlue = css`

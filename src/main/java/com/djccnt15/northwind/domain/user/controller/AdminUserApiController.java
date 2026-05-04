@@ -3,6 +3,7 @@ package com.djccnt15.northwind.domain.user.controller;
 import com.djccnt15.northwind.comm.api.Api;
 import com.djccnt15.northwind.domain.user.business.AdminUserBusiness;
 import com.djccnt15.northwind.domain.model.ListCountRes;
+import com.djccnt15.northwind.domain.model.ListString;
 import com.djccnt15.northwind.domain.user.model.SignupReq;
 import com.djccnt15.northwind.domain.user.model.UserInfoRes;
 import lombok.RequiredArgsConstructor;
@@ -45,6 +46,15 @@ public class AdminUserApiController {
     @PatchMapping("{userId}/reset-password")
     public ResponseEntity<Api<UserInfoRes>> resetPassword(@PathVariable Long userId) {
         var response = business.resetPassword(userId);
+        return ResponseEntity.ok(Api.OK(response));
+    }
+    
+    @PatchMapping("{userId}/roles")
+    public ResponseEntity<Api<UserInfoRes>> updateUserRoles(
+        @PathVariable Long userId,
+        @RequestBody ListString request
+    ) {
+        var response = business.updateUserRoles(userId, request);
         return ResponseEntity.ok(Api.OK(response));
     }
 }

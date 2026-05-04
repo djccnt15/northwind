@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 import static com.djccnt15.northwind.comm.code.StatusCode.SERVER_ERROR;
 
 @Slf4j
@@ -33,6 +35,19 @@ public class UserRoleService {
             .build();
         userEntity.addAppUserRole(appUserRoleEntity);
         appUserRoleRepo.save(appUserRoleEntity);
+        return userEntity;
+    }
+    
+    public AppUserEntity assignRolesToUser(AppUserEntity userEntity, List<UserRoleEntity> roleEntities) {
+        roleEntities.stream()
+            .map(it -> AppUserRoleEntity.builder().userRole(it).build())
+            .forEach(userEntity::addAppUserRole);
+        appUserRoleRepo.saveAll(userEntity.getAppUserRole());
+        return userEntity;
+    }
+    
+    public AppUserEntity deleteUserRoles(AppUserEntity userEntity) {
+        appUserRoleRepo.deleteAllByAppUser(userEntity);
         return userEntity;
     }
 }
