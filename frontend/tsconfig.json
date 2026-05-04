@@ -3,5 +3,9 @@
   "references": [
     { "path": "./tsconfig.app.json" },
     { "path": "./tsconfig.node.json" }
-  ]
+  ],
+  "compilerOptions": {
+    "skipLibCheck": true // 외부 라이브러리의 타입 체크 skip
+  },
+  "exclude": ["node_modules", "dist", "build", "**/*.spec.ts"]
 }
