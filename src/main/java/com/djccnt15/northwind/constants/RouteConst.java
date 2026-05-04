@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 import static lombok.AccessLevel.PRIVATE;
 
 @NoArgsConstructor(access = PRIVATE)
-public class RouteConst {
+public final class RouteConst {
     
     public static final String API = "/api";
     public static final String PUBLIC = "/public";

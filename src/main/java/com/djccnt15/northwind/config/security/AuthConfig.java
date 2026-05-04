@@ -1,6 +1,6 @@
 package com.djccnt15.northwind.config.security;
 
-import com.djccnt15.northwind.config.RememberMeProperties;
+import com.djccnt15.northwind.config.properties.ConfigProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -42,7 +42,7 @@ public class AuthConfig {
     private final LogoutSuccessHandler logoutHandler;
     private final AuthenticationEntryPoint unauthorizedHandler;
     private final AccessDeniedHandler forbiddenHandler;
-    private final RememberMeProperties rememberMeProperties;
+    private final ConfigProperties configProperties;
     
     @Bean
     @Order(1)
@@ -65,8 +65,8 @@ public class AuthConfig {
                 .failureHandler(authFailureHandler)
             )
             .rememberMe(remember -> remember
-                .key(rememberMeProperties.getKey())
-                .tokenValiditySeconds(rememberMeProperties.getTokenValiditySeconds())
+                .key(configProperties.getRememberMe().getKey())
+                .tokenValiditySeconds(configProperties.getRememberMe().getTokenValiditySeconds())
             )
             .logout(logout -> logout
                 .logoutUrl(API_V1 + "/logout")

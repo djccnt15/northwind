@@ -1,7 +1,6 @@
 package com.djccnt15.northwind.domain.auth;
 
 import com.djccnt15.northwind.comm.api.Api;
-import com.djccnt15.northwind.comm.code.StatusCode;
 import com.djccnt15.northwind.exception.exceptions.ApiException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import static com.djccnt15.northwind.comm.code.StatusCode.*;
 import static com.djccnt15.northwind.constants.RouteConst.PUBLIC_API_V1;
 
 @Slf4j
@@ -25,6 +25,7 @@ public class AuthPublicApiController {
     @PostMapping("/login/fail")
     public ResponseEntity<Api<?>> loginFail(HttpServletRequest request) {
         var exception = (AuthenticationException) request.getAttribute("exception");
+        
         var message = switch (exception) {
             case BadCredentialsException ignored -> "Invalid username or password";
             case DisabledException ignored -> "Account is disabled";
@@ -33,7 +34,12 @@ public class AuthPublicApiController {
             case CredentialsExpiredException ignored -> "Credentials have expired";
             case null, default -> "Authentication failed, Please contact to admin";
         };
-        throw new ApiException(StatusCode.UNAUTHORIZED, message);
+        
+        switch (exception) {
+            case null -> throw new ApiException(SERVER_ERROR, message);
+            case BadCredentialsException ignored -> throw new ApiException(UNAUTHORIZED, message);
+            default -> throw new ApiException(FORBIDDEN, message);
+        }
     }
     
     @GetMapping("/logout")
@@ -43,11 +49,11 @@ public class AuthPublicApiController {
     
     @GetMapping("/unauthorized")
     public ResponseEntity<Api<?>> unauthorized() {
-        throw new ApiException(StatusCode.UNAUTHORIZED, "Authentication is required");
+        throw new ApiException(UNAUTHORIZED, "Authentication is required");
     }
     
     @GetMapping("/forbidden")
     public ResponseEntity<Api<?>> forbidden() {
-        throw new ApiException(StatusCode.FORBIDDEN, "Access denied");
+        throw new ApiException(FORBIDDEN, "Access denied");
     }
 }

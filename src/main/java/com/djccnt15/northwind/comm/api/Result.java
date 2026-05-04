@@ -1,11 +1,13 @@
 package com.djccnt15.northwind.comm.api;
 
-import com.djccnt15.northwind.comm.code.StatusCode;
 import com.djccnt15.northwind.comm.code.StatusCodeIfs;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import static com.djccnt15.northwind.comm.code.StatusCode.CREATED;
+import static com.djccnt15.northwind.comm.code.StatusCode.OK;
 
 @Data
 @NoArgsConstructor
@@ -19,16 +21,16 @@ public class Result {
     
     public static Result OK() {
         return Result.builder()
-            .code(StatusCode.OK.getStatusCode())
-            .message(StatusCode.OK.getDescription())
+            .code(OK.getStatusCode())
+            .message(OK.getDescription())
             .description("OK")
             .build();
     }
     
     public static Result CREATED() {
         return Result.builder()
-            .code(StatusCode.CREATED.getStatusCode())
-            .message(StatusCode.CREATED.getDescription())
+            .code(CREATED.getStatusCode())
+            .message(CREATED.getDescription())
             .description("CREATED")
             .build();
     }
