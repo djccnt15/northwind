@@ -8,11 +8,13 @@ import com.djccnt15.northwind.domain.user.model.SignupReq;
 import com.djccnt15.northwind.exception.exceptions.ApiException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.djccnt15.northwind.comm.code.StatusCode.BAD_REQUEST;
@@ -25,6 +27,9 @@ public class UserService {
     private final UserConverter userConverter;
     private final AppUserRepo userRepo;
     private final PasswordEncoder encoder;
+    
+    @Value("${app.defaultPw:1234}")
+    private String defaultPw;
     
     public void validateUserId(UserSession userSession, Long userId) {
         if (!userSession.getId().equals(userId)) {
@@ -93,5 +98,11 @@ public class UserService {
     
     public Integer getUserCount(String keyword) {
         return userRepo.countByUsernameLikeOrEmailLike(keyword, keyword);
+    }
+    
+    public void resetPassword(AppUserEntity entity) {
+        entity.setPassword(encoder.encode(defaultPw));
+        entity.setPasswordChangedAt(LocalDateTime.now());
+        userRepo.save(entity);
     }
 }

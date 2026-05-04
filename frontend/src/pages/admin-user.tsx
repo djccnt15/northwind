@@ -1,13 +1,20 @@
 import styled from "styled-components";
 import type { UserIfs } from "../entities/app/user";
 import { privateApi } from "../shared/api";
-import { Title } from "../shared/global-styles";
+import {
+  commBorderRadius,
+  commBtnHoverSkyBlue,
+  commBtnSkyBlue,
+  commBtnSkyBlueBoxShadow,
+  globalTransition,
+  Title,
+} from "../shared/global-styles";
 import {
   DataGrid,
   type GridDataSource,
   type GridGetRowsParams,
 } from "@mui/x-data-grid";
-import type { GridColDef } from "@mui/x-data-grid";
+import type { GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
 import type { ApiIfs, ListCountIfs } from "../entities/app/api";
 import { useState } from "react";
 import {
@@ -23,7 +30,62 @@ const Wrapper = styled.div`
   grid-template-rows: auto 1fr;
 `;
 
-const columns: GridColDef[] = [
+const CellBlueButton = styled.button`
+  ${commBtnSkyBlue}
+  ${globalTransition}
+  ${commBorderRadius}
+  height: 30px;
+  width: 40px;
+  border: none;
+  color: white;
+  font-size: 10px;
+  cursor: pointer;
+
+  &:hover {
+    ${commBtnHoverSkyBlue}
+    ${globalTransition}
+  }
+
+  &:focus {
+    outline: none;
+    ${commBtnSkyBlueBoxShadow}
+  }
+`;
+
+const onResetPassword = (params: GridRenderCellParams<UserIfs>) => {
+  const { id, username } = params.row;
+  const ok = confirm(`Reset password for user ${username}?`);
+  if (!ok) return;
+
+  privateApi
+    .patch(`/v1/admin/user/${id}/reset-password`)
+    .then((res) => {
+      const data: ApiIfs<UserIfs> = res.data;
+      const updatedUsername = data.body?.username || "Unknown";
+
+      if (data.body) {
+        params.api.updateRows([
+          {
+            id: data.body.id,
+            passwordChangedAt: data.body.passwordChangedAt ?? null,
+          },
+        ]);
+      }
+
+      alert(`Reset password for user ID: ${updatedUsername}`);
+    })
+    .catch((err) => {
+      const data: ApiIfs<null> = err.response?.data;
+      const message = data?.result?.description || "Unknown error";
+      console.error("Failed to reset password:", message);
+      alert(`Failed to reset password: ${message}`);
+    })
+    .finally(() => {});
+};
+
+const createColumns = (
+  onReset: (params: GridRenderCellParams<UserIfs>) => void,
+): GridColDef[] => [
   {
     ...defaultColOptions,
     field: "id",
@@ -76,6 +138,15 @@ const columns: GridColDef[] = [
     editable: true,
     type: "boolean",
   },
+  {
+    ...defaultColOptions,
+    field: "reset",
+    headerName: "Reset Password",
+    flex: 0.2,
+    renderCell: (params: GridRenderCellParams<UserIfs>) => (
+      <CellBlueButton onClick={() => onReset(params)}>Reset</CellBlueButton>
+    ),
+  },
 ];
 
 const initialState = {
@@ -122,6 +193,8 @@ const processRowUpdate = async (
 
 export default function AdminUser() {
   const [isLoading, setIsLoading] = useState(false);
+
+  const columns = createColumns((params) => onResetPassword(params));
 
   const customDataSource: GridDataSource = {
     getRows: async (params: GridGetRowsParams) => {

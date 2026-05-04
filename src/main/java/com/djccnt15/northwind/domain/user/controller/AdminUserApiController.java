@@ -41,4 +41,10 @@ public class AdminUserApiController {
         var response = business.updateUser(userId, req);
         return ResponseEntity.ok(Api.OK(response));
     }
+    
+    @PatchMapping("{userId}/reset-password")
+    public ResponseEntity<Api<UserInfoRes>> resetPassword(@PathVariable Long userId) {
+        var response = business.resetPassword(userId);
+        return ResponseEntity.ok(Api.OK(response));
+    }
 }

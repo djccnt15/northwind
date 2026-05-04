@@ -36,4 +36,10 @@ public class AdminUserBusiness {
         userService.updateProfile(entity, request);
         return userConverter.toResponse(entity);
     }
+    
+    public UserInfoRes resetPassword(Long userId) {
+        var entity = userService.getUser(userId);
+        userService.resetPassword(entity);
+        return userConverter.toResponse(entity);
+    }
 }
