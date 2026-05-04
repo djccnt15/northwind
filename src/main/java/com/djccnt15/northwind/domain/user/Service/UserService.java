@@ -103,6 +103,7 @@ public class UserService {
     public void resetPassword(AppUserEntity entity) {
         entity.setPassword(encoder.encode(defaultPw));
         entity.setPasswordChangedAt(LocalDateTime.now());
+        entity.setLoginFailedCount(0);
         userRepo.save(entity);
     }
 }

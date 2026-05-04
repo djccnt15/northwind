@@ -4,6 +4,7 @@ import com.djccnt15.northwind.config.security.model.UserSession;
 import com.djccnt15.northwind.db.repository.AppUserRepo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -21,6 +22,9 @@ import static com.djccnt15.northwind.util.UserUtil.getRoleName;
 public class AuthService implements UserDetailsService {
     
     private final AppUserRepo repository;
+
+    @Value("${app.loginFailureLimit:6}")
+    private int loginFailureLimit;
     
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -42,6 +46,8 @@ public class AuthService implements UserDetailsService {
             .isEnabled(entity.isVerified())
             .liveUntil(entity.getLiveUntil())
             .passwordChangedAt(entity.getPasswordChangedAt())
+            .loginFailedCount(entity.getLoginFailedCount())
+            .loginFailureLimit(loginFailureLimit)
             .build();
     }
 }

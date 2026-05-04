@@ -40,6 +40,11 @@ public class AppUserEntity extends BaseEntity {
     @Column(name = "password_changed_at")
     private LocalDateTime passwordChangedAt;
     
+    @Column(name = "login_failed_count", nullable = false)
+    @ColumnDefault(value = "0")
+    @Builder.Default
+    private int loginFailedCount = 0;
+    
     @OneToMany(mappedBy = "appUser", cascade = CascadeType.REMOVE)
     @Builder.Default
     @ToString.Exclude @EqualsAndHashCode.Exclude

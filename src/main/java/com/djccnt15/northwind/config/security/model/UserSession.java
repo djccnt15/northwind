@@ -24,12 +24,13 @@ public class UserSession implements UserDetails {
     
     private boolean isEnabled;  // TODO. implement email verification to set this to true
     
-    @Builder.Default
-    private boolean isLocked = false;
-    
     private LocalDateTime liveUntil;
     
     private LocalDateTime passwordChangedAt;
+    
+    private int loginFailedCount;
+    
+    private int loginFailureLimit;
     
     @Builder.Default
     private boolean isBanned = false;
@@ -41,7 +42,7 @@ public class UserSession implements UserDetails {
     
     @Override  // LockedException. 계정 잠금(비밀번호 수회 오류 등)
     public boolean isAccountNonLocked() {
-        return !isLocked;
+        return loginFailedCount < loginFailureLimit;
     }
     
     @Override  // AccountExpiredException. 계정 만료(기간제 회원권 만료 등)
