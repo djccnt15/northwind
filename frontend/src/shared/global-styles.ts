@@ -49,7 +49,21 @@ export const commLinkSkyBlue = css`
   color: #17c1ff;
 `;
 
+const modalFadeInAnimation = css`
+  animation: fadeIn 0.2s ease-out forwards;
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+`;
+
 export const ModalOverlay = styled.div`
+  ${modalFadeInAnimation}
   position: fixed;
   top: 0;
   left: 0;
@@ -62,17 +76,9 @@ export const ModalOverlay = styled.div`
   z-index: 9998;
 `;
 
-export const ModalFadeInAnimation = css`
-  animation: fadeIn 0.5s ease-out forwards;
-
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
-  }
+export const ModalDefault = styled.div`
+  ${commBorderRadius}
+  z-index: 9999;
 `;
 
 export const Title = styled.h1`

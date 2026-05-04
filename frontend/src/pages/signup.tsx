@@ -19,8 +19,8 @@ import {
   commBtnSkyBlueBoxShadow,
   ModalOverlay,
   commLinkSkyBlue,
-  ModalFadeInAnimation,
   globalTransition,
+  ModalDefault,
 } from "../shared/global-styles";
 import type { ApiIfs } from "../entities/app/api";
 
@@ -59,8 +59,7 @@ const CheckEmailBtn = styled.button`
   }
 `;
 
-const SuccessModal = styled.div`
-  ${commBorderRadius}
+const SuccessModal = styled(ModalDefault)`
   background-color: white;
   padding: 50px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
@@ -70,7 +69,6 @@ const SuccessModal = styled.div`
   a {
     ${commLinkSkyBlue}
   }
-  ${ModalFadeInAnimation}
 `;
 
 export default function Signup() {
