@@ -12,7 +12,8 @@ import org.springframework.stereotype.Component;
 public class TimeTraceAop {
     
     @Around("""
-        execution(* com.djccnt15.northwind.domain..*(..))
+        (execution(* com.djccnt15.northwind.domain..*(..))
+        || execution(* com.djccnt15.northwind.config.security..*(..)))
         && !@within(com.djccnt15.northwind.annotation.Converter)
         && (@within(com.djccnt15.northwind.annotation.Business)
         || @within(org.springframework.stereotype.Service))

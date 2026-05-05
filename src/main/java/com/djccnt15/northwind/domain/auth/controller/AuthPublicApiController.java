@@ -1,7 +1,7 @@
 package com.djccnt15.northwind.domain.auth.controller;
 
 import com.djccnt15.northwind.comm.api.Api;
-import com.djccnt15.northwind.domain.auth.business.AuthBusiness;
+import com.djccnt15.northwind.config.security.AuthBusiness;
 import com.djccnt15.northwind.exception.exceptions.ApiException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -25,13 +25,8 @@ public class AuthPublicApiController {
     
     @PostMapping("/login/fail")
     public ResponseEntity<Api<?>> loginFail(HttpServletRequest request) {
-        business.handleLoginFailure(request);
+        business.handleLoginFailureInController(request);
         throw new ApiException(SERVER_ERROR);  // This line will never be reached, but it's required to satisfy the return type
-    }
-    
-    @GetMapping("/logout")
-    public ResponseEntity<Api<?>> logout() {
-        return ResponseEntity.ok(Api.OK(null));
     }
     
     @GetMapping("/unauthorized")

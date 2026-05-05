@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -24,14 +23,5 @@ public class AuthExceptionHandler {
         return ResponseEntity
             .status(FORBIDDEN.getHttpStatusCode())
             .body(Api.ERROR(FORBIDDEN, "Access Denied"));
-    }
-    
-    @ExceptionHandler(DisabledException.class)
-    public ResponseEntity<Api<?>> disabledException(DisabledException exception) {
-        log.error("", exception);
-        
-        return ResponseEntity
-            .status(FORBIDDEN.getHttpStatusCode())
-            .body(Api.ERROR(FORBIDDEN, "Account Disabled"));
     }
 }

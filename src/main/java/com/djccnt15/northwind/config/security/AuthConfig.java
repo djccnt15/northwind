@@ -72,6 +72,7 @@ public class AuthConfig {
                 .logoutUrl(API_V1 + "/logout")
                 .logoutSuccessHandler(logoutHandler)
                 .invalidateHttpSession(true)  // default: true. only for explicitly setting
+                .clearAuthentication(true)  // default: true. only for explicitly setting
                 .deleteCookies("JSESSIONID")
             )
             .sessionManagement(session -> session

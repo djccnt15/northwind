@@ -4,6 +4,9 @@ import com.djccnt15.northwind.db.entity.AppUserEntity;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,6 +17,14 @@ public interface AppUserRepo extends JpaRepository<AppUserEntity, Long> {
     Optional<AppUserEntity> findWithRoleFirstByUsername(String username);
     
     Optional<AppUserEntity> findFirstByUsername(String username);
+    
+    @Modifying
+    @Query("UPDATE AppUserEntity u SET u.loginFailedCount = u.loginFailedCount + 1 WHERE u.username = :name")
+    void increaseLoginFailedCount(@Param("name") String username);
+    
+    @Modifying
+    @Query("UPDATE AppUserEntity u SET u.loginFailedCount = 0 WHERE u.id = :id")
+    void resetLoginFailedCount(@Param("id") Long id);
     
     Optional<AppUserEntity> findFirstByUsernameAndIdNot(String username, Long id);
     

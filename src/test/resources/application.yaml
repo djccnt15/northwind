@@ -7,3 +7,9 @@ spring:
       format_sql: true
       highlight_sql: true
       use_sql_comment: true
+app:
+  defaultPw: 1234
+  loginFailureLimit: 6
+  remember-me:
+    key: northwind-remember-me-key
+    tokenValiditySeconds: 1209600  # 14 days

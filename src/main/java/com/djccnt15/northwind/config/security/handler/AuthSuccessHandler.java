@@ -1,6 +1,6 @@
 package com.djccnt15.northwind.config.security.handler;
 
-import com.djccnt15.northwind.db.repository.AppUserRepo;
+import com.djccnt15.northwind.config.security.AuthBusiness;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -17,18 +17,13 @@ import static com.djccnt15.northwind.constants.RouteConst.API_V1;
 @RequiredArgsConstructor
 public class AuthSuccessHandler implements AuthenticationSuccessHandler {
     
-    private final AppUserRepo userRepo;
+    private final AuthBusiness business;
     
     @Override
     public void onAuthenticationSuccess(
         HttpServletRequest request, HttpServletResponse response, Authentication authentication
     ) throws IOException, ServletException {
-        userRepo.findFirstByUsername(request.getParameter("username"))
-            .ifPresent(it -> {
-                it.setLoginFailedCount(0);
-                userRepo.save(it);
-            });
-        
+        business.handleLoginSuccess(authentication);
         request.getRequestDispatcher(API_V1 + "/auth/login/success").forward(request, response);
     }
 }

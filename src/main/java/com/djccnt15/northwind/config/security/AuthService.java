@@ -2,18 +2,23 @@ package com.djccnt15.northwind.config.security;
 
 import com.djccnt15.northwind.config.security.model.UserSession;
 import com.djccnt15.northwind.db.repository.AppUserRepo;
+import com.djccnt15.northwind.exception.exceptions.ApiException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.*;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.Optional;
 
+import static com.djccnt15.northwind.comm.code.StatusCode.*;
 import static com.djccnt15.northwind.util.UserUtil.getRoleName;
 
 @Slf4j
@@ -49,5 +54,34 @@ public class AuthService implements UserDetailsService {
             .loginFailedCount(entity.getLoginFailedCount())
             .loginFailureLimit(loginFailureLimit)
             .build();
+    }
+    
+    @Transactional
+    public void resetFailedCount(Long id) {
+        repository.resetLoginFailedCount(id);
+    }
+    
+    @Transactional
+    public void increaseFailedCount(String username) {
+        repository.increaseLoginFailedCount(username);
+    }
+    
+    public String getErrorMessage(AuthenticationException exception) {
+        return switch (exception) {
+            case BadCredentialsException ignored -> "Invalid username or password";
+            case DisabledException ignored -> "Account is disabled";
+            case LockedException ignored -> "Account is locked";
+            case AccountExpiredException ignored -> "Account has expired";
+            case CredentialsExpiredException ignored -> "Credentials have expired";
+            case null, default -> "Authentication failed, Please contact to admin";
+        };
+    }
+    
+    public void throwException(AuthenticationException exception, String message) {
+        switch (exception) {
+            case null -> throw new ApiException(SERVER_ERROR, message);
+            case BadCredentialsException ignored -> throw new ApiException(UNAUTHORIZED, message);
+            default -> throw new ApiException(FORBIDDEN, message);
+        }
     }
 }
