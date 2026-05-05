@@ -1,4 +1,4 @@
-package com.djccnt15.northwind.domain.home;
+package com.djccnt15.northwind.domain.home.controller;
 
 import com.djccnt15.northwind.comm.api.Api;
 import lombok.extern.slf4j.Slf4j;

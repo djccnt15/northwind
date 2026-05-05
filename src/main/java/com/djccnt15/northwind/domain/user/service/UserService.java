@@ -1,4 +1,4 @@
-package com.djccnt15.northwind.domain.user.Service;
+package com.djccnt15.northwind.domain.user.service;
 
 import com.djccnt15.northwind.config.security.model.UserSession;
 import com.djccnt15.northwind.db.entity.AppUserEntity;
