@@ -12,8 +12,9 @@ import {
   SubmitBtnWrapper,
   Switcher,
 } from "../shared/auth-ui";
-import { useAuth } from "../shared/auth/auth-context";
+import { responseToUser, useAuth } from "../shared/auth/auth-context";
 import type { ApiIfs } from "../entities/app/api";
+import type { UserIfs } from "../entities/app/user";
 
 const Wrapper = styled.div`
   display: flex;
@@ -89,20 +90,9 @@ export default function Login() {
         headers: { "content-type": "application/x-www-form-urlencoded" },
       })
       .then((res) => {
-        const data: ApiIfs = res.data;
+        const data: ApiIfs<UserIfs> = res.data;
         console.log("login response:", data);
-        setUser({
-          id: Number(data.body?.id) || 0,
-          username: String(data.body?.username),
-          email: String(data.body?.email),
-          authorities: Array.isArray(data.body?.authorities)
-            ? data.body.authorities.map(String)
-            : [],
-          enabled: !!data.body?.enabled,
-          liveUntil: String(data.body?.liveUntil),
-          passwordChangedAt: String(data.body?.passwordChangedAt),
-          loggedIn: true,
-        });
+        setUser(responseToUser(data));
 
         if (rememberId) {
           localStorage.setItem("rememberedId", username);
@@ -114,7 +104,7 @@ export default function Login() {
         navigate(from, { replace: true });
       })
       .catch((err) => {
-        const data: ApiIfs = err.response?.data;
+        const data: ApiIfs<null> = err.response?.data;
         console.error(data || err);
         const description = data?.result?.description;
         const message = description

@@ -23,6 +23,7 @@ import {
   ModalDefault,
 } from "../shared/global-styles";
 import type { ApiIfs } from "../entities/app/api";
+import type { UserIfs } from "../entities/app/user";
 
 const Wrapper = styled.div`
   display: flex;
@@ -117,7 +118,7 @@ export default function Signup() {
       })
       .catch((err) => {
         console.error(err);
-        const data: ApiIfs = err.response?.data;
+        const data: ApiIfs<null> = err.response?.data;
         const description = data?.result?.description;
         const message = description
           ? `Failed to check email. ${description}`
@@ -149,13 +150,13 @@ export default function Signup() {
     api
       .post("/v1/signup", { username, email, password, confirmPassword })
       .then((res) => {
-        const data: ApiIfs = res.data;
+        const data: ApiIfs<UserIfs> = res.data;
         console.log("signup response:", data);
         setIsSignupSuccess(true);
       })
       .catch((err) => {
         console.error(err);
-        const data: ApiIfs = err.response?.data;
+        const data: ApiIfs<null> = err.response?.data;
         const description = data?.result?.description;
         const message = description
           ? `Signup failed. ${description}`

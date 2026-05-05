@@ -161,7 +161,7 @@ export default function Profile() {
       })
       .catch((err) => {
         console.error(err);
-        const data: ApiIfs = err.response?.data;
+        const data: ApiIfs<null> = err.response?.data;
         const description = data?.result?.description;
         const message =
           description || "An error occurred while updating the profile.";
@@ -197,7 +197,7 @@ export default function Profile() {
       })
       .catch((err) => {
         console.error(err);
-        const data: ApiIfs = err.response?.data;
+        const data: ApiIfs<null> = err.response?.data;
         const description = data?.result?.description;
         const message =
           description || "An error occurred while updating the password.";
