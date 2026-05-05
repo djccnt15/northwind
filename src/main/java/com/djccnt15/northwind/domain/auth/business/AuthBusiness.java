@@ -1,29 +1,21 @@
-package com.djccnt15.northwind.domain.auth;
+package com.djccnt15.northwind.domain.auth.business;
 
-import com.djccnt15.northwind.comm.api.Api;
+import com.djccnt15.northwind.annotation.Business;
 import com.djccnt15.northwind.exception.exceptions.ApiException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 import static com.djccnt15.northwind.comm.code.StatusCode.*;
-import static com.djccnt15.northwind.constants.RouteConst.PUBLIC_API_V1;
 
 @Slf4j
-@RestController
-@RequestMapping(PUBLIC_API_V1 + "/auth")
+@Business
 @RequiredArgsConstructor
-public class AuthPublicApiController {
+public class AuthBusiness {
     
-    @PostMapping("/login/fail")
-    public ResponseEntity<Api<?>> loginFail(HttpServletRequest request) {
+    public void handleLoginFailure(HttpServletRequest request) {
         var exception = (AuthenticationException) request.getAttribute("exception");
         
         var message = switch (exception) {
@@ -40,20 +32,5 @@ public class AuthPublicApiController {
             case BadCredentialsException ignored -> throw new ApiException(UNAUTHORIZED, message);
             default -> throw new ApiException(FORBIDDEN, message);
         }
-    }
-    
-    @GetMapping("/logout")
-    public ResponseEntity<Api<?>> logout() {
-        return ResponseEntity.ok(Api.OK(null));
-    }
-    
-    @GetMapping("/unauthorized")
-    public ResponseEntity<Api<?>> unauthorized() {
-        throw new ApiException(UNAUTHORIZED, "Authentication is required");
-    }
-    
-    @GetMapping("/forbidden")
-    public ResponseEntity<Api<?>> forbidden() {
-        throw new ApiException(FORBIDDEN, "Access denied");
     }
 }

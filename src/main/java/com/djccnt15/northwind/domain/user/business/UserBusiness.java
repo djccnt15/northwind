@@ -20,10 +20,6 @@ public class UserBusiness {
     private final UserService userService;
     private final UserRoleService userRoleService;
     
-    public UserInfoRes getUserInfo(UserSession userSession) {
-        return userConverter.toResponse(userSession);
-    }
-    
     public void checkEmailExists(String email) {
         userService.validateEmailNotExists(email);
     }

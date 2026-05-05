@@ -18,11 +18,11 @@ import static com.djccnt15.northwind.constants.RouteConst.PUBLIC_API_V1;
 @RequiredArgsConstructor
 public class UserApiController {
     
-    private final UserBusiness userBusiness;
+    private final UserBusiness business;
     
     @GetMapping("/check-email")
     public ResponseEntity<Api<?>> checkEmail(@RequestParam String email) {
-        userBusiness.checkEmailExists(email);
+        business.checkEmailExists(email);
         return ResponseEntity.ok(Api.OK(null));
     }
     
@@ -30,7 +30,7 @@ public class UserApiController {
     public ResponseEntity<Api<UserInfoRes>> createUser(
         @Validated(SignupReq.CreateCheck.class) @RequestBody SignupReq request
     ) {
-        var response = userBusiness.createUser(request);
+        var response = business.createUser(request);
         return ResponseEntity.ok(Api.CREATED(response));
     }
 }

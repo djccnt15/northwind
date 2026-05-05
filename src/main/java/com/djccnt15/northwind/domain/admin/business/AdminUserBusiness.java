@@ -1,4 +1,4 @@
-package com.djccnt15.northwind.domain.user.business;
+package com.djccnt15.northwind.domain.admin.business;
 
 import com.djccnt15.northwind.annotation.Business;
 import com.djccnt15.northwind.domain.user.Service.RoleService;
@@ -6,7 +6,7 @@ import com.djccnt15.northwind.domain.user.Service.UserRoleService;
 import com.djccnt15.northwind.domain.user.Service.UserService;
 import com.djccnt15.northwind.domain.user.converter.UserConverter;
 import com.djccnt15.northwind.domain.model.ListCountRes;
-import com.djccnt15.northwind.domain.model.ListString;
+import com.djccnt15.northwind.domain.model.ListBodyReq;
 import com.djccnt15.northwind.domain.user.model.SignupReq;
 import com.djccnt15.northwind.domain.user.model.UserInfoRes;
 import lombok.RequiredArgsConstructor;
@@ -52,7 +52,7 @@ public class AdminUserBusiness {
     }
     
     @Transactional
-    public UserInfoRes updateUserRoles(Long userId, ListString request) {
+    public UserInfoRes updateUserRoles(Long userId, ListBodyReq<String> request) {
         var userEntity = userService.getUser(userId);
         userRoleService.deleteUserRoles(userEntity);
         userEntity.setAppUserRole(new HashSet<>());

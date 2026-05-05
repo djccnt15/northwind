@@ -7,7 +7,7 @@ import java.util.List;
 
 @Data
 @AllArgsConstructor
-public class ListString {
+public class ListBodyReq<T> {
     
-    private final List<String> list;
+    private List<T> list;
 }

@@ -1,9 +1,9 @@
-package com.djccnt15.northwind.domain.user.controller;
+package com.djccnt15.northwind.domain.admin.controller;
 
 import com.djccnt15.northwind.comm.api.Api;
-import com.djccnt15.northwind.domain.user.business.AdminUserBusiness;
+import com.djccnt15.northwind.domain.admin.business.AdminUserBusiness;
 import com.djccnt15.northwind.domain.model.ListCountRes;
-import com.djccnt15.northwind.domain.model.ListString;
+import com.djccnt15.northwind.domain.model.ListBodyReq;
 import com.djccnt15.northwind.domain.user.model.SignupReq;
 import com.djccnt15.northwind.domain.user.model.UserInfoRes;
 import lombok.RequiredArgsConstructor;
@@ -52,7 +52,7 @@ public class AdminUserApiController {
     @PatchMapping("{userId}/roles")
     public ResponseEntity<Api<UserInfoRes>> updateUserRoles(
         @PathVariable Long userId,
-        @RequestBody ListString request
+        @RequestBody ListBodyReq<String> request
     ) {
         var response = business.updateUserRoles(userId, request);
         return ResponseEntity.ok(Api.OK(response));

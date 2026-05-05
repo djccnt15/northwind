@@ -18,4 +18,10 @@ public class RoleService {
     public List<UserRoleEntity> getRoles(List<String> names) {
         return userRoleRepo.findAllByNameInOrderByName(names);
     }
+    
+    public List<String> getAllRoles() {
+        return userRoleRepo.findAll().stream()
+            .map(UserRoleEntity::getName)
+            .filter(name -> !name.equals("SUPERADMIN")).toList();
+    }
 }

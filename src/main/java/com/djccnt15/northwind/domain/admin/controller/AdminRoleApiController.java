@@ -1,7 +1,7 @@
-package com.djccnt15.northwind.domain.user.controller;
+package com.djccnt15.northwind.domain.admin.controller;
 
 import com.djccnt15.northwind.comm.api.Api;
-import com.djccnt15.northwind.domain.user.business.AdminRoleBusiness;
+import com.djccnt15.northwind.domain.admin.business.AdminRoleBusiness;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
