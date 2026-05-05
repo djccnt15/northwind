@@ -15,10 +15,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
-import java.util.Optional;
-
 import static com.djccnt15.northwind.comm.code.StatusCode.*;
+import static com.djccnt15.northwind.constants.RoleConst.SUPERADMIN;
 import static com.djccnt15.northwind.util.UserUtil.getRoleName;
 
 @Slf4j
@@ -36,11 +34,12 @@ public class AuthService implements UserDetailsService {
         var entity = repository.findWithRoleFirstByUsername(username)
             .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
         
-        var authorities = Optional.ofNullable(entity.getAppUserRole())
-            .orElse(Collections.emptySet())
-            .stream()
+        var authorities = entity.getAppUserRole().stream()
             .map(it -> getRoleName(it.getUserRole().getName()))
             .map(SimpleGrantedAuthority::new).toList();
+
+        var isSuperAdmin = entity.getAppUserRole().stream()
+            .anyMatch(it -> it.getUserRole().getName().equals(SUPERADMIN));
         
         return UserSession.builder()
             .id(entity.getId())
@@ -53,6 +52,7 @@ public class AuthService implements UserDetailsService {
             .passwordChangedAt(entity.getPasswordChangedAt())
             .loginFailedCount(entity.getLoginFailedCount())
             .loginFailureLimit(loginFailureLimit)
+            .isSuperAdmin(isSuperAdmin)
             .build();
     }
     
