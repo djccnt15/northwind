@@ -1,15 +1,17 @@
 package com.djccnt15.northwind.domain.user.business;
 
 import com.djccnt15.northwind.domain.user.converter.UserConverter;
-import com.djccnt15.northwind.domain.user.service.UserRoleService;
-import com.djccnt15.northwind.domain.user.service.UserService;
 import com.djccnt15.northwind.domain.user.model.SignupReq;
 import com.djccnt15.northwind.domain.user.model.UserInfoRes;
+import com.djccnt15.northwind.domain.user.service.UserRoleService;
+import com.djccnt15.northwind.domain.user.service.UserService;
 import com.djccnt15.northwind.global.annotation.Business;
 import com.djccnt15.northwind.global.config.security.model.UserSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
+
+import static com.djccnt15.northwind.global.constants.RoleConst.USER;
 
 @Slf4j
 @Business
@@ -30,7 +32,7 @@ public class UserBusiness {
         userService.validateEmailNotExists(request.getEmail());
         userService.validateUsernameNotExists(request.getUsername());
         var userEntity = userService.createUser(request);
-        var userRoleEntity = userRoleService.getUserRole("USER");
+        var userRoleEntity = userRoleService.getUserRole(USER);
         userRoleService.assignRoleToUser(userEntity, userRoleEntity);
         return userConverter.toResponse(userEntity);
     }

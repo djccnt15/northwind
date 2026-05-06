@@ -70,10 +70,8 @@ public class UserService {
     }
     
     public AppUserEntity getUser(Long userId) {
-        return userRepo.findById(userId).orElseThrow(() -> {
-            log.error("User with id {} not found", userId);
-            return new ApiException(BAD_REQUEST, "User not found");
-        });
+        return userRepo.findById(userId)
+            .orElseThrow(() -> new ApiException(BAD_REQUEST, "User not found"));
     }
     
     public AppUserEntity updateProfile(AppUserEntity entity, SignupReq request) {

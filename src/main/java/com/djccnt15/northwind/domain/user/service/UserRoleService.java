@@ -23,10 +23,8 @@ public class UserRoleService {
     private final AppUserRoleRepo appUserRoleRepo;
     
     public UserRoleEntity getUserRole(String name) {
-        return userRoleRepo.findFirstByName(name).orElseThrow(() -> {
-            log.error("User role not found in database name: {}", name);
-            return new ApiException(SERVER_ERROR, "Please contact administrator");
-        });
+        return userRoleRepo.findFirstByName(name)
+            .orElseThrow(() -> new ApiException(SERVER_ERROR, "Please contact administrator"));
     }
     
     public AppUserEntity assignRoleToUser(AppUserEntity userEntity, UserRoleEntity roleEntity) {
