@@ -220,6 +220,21 @@ const createColumns = (
   },
   {
     ...defaultColOptions,
+    field: "lastLoginAt",
+    headerName: "Last Login At",
+    flex: 1,
+    type: "dateTime",
+    valueGetter: (value) => value && new Date(value),
+  },
+  {
+    ...defaultColOptions,
+    field: "loginFailedCount",
+    headerName: "Login Failed Count",
+    flex: 0.2,
+    type: "number",
+  },
+  {
+    ...defaultColOptions,
     field: "reset",
     headerName: "Reset Password",
     flex: 0.2,

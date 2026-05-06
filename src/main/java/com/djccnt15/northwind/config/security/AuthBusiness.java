@@ -24,7 +24,7 @@ public class AuthBusiness {
     
     public void handleLoginSuccess(Authentication authentication) {
         var userSession = (UserSession) authentication.getPrincipal();
-        service.resetFailedCount(userSession.getId());
+        service.handleLoginSuccess(userSession.getId());
     }
     
     public void handleLoginFailure(

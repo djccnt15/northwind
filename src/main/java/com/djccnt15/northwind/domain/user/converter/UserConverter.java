@@ -32,6 +32,8 @@ public class UserConverter {
             .isEnabled(userSession.isEnabled())
             .liveUntil(userSession.getLiveUntil())
             .passwordChangedAt(userSession.getPasswordChangedAt())
+            .loginFailedCount(userSession.getLoginFailedCount())
+            .lastLoginAt(userSession.getLastLoginAt())
             .build();
     }
     
@@ -48,6 +50,8 @@ public class UserConverter {
             .isEnabled(entity.isVerified())
             .liveUntil(entity.getLiveUntil())
             .passwordChangedAt(entity.getPasswordChangedAt())
+            .loginFailedCount(entity.getLoginFailedCount())
+            .lastLoginAt(entity.getLastLoginAt())
             .build();
     }
     

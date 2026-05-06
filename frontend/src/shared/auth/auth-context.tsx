@@ -26,6 +26,8 @@ export const responseToUser = (data: ApiIfs<UserIfs>): UserIfs => {
     enabled: !!data.body?.enabled,
     liveUntil: String(data.body?.liveUntil) || "",
     passwordChangedAt: String(data.body?.passwordChangedAt) || "",
+    loginFailedCount: Number(data.body?.loginFailedCount) || 0,
+    lastLoginAt: String(data.body?.lastLoginAt) || "",
     loggedIn: true,
   };
 };

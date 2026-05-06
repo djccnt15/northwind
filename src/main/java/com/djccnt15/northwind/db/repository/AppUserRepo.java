@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,8 +24,14 @@ public interface AppUserRepo extends JpaRepository<AppUserEntity, Long> {
     void increaseLoginFailedCount(@Param("name") String username);
     
     @Modifying
-    @Query("UPDATE AppUserEntity u SET u.loginFailedCount = 0 WHERE u.id = :id")
-    void resetLoginFailedCount(@Param("id") Long id);
+    @Query("""
+        UPDATE AppUserEntity u
+        SET
+            u.loginFailedCount = 0,
+            u.lastLoginAt = :now
+        WHERE u.id = :id
+        """)
+    void handleLoginSuccess(@Param("id") Long id, @Param("now") LocalDateTime lastLoginAt);
     
     Optional<AppUserEntity> findFirstByUsernameAndIdNot(String username, Long id);
     

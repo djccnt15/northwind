@@ -23,4 +23,8 @@ public class UserInfoRes {
     private LocalDateTime liveUntil;
     
     private LocalDateTime passwordChangedAt;
+    
+    private int loginFailedCount;
+    
+    private LocalDateTime lastLoginAt;
 }

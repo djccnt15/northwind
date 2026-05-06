@@ -49,6 +49,9 @@ public class AppUserEntity extends BaseEntity {
     @Builder.Default
     private int loginFailedCount = 0;
     
+    @Column(name = "last_login_at")
+    private LocalDateTime lastLoginAt;
+    
     @OneToMany(mappedBy = "appUser", cascade = CascadeType.REMOVE)
     @Builder.Default
     @ToString.Exclude @EqualsAndHashCode.Exclude

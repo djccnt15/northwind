@@ -15,6 +15,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+
 import static com.djccnt15.northwind.comm.code.StatusCode.*;
 import static com.djccnt15.northwind.constants.RoleConst.SUPERADMIN;
 import static com.djccnt15.northwind.util.UserUtil.getRoleName;
@@ -52,13 +54,14 @@ public class AuthService implements UserDetailsService {
             .passwordChangedAt(entity.getPasswordChangedAt())
             .loginFailedCount(entity.getLoginFailedCount())
             .loginFailureLimit(loginFailureLimit)
+            .lastLoginAt(entity.getLastLoginAt())
             .isSuperAdmin(isSuperAdmin)
             .build();
     }
     
     @Transactional
-    public void resetFailedCount(Long id) {
-        repository.resetLoginFailedCount(id);
+    public void handleLoginSuccess(Long id) {
+        repository.handleLoginSuccess(id, LocalDateTime.now());
     }
     
     @Transactional

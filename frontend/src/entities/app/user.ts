@@ -6,5 +6,7 @@ export interface UserIfs {
   enabled: boolean;
   liveUntil: string;
   passwordChangedAt: string;
+  loginFailedCount: number;
+  lastLoginAt: string;
   loggedIn: boolean;
 }

@@ -32,6 +32,8 @@ public class UserSession implements UserDetails {
     
     private int loginFailureLimit;
     
+    private LocalDateTime lastLoginAt;
+    
     private boolean isSuperAdmin;
     
     @Builder.Default
