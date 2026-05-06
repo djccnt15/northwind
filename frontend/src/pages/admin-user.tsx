@@ -136,6 +136,7 @@ const onResetPassword = (params: GridRenderCellParams<UserIfs>) => {
           {
             id: data.body.id,
             passwordChangedAt: data.body.passwordChangedAt ?? null,
+            loginFailedCount: data.body.loginFailedCount ?? 0,
           },
         ]);
       }
@@ -161,6 +162,14 @@ const createColumns = (
     headerName: "DB ID",
     flex: 0.2,
     editable: false,
+  },
+  {
+    ...defaultColOptions,
+    field: "enabled",
+    headerName: "Enabled",
+    flex: 0.2,
+    editable: true,
+    type: "boolean",
   },
   {
     ...defaultColOptions,
@@ -209,14 +218,6 @@ const createColumns = (
     flex: 1,
     type: "dateTime",
     valueGetter: (value) => value && new Date(value),
-  },
-  {
-    ...defaultColOptions,
-    field: "enabled",
-    headerName: "Enabled",
-    flex: 0.2,
-    editable: true,
-    type: "boolean",
   },
   {
     ...defaultColOptions,
@@ -344,7 +345,9 @@ export default function AdminUser() {
       })
       .catch((err) => {
         console.error("Failed to update roles:", err);
-        alert("Failed to update roles");
+        const data: ApiIfs<null> = err.response?.data;
+        const message = data?.result?.description || "Unknown error";
+        alert(`Failed to update roles: ${message}`);
       });
   };
 
@@ -428,9 +431,9 @@ export default function AdminUser() {
             <ModalTitleArea>
               <ModalTitle>Role Management</ModalTitle>
               <ModalBtnArea>
-                <CellBlueButton form="role-form">저장</CellBlueButton>
+                <CellBlueButton form="role-form">Save</CellBlueButton>
                 <CellRedButton type="button" onClick={closeModal}>
-                  취소
+                  Cancel
                 </CellRedButton>
               </ModalBtnArea>
             </ModalTitleArea>
