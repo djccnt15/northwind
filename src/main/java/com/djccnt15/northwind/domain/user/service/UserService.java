@@ -1,11 +1,11 @@
 package com.djccnt15.northwind.domain.user.service;
 
-import com.djccnt15.northwind.config.security.model.UserSession;
 import com.djccnt15.northwind.db.entity.AppUserEntity;
 import com.djccnt15.northwind.db.repository.AppUserRepo;
 import com.djccnt15.northwind.domain.user.converter.UserConverter;
 import com.djccnt15.northwind.domain.user.model.SignupReq;
-import com.djccnt15.northwind.exception.exceptions.ApiException;
+import com.djccnt15.northwind.global.config.security.model.UserSession;
+import com.djccnt15.northwind.global.exception.exceptions.ApiException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static com.djccnt15.northwind.comm.code.StatusCode.BAD_REQUEST;
+import static com.djccnt15.northwind.global.code.StatusCode.BAD_REQUEST;
 
 @Slf4j
 @Service

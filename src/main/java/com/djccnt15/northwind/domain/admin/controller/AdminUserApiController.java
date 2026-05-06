@@ -1,6 +1,6 @@
 package com.djccnt15.northwind.domain.admin.controller;
 
-import com.djccnt15.northwind.comm.api.Api;
+import com.djccnt15.northwind.global.api.Api;
 import com.djccnt15.northwind.domain.admin.business.AdminUserBusiness;
 import com.djccnt15.northwind.domain.model.ListCountRes;
 import com.djccnt15.northwind.domain.model.ListBodyReq;
@@ -13,7 +13,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import static com.djccnt15.northwind.constants.RouteConst.API_V1;
+import static com.djccnt15.northwind.global.constants.RouteConst.API_V1;
 
 @Slf4j
 @RestController

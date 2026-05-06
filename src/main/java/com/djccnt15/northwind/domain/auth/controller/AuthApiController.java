@@ -1,9 +1,9 @@
 package com.djccnt15.northwind.domain.auth.controller;
 
-import com.djccnt15.northwind.comm.api.Api;
-import com.djccnt15.northwind.config.security.model.UserSession;
+import com.djccnt15.northwind.global.api.Api;
 import com.djccnt15.northwind.domain.user.converter.UserConverter;
 import com.djccnt15.northwind.domain.user.model.UserInfoRes;
+import com.djccnt15.northwind.global.config.security.model.UserSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import static com.djccnt15.northwind.constants.RouteConst.API_V1;
+import static com.djccnt15.northwind.global.constants.RouteConst.API_V1;
 
 @Slf4j
 @RestController

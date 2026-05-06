@@ -1,7 +1,7 @@
 package com.djccnt15.northwind.domain.admin.business;
 
-import com.djccnt15.northwind.annotation.Business;
 import com.djccnt15.northwind.domain.user.service.RoleService;
+import com.djccnt15.northwind.global.annotation.Business;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 

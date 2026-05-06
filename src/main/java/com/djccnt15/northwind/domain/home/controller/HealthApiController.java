@@ -1,13 +1,13 @@
 package com.djccnt15.northwind.domain.home.controller;
 
-import com.djccnt15.northwind.comm.api.Api;
+import com.djccnt15.northwind.global.api.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import static com.djccnt15.northwind.constants.RouteConst.PUBLIC_API_V1;
+import static com.djccnt15.northwind.global.constants.RouteConst.PUBLIC_API_V1;
 
 @Slf4j
 @RestController

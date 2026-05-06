@@ -1,6 +1,6 @@
 package com.djccnt15.northwind.domain.user.controller;
 
-import com.djccnt15.northwind.comm.api.Api;
+import com.djccnt15.northwind.global.api.Api;
 import com.djccnt15.northwind.domain.user.business.UserBusiness;
 import com.djccnt15.northwind.domain.user.model.SignupReq;
 import com.djccnt15.northwind.domain.user.model.UserInfoRes;
@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import static com.djccnt15.northwind.constants.RouteConst.PUBLIC_API_V1;
+import static com.djccnt15.northwind.global.constants.RouteConst.PUBLIC_API_V1;
 
 @Slf4j
 @RestController

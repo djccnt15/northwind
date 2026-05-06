@@ -1,10 +1,10 @@
 package com.djccnt15.northwind.domain.user.converter;
 
-import com.djccnt15.northwind.annotation.Converter;
-import com.djccnt15.northwind.config.security.model.UserSession;
 import com.djccnt15.northwind.db.entity.AppUserEntity;
 import com.djccnt15.northwind.domain.user.model.SignupReq;
 import com.djccnt15.northwind.domain.user.model.UserInfoRes;
+import com.djccnt15.northwind.global.annotation.Converter;
+import com.djccnt15.northwind.global.config.security.model.UserSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
@@ -13,7 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import java.util.Collections;
 import java.util.Optional;
 
-import static com.djccnt15.northwind.util.UserUtil.getRoleName;
+import static com.djccnt15.northwind.global.util.UserUtil.getRoleName;
 
 @Slf4j
 @Converter
