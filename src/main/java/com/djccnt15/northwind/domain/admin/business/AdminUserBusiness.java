@@ -53,6 +53,8 @@ public class AdminUserBusiness {
     
     @Transactional
     public UserInfoRes updateUserRoles(Long userId, ListBodyReq<String> request) {
+        roleService.validateNotSuperAdmin(userId);
+        
         var userEntity = userService.getUser(userId);
         userRoleService.deleteUserRoles(userEntity);
         userEntity.setAppUserRole(new HashSet<>());

@@ -18,3 +18,6 @@ app:
   remember-me:
     key: northwind-remember-me-key
     tokenValiditySeconds: 1209600  # 14 days
+  schedule:
+    cron:
+      superAdminRefresh: "0 0 * * * *"  # runs every minute

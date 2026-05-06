@@ -15,3 +15,6 @@ app:
   remember-me:
     key: { remember-me-key }
     tokenValiditySeconds: 604800  # 7 days
+  schedule:
+    cron:
+      superAdminRefresh: "0 0 * * * *"  # runs every hour

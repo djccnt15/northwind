@@ -36,4 +36,12 @@ public interface AppUserRepo extends JpaRepository<AppUserEntity, Long> {
     List<AppUserEntity> findWithRoleByUsernameLikeOrEmailLike(String usernameKw, String emailKw, Pageable pageable);
     
     Integer countByUsernameLikeOrEmailLike(String usernameKw, String emailKw);
+    
+    @Query("""
+        SELECT u FROM AppUserEntity u
+        JOIN FETCH u.appUserRole ur
+        JOIN FETCH ur.userRole r
+        WHERE r.name = :name
+    """)
+    List<AppUserEntity> findByRoleName(String name);
 }
