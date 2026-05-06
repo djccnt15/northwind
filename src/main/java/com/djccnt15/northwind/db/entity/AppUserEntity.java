@@ -13,7 +13,11 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
-@Table(name = "app_user", indexes = @Index(columnList = "username"))
+@Table(name = "app_user",
+    indexes = {
+        @Index(columnList = "username"),
+        @Index(columnList = "email")
+    })
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
