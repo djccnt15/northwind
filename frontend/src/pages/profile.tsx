@@ -6,8 +6,8 @@ import {
   commBtnSkyBlueBoxShadow,
   globalTransition,
   Title,
-} from "../shared/global-styles";
-import { SubmitBtn } from "../shared/auth-ui";
+} from "../shared/ui/global-styles";
+import { SubmitBtn } from "../shared/ui/auth-ui";
 import { useAuth } from "../shared/auth/auth-context";
 import { useState } from "react";
 import { privateApi } from "../shared/api";

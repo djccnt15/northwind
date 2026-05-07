@@ -11,7 +11,7 @@ import {
   SubmitBtnHoverMsg,
   SubmitBtnWrapper,
   Switcher,
-} from "../shared/auth-ui";
+} from "../shared/ui/auth-ui";
 import {
   commBorderRadius,
   commBtnSkyBlue,
@@ -21,7 +21,7 @@ import {
   commLinkSkyBlue,
   globalTransition,
   ModalDefault,
-} from "../shared/global-styles";
+} from "../shared/ui/global-styles";
 import type { ApiIfs } from "../entities/app/api";
 import type { UserIfs } from "../entities/app/user";
 

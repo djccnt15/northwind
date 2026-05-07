@@ -12,8 +12,9 @@ import {
   globalTransition,
   ModalDefault,
   ModalOverlay,
+  PageWrapper,
   Title,
-} from "../shared/global-styles";
+} from "../shared/ui/global-styles";
 import {
   DataGrid,
   type GridDataSource,
@@ -30,12 +31,7 @@ import {
 import QuickToolbar from "../features/data-grid/custom-toolbar";
 import { useKeyDown } from "../shared/useKeyDown";
 
-const Wrapper = styled.div`
-  width: 100%;
-  height: 100%;
-  display: grid;
-  grid-template-rows: auto 1fr;
-`;
+const Wrapper = styled(PageWrapper)``;
 
 const CellBlueButton = styled.button`
   ${commBtnSkyBlue}

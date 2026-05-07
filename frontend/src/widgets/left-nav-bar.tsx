@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { globalTransition } from "../shared/global-styles";
+import { globalTransition } from "../shared/ui/global-styles";
 import { useAuth } from "../shared/auth/auth-context";
 import { Link, useNavigate } from "react-router-dom";
 import { privateApi } from "../shared/api";

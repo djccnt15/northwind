@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { RouterProvider } from "react-router-dom";
 import { AppRouter } from "./app/router";
 import AuthProvider from "./app/provider/auth-provider";
-import { GlobalStyles } from "./shared/global-styles";
+import { GlobalStyles } from "./shared/ui/global-styles";
 
 const Wrapper = styled.div`
   height: 100vh;

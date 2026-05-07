@@ -100,3 +100,10 @@ export const Title = styled.h1`
   padding: 20px;
   margin-bottom: 10px;
 `;
+
+export const PageWrapper = styled.div`
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-rows: auto 1fr;
+`;
