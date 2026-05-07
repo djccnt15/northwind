@@ -55,12 +55,12 @@ public class AdminUserBusiness {
     public UserInfoRes updateUserRoles(Long userId, ListBodyReq<String> request) {
         roleService.validateNotSuperAdmin(userId);
         
-        var userEntity = userService.getUser(userId);
-        userRoleService.deleteUserRoles(userEntity);
-        userEntity.setAppUserRole(new HashSet<>());
+        var entity = userService.getUser(userId);
+        userRoleService.deleteUserRoles(entity);
+        entity.setAppUserRole(new HashSet<>());
         
         var roleEntities = roleService.getRoles(request.getList());
-        var updatedUser = userRoleService.assignRolesToUser(userEntity, roleEntities);
+        var updatedUser = userRoleService.assignRolesToUser(entity, roleEntities);
         return userConverter.toResponse(updatedUser);
     }
 }

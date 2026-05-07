@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 import static com.djccnt15.northwind.global.code.StatusCode.BAD_REQUEST;
+import static com.djccnt15.northwind.global.code.StatusCode.NOT_FOUND;
 
 @Slf4j
 @Service
@@ -24,7 +25,7 @@ public class TitleService {
     
     public TitleEntity getTitle(Long id) {
         return repository.findById(id)
-            .orElseThrow(() -> new ApiException(BAD_REQUEST, "Title not found"));
+            .orElseThrow(() -> new ApiException(NOT_FOUND, "Title not found"));
     }
     
     public void validateTitle(TitleCreateReq request) {

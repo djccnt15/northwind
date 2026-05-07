@@ -18,6 +18,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.djccnt15.northwind.global.code.StatusCode.BAD_REQUEST;
+import static com.djccnt15.northwind.global.code.StatusCode.NOT_FOUND;
 
 @Slf4j
 @Service
@@ -71,7 +72,7 @@ public class UserService {
     
     public AppUserEntity getUser(Long userId) {
         return userRepo.findById(userId)
-            .orElseThrow(() -> new ApiException(BAD_REQUEST, "User not found"));
+            .orElseThrow(() -> new ApiException(NOT_FOUND, "User not found"));
     }
     
     public AppUserEntity updateProfile(AppUserEntity entity, SignupReq request) {

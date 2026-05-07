@@ -31,6 +31,6 @@ public class GlobalExceptionHandler {
         
         return ResponseEntity
             .status(SERVER_ERROR.getHttpStatusCode())
-            .body(Api.ERROR(SERVER_ERROR));
+            .body(Api.ERROR(SERVER_ERROR, "An unexpected error occurred. Please contact to admin."));
     }
 }

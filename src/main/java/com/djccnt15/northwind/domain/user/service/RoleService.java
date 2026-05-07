@@ -6,6 +6,7 @@ import com.djccnt15.northwind.db.entity.UserRoleEntity;
 import com.djccnt15.northwind.db.repository.UserRoleRepo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,7 +27,7 @@ public class RoleService {
     }
     
     public List<String> getAllRoles() {
-        return userRoleRepo.findAll().stream()
+        return userRoleRepo.findAll(Sort.by("name")).stream()
             .map(UserRoleEntity::getName)
             .filter(name -> !name.equals(SUPERADMIN)).toList();
     }
