@@ -28,7 +28,7 @@ import {
   dataGridInitialState,
   defaultColOptions,
 } from "../features/data-grid/constants";
-import QuickToolbar from "../features/data-grid/custom-toolbar";
+import QuickToolbar from "../features/data-grid/quick-toolbar";
 import { useKeyDown } from "../shared/useKeyDown";
 
 const Wrapper = styled(PageWrapper)``;
