@@ -25,7 +25,7 @@ public class TitleApiController {
     private final TitleBusiness business;
     
     @PostMapping
-    public ResponseEntity<Api<TitleRes>> createTitle(@Validated TitleCreateReq request) {
+    public ResponseEntity<Api<TitleRes>> createTitle(@Validated @RequestBody TitleCreateReq request) {
         var response = business.createTitle(request);
         return ResponseEntity.ok(Api.CREATED(response));
     }
@@ -39,7 +39,7 @@ public class TitleApiController {
     @PutMapping("{id}")
     public ResponseEntity<Api<TitleRes>> updateTitle(
         @PathVariable Long id,
-        @Validated TitleCreateReq request
+        @Validated @RequestBody TitleCreateReq request
     ) {
         var response = business.updateTitle(id, request);
         return ResponseEntity.ok(Api.OK(response));
