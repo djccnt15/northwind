@@ -218,6 +218,7 @@ export default function Profile() {
             <Input
               type="text"
               value={username}
+              placeholder="ID"
               onChange={onChangeUsername}
               required
             />
@@ -227,6 +228,7 @@ export default function Profile() {
             <Input
               type="email"
               value={email}
+              placeholder="email@example.com"
               onChange={onChangeEmail}
               required
             />
@@ -250,7 +252,7 @@ export default function Profile() {
               <Label>Confirm Password</Label>
               <Input
                 type="password"
-                placeholder="Password"
+                placeholder="Confirm Password"
                 value={confirmPassword}
                 onChange={onChangeConfirmPassword}
                 required
