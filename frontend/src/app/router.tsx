@@ -12,8 +12,18 @@ import Signup from "../pages/signup";
 import AdminUser from "../pages/admin-user";
 import Profile from "../pages/profile";
 import EmployeeTitle from "../pages/title";
+import Welcome from "../pages/welcome";
 
 export const AppRouter = createBrowserRouter([
+  {
+    path: "/",
+    element: <AuthRedirectRoute />,
+    children: [
+      { path: "/", element: <Welcome /> },
+      { path: "/login", element: <Login /> },
+      { path: "/signup", element: <Signup /> },
+    ],
+  },
   {
     path: "/",
     element: (
@@ -22,7 +32,7 @@ export const AppRouter = createBrowserRouter([
       </ProtectedRoute>
     ),
     children: [
-      { path: "/", element: <Home /> },
+      { path: "/home", element: <Home /> },
       { path: "/profile", element: <Profile /> },
       { path: "/employee/titles", element: <EmployeeTitle /> },
     ],
@@ -35,14 +45,6 @@ export const AppRouter = createBrowserRouter([
       </AdminRoute>
     ),
     children: [{ path: "/admin/user", element: <AdminUser /> }],
-  },
-  {
-    path: "",
-    element: <AuthRedirectRoute />,
-    children: [
-      { path: "/login", element: <Login /> },
-      { path: "/signup", element: <Signup /> },
-    ],
   },
   { path: "*", element: <NotFoundRoute /> },
 ]);

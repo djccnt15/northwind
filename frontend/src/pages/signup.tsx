@@ -50,10 +50,12 @@ const CheckEmailBtn = styled.button`
   font-size: 10px;
   padding: 10px;
   cursor: pointer;
+
   &:hover {
     ${commBtnHoverSkyBlue}
     ${globalTransition}
   }
+
   &:focus {
     outline: none;
     ${commBtnSkyBlueBoxShadow}
@@ -67,6 +69,7 @@ const SuccessModal = styled(ModalDefault)`
   text-align: center;
   font-size: 18px;
   font-weight: 600;
+
   a {
     ${commLinkSkyBlue}
   }

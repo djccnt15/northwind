@@ -18,7 +18,7 @@ export function AdminRoute({ children }: ChildNodeIfs) {
   const { user } = useAuth();
 
   if (!user || !user.authorities.includes("ADMIN")) {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/home" replace />;
   }
 
   return <>{children}</>;
@@ -27,11 +27,11 @@ export function AdminRoute({ children }: ChildNodeIfs) {
 export function AuthRedirectRoute() {
   // 이미 로그인한 사용자 접근시 홈 페이지로 리다이렉트
   const { user } = useAuth();
-  if (user) return <Navigate to="/" replace />;
+  if (user) return <Navigate to="/home" replace />;
 
   return <Outlet />;
 }
 
 export function NotFoundRoute() {
-  return <Navigate to="/" replace />;
+  return <Navigate to="/home" replace />;
 }

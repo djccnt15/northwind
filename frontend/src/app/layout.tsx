@@ -1,6 +1,6 @@
 import { Outlet } from "react-router-dom";
 import styled from "styled-components";
-import LeftNavBar from "../widgets/left-nav-bar";
+import LeftNavBar from "../widgets/navbar-left";
 
 const Wrapper = styled.div`
   display: grid;
