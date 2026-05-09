@@ -16,13 +16,22 @@ import type { ApiIfs } from "../entities/app/api";
 const Wrapper = styled.div`
   width: 100%;
   height: 100%;
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+`;
+
+const PageWrapper = styled.div`
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  overflow-y: auto;
 `;
 
 const ContentWrapper = styled.div`
   padding-left: 20px;
-  gap: 30px;
+  height: 100%;
+  overflow-y: auto;
 `;
 
 const GapDiv = styled.div<{ padding?: string }>`
@@ -90,16 +99,9 @@ const SubmitPwBtn = styled.button`
 
 const AuthList = styled.ul`
   display: flex;
-  flex-direction: column;
   flex-wrap: wrap;
-  align-content: flex-start;
   width: 100%;
-  height: min(230px, calc(100dvh - 280px));
-  min-height: 120px;
-  overflow-x: auto;
-  overflow-y: hidden;
   gap: 10px;
-  padding: 0 0 6px 0;
   list-style: none;
 `;
 
@@ -109,6 +111,11 @@ const AuthItem = styled.li`
   border-radius: 4px;
   font-size: 12px;
   white-space: nowrap;
+  cursor: default;
+
+  &:hover {
+    background-color: #cccccc;
+  }
 `;
 
 export default function Profile() {
@@ -210,71 +217,78 @@ export default function Profile() {
 
   return (
     <Wrapper>
-      <Title>Profile</Title>
-      <ContentWrapper>
-        <Form onSubmit={onSubmitProfile}>
-          <FieldWrapper>
-            <Label>ID</Label>
-            <Input
-              type="text"
-              value={username}
-              placeholder="ID"
-              onChange={onChangeUsername}
-              required
-            />
-          </FieldWrapper>
-          <FieldWrapper>
-            <Label>E-mail</Label>
-            <Input
-              type="email"
-              value={email}
-              placeholder="email@example.com"
-              onChange={onChangeEmail}
-              required
-            />
-          </FieldWrapper>
-          <SubmitBtn value="Update Profile">Update Profile</SubmitBtn>
-        </Form>
-        <GapDiv />
-        <Form onSubmit={onSubmitPassword}>
-          <PasswordWrapper>
+      <PageWrapper>
+        <Title>Profile</Title>
+        <ContentWrapper>
+          <Form onSubmit={onSubmitProfile}>
             <FieldWrapper>
-              <Label>Password</Label>
+              <Label>ID</Label>
               <Input
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange={onChangePassword}
+                type="text"
+                value={username}
+                placeholder="ID"
+                onChange={onChangeUsername}
                 required
               />
             </FieldWrapper>
             <FieldWrapper>
-              <Label>Confirm Password</Label>
+              <Label>E-mail</Label>
               <Input
-                type="password"
-                placeholder="Confirm Password"
-                value={confirmPassword}
-                onChange={onChangeConfirmPassword}
+                type="email"
+                value={email}
+                placeholder="email@example.com"
+                onChange={onChangeEmail}
                 required
               />
             </FieldWrapper>
-            <SubmitPwBtn>Change</SubmitPwBtn>
-          </PasswordWrapper>
-          <FieldWrapper>
-            <Label>Live Until</Label>
-            <Input type="datetime-local" value={user?.liveUntil} disabled />
-          </FieldWrapper>
-        </Form>
-      </ContentWrapper>
-      <GapDiv />
-      <Title>Authorities</Title>
-      <ContentWrapper>
-        <AuthList>
-          {user?.authorities.map((auth, index) => (
-            <AuthItem key={index}>{auth}</AuthItem>
-          ))}
-        </AuthList>
-      </ContentWrapper>
+            <FieldWrapper>
+              <Label>Team</Label>
+              <Input type="text" value={user?.team || ""} disabled />
+            </FieldWrapper>
+            <SubmitBtn value="Update Profile">Update Profile</SubmitBtn>
+          </Form>
+          <GapDiv />
+          <Form onSubmit={onSubmitPassword}>
+            <PasswordWrapper>
+              <FieldWrapper>
+                <Label>Password</Label>
+                <Input
+                  type="password"
+                  placeholder="Password"
+                  value={password}
+                  onChange={onChangePassword}
+                  required
+                />
+              </FieldWrapper>
+              <FieldWrapper>
+                <Label>Confirm Password</Label>
+                <Input
+                  type="password"
+                  placeholder="Confirm Password"
+                  value={confirmPassword}
+                  onChange={onChangeConfirmPassword}
+                  required
+                />
+              </FieldWrapper>
+              <SubmitPwBtn>Change</SubmitPwBtn>
+            </PasswordWrapper>
+            <FieldWrapper>
+              <Label>Live Until</Label>
+              <Input type="datetime-local" value={user?.liveUntil} disabled />
+            </FieldWrapper>
+          </Form>
+        </ContentWrapper>
+      </PageWrapper>
+      <PageWrapper>
+        <Title>Authorities</Title>
+        <ContentWrapper>
+          <AuthList>
+            {user?.authorities.map((auth, index) => (
+              <AuthItem key={index}>{auth}</AuthItem>
+            ))}
+          </AuthList>
+        </ContentWrapper>
+      </PageWrapper>
     </Wrapper>
   );
 }
