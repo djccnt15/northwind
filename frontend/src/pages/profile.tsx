@@ -6,6 +6,8 @@ import {
   commBtnSkyBlueBoxShadow,
   globalTransition,
   Title,
+  Tooltip,
+  TooltipWrapper,
 } from "../shared/ui/global-styles";
 import { SubmitBtn } from "../shared/ui/auth-ui";
 import { useAuth } from "../shared/auth/auth-context";
@@ -243,7 +245,16 @@ export default function Profile() {
             </FieldWrapper>
             <FieldWrapper>
               <Label>Team</Label>
-              <Input type="text" value={user?.team || ""} disabled />
+              <TooltipWrapper>
+                <Input type="text" value={user?.team || ""} disabled />
+                <Tooltip
+                  left="50%"
+                  top="-100%"
+                  style={{ transform: "translateX(-50%)", marginTop: "5px" }}
+                >
+                  You can't change team by yourself. Contact to Admin
+                </Tooltip>
+              </TooltipWrapper>
             </FieldWrapper>
             <SubmitBtn value="Update Profile">Update Profile</SubmitBtn>
           </Form>
@@ -274,7 +285,16 @@ export default function Profile() {
             </PasswordWrapper>
             <FieldWrapper>
               <Label>Live Until</Label>
-              <Input type="datetime-local" value={user?.liveUntil} disabled />
+              <TooltipWrapper>
+                <Input type="datetime-local" value={user?.liveUntil} disabled />
+                <Tooltip top="calc(100% + 8px)">
+                  Expiration date of your account. You can't use the account
+                  after this date.
+                </Tooltip>
+                <Tooltip top="calc(200%)">
+                  Contact your account manager for more information.
+                </Tooltip>
+              </TooltipWrapper>
             </FieldWrapper>
           </Form>
         </ContentWrapper>
