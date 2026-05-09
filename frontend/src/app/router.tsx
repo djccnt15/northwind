@@ -11,6 +11,7 @@ import {
 import Signup from "../pages/signup";
 import AdminUser from "../pages/admin-user";
 import Profile from "../pages/profile";
+import EmployeeTitle from "../pages/title";
 
 export const AppRouter = createBrowserRouter([
   {
@@ -23,6 +24,7 @@ export const AppRouter = createBrowserRouter([
     children: [
       { path: "/", element: <Home /> },
       { path: "/profile", element: <Profile /> },
+      { path: "/employee/titles", element: <EmployeeTitle /> },
     ],
   },
   {
