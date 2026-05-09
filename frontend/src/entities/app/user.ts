@@ -8,5 +8,6 @@ export interface UserIfs {
   passwordChangedAt: string;
   loginFailedCount: number;
   lastLoginAt: string;
+  team: string;
   loggedIn: boolean;
 }

@@ -27,4 +27,6 @@ public class UserInfoRes {
     private int loginFailedCount;
     
     private LocalDateTime lastLoginAt;
+    
+    private String team;
 }

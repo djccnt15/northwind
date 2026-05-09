@@ -28,6 +28,7 @@ export const responseToUser = (data: ApiIfs<UserIfs>): UserIfs => {
     passwordChangedAt: String(data.body?.passwordChangedAt) || "",
     loginFailedCount: Number(data.body?.loginFailedCount) || 0,
     lastLoginAt: String(data.body?.lastLoginAt) || "",
+    team: String(data.body?.team) || "",
     loggedIn: true,
   };
 };

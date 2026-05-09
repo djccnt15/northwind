@@ -56,6 +56,11 @@ public class AppUserEntity extends BaseEntity {
     @Builder.Default
     @ToString.Exclude @EqualsAndHashCode.Exclude
     private Set<AppUserRoleEntity> appUserRole = new HashSet<>();
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "team_id", nullable = false)
+    @ToString.Exclude @EqualsAndHashCode.Exclude
+    private TeamEntity team;
 
     public void addAppUserRole(AppUserRoleEntity roleLink) {
         if (roleLink == null) return;

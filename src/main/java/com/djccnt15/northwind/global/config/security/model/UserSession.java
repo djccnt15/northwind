@@ -34,6 +34,8 @@ public class UserSession implements UserDetails {
     
     private LocalDateTime lastLoginAt;
     
+    private String team;
+    
     private boolean isSuperAdmin;
     
     @Builder.Default

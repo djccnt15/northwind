@@ -34,6 +34,7 @@ public class UserConverter {
             .passwordChangedAt(userSession.getPasswordChangedAt())
             .loginFailedCount(userSession.getLoginFailedCount())
             .lastLoginAt(userSession.getLastLoginAt())
+            .team(userSession.getTeam())
             .build();
     }
     
@@ -52,6 +53,7 @@ public class UserConverter {
             .passwordChangedAt(entity.getPasswordChangedAt())
             .loginFailedCount(entity.getLoginFailedCount())
             .lastLoginAt(entity.getLastLoginAt())
+            .team(entity.getTeam().getName())
             .build();
     }
     

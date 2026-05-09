@@ -33,7 +33,7 @@ public class AuthService implements UserDetailsService {
     
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        var entity = repository.findWithRoleFirstByUsername(username)
+        var entity = repository.findWithRoleTeamFirstByUsername(username)
             .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
         
         var authorities = entity.getAppUserRole().stream()
@@ -55,6 +55,7 @@ public class AuthService implements UserDetailsService {
             .loginFailedCount(entity.getLoginFailedCount())
             .loginFailureLimit(loginFailureLimit)
             .lastLoginAt(entity.getLastLoginAt())
+            .team(entity.getTeam().getName())
             .isSuperAdmin(isSuperAdmin)
             .build();
     }
