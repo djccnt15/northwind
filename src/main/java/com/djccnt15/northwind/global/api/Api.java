@@ -24,6 +24,10 @@ public class Api<T> {
         return new Api<>(currentTimeMillis(), Result.OK(), data);
     }
     
+    public static <T> Api<T> OK(StatusCodeIfs statusCodeIfs, T data) {
+        return new Api<>(currentTimeMillis(), Result.OK(statusCodeIfs), data);
+    }
+    
     public static <T> Api<T> CREATED(T data) {
         return new Api<>(currentTimeMillis(), Result.CREATED(), data);
     }

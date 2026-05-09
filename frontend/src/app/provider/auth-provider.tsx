@@ -16,7 +16,11 @@ export default function AuthProvider({ children }: ChildNodeIfs) {
         .then((res) => {
           const data: ApiIfs<UserIfs> = res.data;
           console.log("Session check response:", data);
-          setUser(responseToUser(data));
+          if (data.result.code === 1200) {
+            setUser(responseToUser(data));
+          } else {
+            setUser(null);
+          }
         })
         .catch((err) => {
           const data: ApiIfs<null> = err.response?.data;

@@ -27,6 +27,14 @@ public class Result {
             .build();
     }
     
+    public static Result OK(StatusCodeIfs statusCodeIfs) {
+        return Result.builder()
+            .code(statusCodeIfs.getStatusCode())
+            .message(statusCodeIfs.getDescription())
+            .description("OK")
+            .build();
+    }
+    
     public static Result CREATED() {
         return Result.builder()
             .code(CREATED.getStatusCode())

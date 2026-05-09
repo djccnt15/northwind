@@ -17,6 +17,7 @@ public enum StatusCode implements StatusCodeIfs {
     SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, 500, "Internal Server Error"),
     NULL_POINT(HttpStatus.INTERNAL_SERVER_ERROR, 512, "Null Point"),
     
+    VALIDATED(HttpStatus.OK, 1200, "Validated"),
     VALIDATION_ERROR(HttpStatus.BAD_REQUEST, 1400, "Validation Error"),
     ;
     

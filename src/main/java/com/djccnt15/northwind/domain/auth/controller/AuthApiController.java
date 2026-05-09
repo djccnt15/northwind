@@ -1,8 +1,8 @@
 package com.djccnt15.northwind.domain.auth.controller;
 
-import com.djccnt15.northwind.global.api.Api;
 import com.djccnt15.northwind.domain.user.converter.UserConverter;
 import com.djccnt15.northwind.domain.user.model.UserInfoRes;
+import com.djccnt15.northwind.global.api.Api;
 import com.djccnt15.northwind.global.config.security.model.UserSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import static com.djccnt15.northwind.global.code.StatusCode.VALIDATED;
 import static com.djccnt15.northwind.global.constants.RouteConst.API_V1;
 
 @Slf4j
@@ -26,7 +27,7 @@ public class AuthApiController {
     @GetMapping("/check-session")
     public ResponseEntity<Api<UserInfoRes>> checkSession(@AuthenticationPrincipal UserSession userSession) {
         var response = converter.toResponse(userSession);
-        return ResponseEntity.ok(Api.OK(response));
+        return ResponseEntity.ok(Api.OK(VALIDATED, response));
     }
     
     @PostMapping("/login/success")
