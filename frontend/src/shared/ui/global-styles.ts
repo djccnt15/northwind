@@ -98,7 +98,6 @@ export const Title = styled.h1`
   font-weight: 700;
   text-transform: uppercase;
   padding: 20px;
-  margin-bottom: 10px;
 `;
 
 export const PageWrapper = styled.div`
@@ -106,4 +105,31 @@ export const PageWrapper = styled.div`
   height: 100%;
   display: grid;
   grid-template-rows: auto 1fr;
+`;
+
+export const TooltipWrapper = styled.div`
+  position: relative;
+`;
+
+export const TooltipBase = styled.span`
+  ${commBorderRadius}
+  background-color: #2f4858;
+  white-space: nowrap; // 텍스트가 길어질 경우 줄바꿈 방지
+  pointer-events: none; // 마우스 이벤트를 받지 않도록 설정
+  position: absolute;
+  color: white;
+  z-index: 9999;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+
+  ${TooltipWrapper}:hover & {
+    opacity: 1;
+  }
+`;
+
+export const Tooltip = styled(TooltipBase)<{ left?: string; top?: string }>`
+  padding: 8px 12px;
+  font-size: 13px;
+  left: ${(props) => props.left || "0"};
+  top: ${(props) => props.top || "0"};
 `;

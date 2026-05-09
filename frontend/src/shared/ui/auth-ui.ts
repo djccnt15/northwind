@@ -6,6 +6,8 @@ import {
   commBtnSkyBlueBoxShadow,
   commLinkSkyBlue,
   globalTransition,
+  TooltipBase,
+  TooltipWrapper,
 } from "./global-styles";
 
 export const H1 = styled.h1`
@@ -63,13 +65,12 @@ export const SubmitBtn = styled.button`
   }
 `;
 
-export const SubmitBtnWrapper = styled.div`
+export const SubmitBtnWrapper = styled(TooltipWrapper)`
   position: relative; // child들이 absolute인 경우 기준점으로 선언
   width: 100%;
 `;
 
-export const SubmitBtnHoverMsg = styled.span`
-  ${commBorderRadius}
+export const SubmitBtnHoverMsg = styled(TooltipBase)`
   position: absolute;
 
   // 버튼의 가로 중앙에 위치하도록 설정(툴팁의 왼쪽 끝을 부모의 정중앙선에 맞춤)
@@ -82,19 +83,7 @@ export const SubmitBtnHoverMsg = styled.span`
   bottom: calc(100% + 8px);
 
   padding: 8px 12px;
-  background-color: #2f4858;
-  color: white;
   font-size: 13px;
-  white-space: nowrap; // 텍스트가 길어질 경우 줄바꿈 방지
-  pointer-events: none; // 마우스 이벤트를 받지 않도록 설정
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.2s ease;
-
-  ${SubmitBtnWrapper}:hover & {
-    opacity: 1;
-    visibility: visible;
-  }
 `;
 
 export const ErrorMsg = styled.span`
