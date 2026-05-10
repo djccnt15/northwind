@@ -35,8 +35,6 @@ export const AppRouter = createBrowserRouter([
     children: [
       { path: "/home", element: <Home /> },
       { path: "/profile", element: <Profile /> },
-      { path: "/employee/titles", element: <EmployeeTitle /> },
-      { path: "/admin/team", element: <AdminTeam /> },
     ],
   },
   {
@@ -46,7 +44,11 @@ export const AppRouter = createBrowserRouter([
         <Layout />
       </AdminRoute>
     ),
-    children: [{ path: "/admin/user", element: <AdminUser /> }],
+    children: [
+      { path: "/admin/user", element: <AdminUser /> },
+      { path: "/admin/titles", element: <EmployeeTitle /> },
+      { path: "/admin/team", element: <AdminTeam /> },
+    ],
   },
   { path: "*", element: <NotFoundRoute /> },
 ]);

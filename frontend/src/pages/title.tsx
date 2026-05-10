@@ -138,7 +138,7 @@ export default function EmployeeTitle() {
   useEffect(() => {
     const fetchTitles = () => {
       privateApi
-        .get("/v1/employee/titles/all")
+        .get("/v1/admin/titles")
         .then((res) => {
           const data: ApiIfs<TitleIfs[]> = res.data;
           setRows(data?.body || []);
@@ -216,7 +216,7 @@ export default function EmployeeTitle() {
 
   return (
     <Wrapper>
-      <Title>Employee Title</Title>
+      <Title>Admin - Title Management</Title>
       <Box
         sx={{
           height: "100%",
@@ -236,6 +236,7 @@ export default function EmployeeTitle() {
             columns={columns}
             editMode="row"
             rowModesModel={rowModesModel}
+            pageSizeOptions={[10, 20, 50, 100]}
             onRowModesModelChange={setRowModesModel}
             onRowEditStop={handleRowEditStop}
             processRowUpdate={processRowUpdate}

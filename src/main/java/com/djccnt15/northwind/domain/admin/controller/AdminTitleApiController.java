@@ -17,7 +17,7 @@ import static com.djccnt15.northwind.global.constants.RouteConst.API_V1;
 
 @Slf4j
 @RestController
-@RequestMapping(API_V1 + "/employee/titles")
+@RequestMapping(API_V1 + "/admin/titles")
 @PreAuthorize("hasAnyAuthority('ADMIN')")
 @RequiredArgsConstructor
 public class AdminTitleApiController {
