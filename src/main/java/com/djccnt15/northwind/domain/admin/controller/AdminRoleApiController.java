@@ -16,15 +16,15 @@ import static com.djccnt15.northwind.global.constants.RouteConst.API_V1;
 
 @Slf4j
 @RestController
-@RequestMapping(API_V1 + "/admin/role")
+@RequestMapping(API_V1 + "/admin/roles")
 @PreAuthorize("hasAnyAuthority('ADMIN')")
 @RequiredArgsConstructor
 public class AdminRoleApiController {
     
     private final AdminRoleBusiness business;
     
-    @GetMapping("/all")
-    public ResponseEntity<Api<List<String>>> getAllRoles() {
+    @GetMapping
+    public ResponseEntity<Api<List<String>>> getRoles() {
         var response = business.getAllRoles();
         return ResponseEntity.ok(Api.OK(response));
     }

@@ -23,15 +23,19 @@ public interface AppUserRepo extends JpaRepository<AppUserEntity, Long> {
     Optional<AppUserEntity> findFirstByUsernameAndIdNot(String username, Long id);
     
     @Modifying
-    @Query("UPDATE AppUserEntity u SET u.loginFailedCount = u.loginFailedCount + 1 WHERE u.username = :name")
+    @Query("""
+        UPDATE AppUserEntity u
+        SET u.loginFailedCount = u.loginFailedCount + 1
+        WHERE u.username = :name
+        """)
     void increaseLoginFailedCount(@Param("name") String username);
     
     @Modifying
     @Query("""
         UPDATE AppUserEntity u
         SET
-            u.loginFailedCount = 0,
-            u.lastLoginAt = :now
+            u.loginFailedCount = 0
+            , u.lastLoginAt = :now
         WHERE u.id = :id
         """)
     void handleLoginSuccess(@Param("id") Long id, @Param("now") LocalDateTime lastLoginAt);

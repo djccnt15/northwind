@@ -2,9 +2,11 @@ package com.djccnt15.northwind.domain.admin.controller;
 
 import com.djccnt15.northwind.domain.admin.business.AdminTeamBusiness;
 import com.djccnt15.northwind.domain.team.model.TeamCreateReq;
+import com.djccnt15.northwind.domain.team.model.TeamRes;
 import com.djccnt15.northwind.global.api.Api;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -22,13 +24,13 @@ public class AdminTeamApiController {
     private final AdminTeamBusiness business;
     
     @PostMapping
-    public ResponseEntity<Api<?>> createTeam(@Validated @RequestBody TeamCreateReq request) {
+    public ResponseEntity<Api<TeamRes>> createTeam(@Validated @RequestBody TeamCreateReq request) {
         var response = business.createTeam(request);
         return ResponseEntity.ok(Api.CREATED(response));
     }
     
-    @GetMapping("/all")
-    public ResponseEntity<Api<?>> getAllTeams(
+    @GetMapping
+    public ResponseEntity<Api<Page<TeamRes>>> getTeams(
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "10") int size,
         @RequestParam(defaultValue = "") String keyword) {
@@ -37,7 +39,7 @@ public class AdminTeamApiController {
     }
     
     @PutMapping("/{id}")
-    public ResponseEntity<Api<?>> updateTeam(
+    public ResponseEntity<Api<TeamRes>> updateTeam(
         @PathVariable Long id,
         @Validated @RequestBody TeamCreateReq request
     ) {

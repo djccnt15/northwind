@@ -17,14 +17,14 @@ import static com.djccnt15.northwind.global.constants.RouteConst.API_V1;
 
 @Slf4j
 @RestController
-@RequestMapping(API_V1 + "/admin/user")
+@RequestMapping(API_V1 + "/admin/users")
 @PreAuthorize("hasAnyAuthority('ADMIN')")
 @RequiredArgsConstructor
 public class AdminUserApiController {
     
     private final AdminUserBusiness business;
     
-    @GetMapping("/all")
+    @GetMapping
     public ResponseEntity<Api<Page<UserInfoRes>>> getUsers(
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "10") int size,

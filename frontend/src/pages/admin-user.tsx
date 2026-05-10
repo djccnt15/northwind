@@ -349,7 +349,7 @@ export default function AdminUser() {
 
   useEffect(() => {
     privateApi
-      .get("/v1/admin/role/all")
+      .get("/v1/admin/roles")
       .then((res) => {
         const data: ApiIfs<string[]> = res.data;
         setRoles(data.body ?? []);
@@ -372,7 +372,7 @@ export default function AdminUser() {
     getRows: async (params: GridGetRowsParams) => {
       setIsLoading(true);
       const res = await privateApi
-        .get("/v1/admin/user/all", {
+        .get("/v1/admin/users", {
           params: {
             page: params?.paginationModel?.page || 0,
             size: params?.paginationModel?.pageSize || 10,

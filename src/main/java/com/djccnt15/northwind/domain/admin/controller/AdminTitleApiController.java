@@ -30,8 +30,8 @@ public class AdminTitleApiController {
         return ResponseEntity.ok(Api.CREATED(response));
     }
     
-    @GetMapping("/all")
-    public ResponseEntity<Api<List<TitleRes>>> getAllTitles() {
+    @GetMapping
+    public ResponseEntity<Api<List<TitleRes>>> getTitles() {
         var response = business.getAllTitles();
         return ResponseEntity.ok(Api.OK(response));
     }
