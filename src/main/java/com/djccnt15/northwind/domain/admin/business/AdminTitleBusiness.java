@@ -30,7 +30,7 @@ public class AdminTitleBusiness {
     }
     
     public TitleRes updateTitle(Long id, TitleCreateReq request) {
-        service.validateTitle(request);
+        service.validateTitle(id, request);
         var entity = service.getTitle(id);
         service.updateTitle(entity, request);
         return converter.toResponse(entity);

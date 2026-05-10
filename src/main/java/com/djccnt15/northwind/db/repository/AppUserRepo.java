@@ -33,11 +33,7 @@ public interface AppUserRepo extends JpaRepository<AppUserEntity, Long> {
         """)
     void handleLoginSuccess(@Param("id") Long id, @Param("now") LocalDateTime lastLoginAt);
     
-    Optional<AppUserEntity> findFirstByUsernameAndIdNot(String username, Long id);
-    
     Optional<AppUserEntity> findFirstByEmail(String email);
-    
-    Optional<AppUserEntity> findFirstByEmailAndIdNot(String email, Long id);
     
     @EntityGraph(attributePaths = {"appUserRole", "appUserRole.userRole"})
     List<AppUserEntity> findWithRoleByUsernameLikeOrEmailLike(String usernameKw, String emailKw, Pageable pageable);

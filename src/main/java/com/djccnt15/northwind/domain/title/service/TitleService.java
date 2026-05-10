@@ -34,6 +34,14 @@ public class TitleService {
         });
     }
     
+    public void validateTitle(Long id, TitleCreateReq request) {
+        repository.findByTitle(request.getTitle()).ifPresent(e -> {
+            if (!e.getId().equals(id)) {
+                throw new ApiException(BAD_REQUEST, "Title already exists");
+            }
+        });
+    }
+    
     public TitleEntity createTitle(TitleCreateReq request) {
         var entity = converter.toEntity(request);
         repository.save(entity);

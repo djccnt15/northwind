@@ -50,8 +50,11 @@ public class UserService {
     }
     
     public void validateEmailNotExists(String email, Long userId) {
-        repository.findFirstByEmailAndIdNot(email, userId)
-            .ifPresent(u -> {throw new ApiException(BAD_REQUEST, "Email already exists");});
+        repository.findFirstByEmail(email).ifPresent(u -> {
+            if (!u.getId().equals(userId)) {
+                throw new ApiException(BAD_REQUEST, "Email already exists");
+            }
+        });
     }
     
     public void validateUsernameNotExists(String username) {
@@ -60,8 +63,11 @@ public class UserService {
     }
     
     public void validateUsernameNotExists(String username, Long userId) {
-        repository.findFirstByUsernameAndIdNot(username, userId)
-            .ifPresent(u -> {throw new ApiException(BAD_REQUEST, "Username already exists");});
+        repository.findFirstByUsername(username).ifPresent(u -> {
+            if (!u.getId().equals(userId)) {
+                throw new ApiException(BAD_REQUEST, "Username already exists");
+            }
+        });
     }
     
     public AppUserEntity createUser(SignupReq request) {
