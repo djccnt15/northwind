@@ -4,10 +4,12 @@ import com.djccnt15.northwind.domain.team.converter.TeamConverter;
 import com.djccnt15.northwind.domain.team.model.TeamCreateReq;
 import com.djccnt15.northwind.domain.team.model.TeamRes;
 import com.djccnt15.northwind.domain.team.service.TeamService;
-import com.djccnt15.northwind.domain.model.ListCountRes;
 import com.djccnt15.northwind.global.annotation.Business;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 
 @Slf4j
 @Business
@@ -23,15 +25,11 @@ public class AdminTeamBusiness {
         return converter.toResponse(entity);
     }
     
-    public ListCountRes<TeamRes> getTeams(int page, int size, String keyword) {
+    public Page<TeamRes> getTeams(int page, int size, String keyword) {
         var kw = "%%%s%%".formatted(keyword.trim());
-        var teamList = service.getTeams(page, size, kw).stream()
-            .map(converter::toResponse).toList();
-        var totalCounts = service.countTeams(kw);
-        return ListCountRes.<TeamRes>builder()
-            .list(teamList)
-            .totalCounts(totalCounts)
-            .build();
+        var pageable = PageRequest.of(page, size, Sort.by("id"));
+        var teams = service.getTeams(kw, pageable);
+        return teams.map(converter::toResponse);
     }
     
     public TeamRes updateTeam(Long id, TeamCreateReq request) {

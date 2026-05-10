@@ -1,6 +1,7 @@
 package com.djccnt15.northwind.db.repository;
 
 import com.djccnt15.northwind.db.entity.AppUserEntity;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -39,10 +40,10 @@ public interface AppUserRepo extends JpaRepository<AppUserEntity, Long> {
     
     Optional<AppUserEntity> findFirstByEmailAndIdNot(String email, Long id);
     
-    @EntityGraph(attributePaths = {"appUserRole", "appUserRole.userRole", "team"})
-    List<AppUserEntity> findFullByUsernameLikeOrEmailLike(String usernameKw, String emailKw, Pageable pageable);
+    Page<AppUserEntity> findByUsernameLikeOrEmailLike(String usernameKw, String emailKw, Pageable pageable);
     
-    Integer countByUsernameLikeOrEmailLike(String usernameKw, String emailKw);
+    @EntityGraph(attributePaths = {"appUserRole", "appUserRole.userRole", "team"})
+    List<AppUserEntity> findFullByIdInOrderById(List<Long> ids);
     
     @Query("""
         SELECT u FROM AppUserEntity u

@@ -7,11 +7,9 @@ import com.djccnt15.northwind.domain.team.model.TeamCreateReq;
 import com.djccnt15.northwind.global.exception.exceptions.ApiException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 import static com.djccnt15.northwind.global.code.StatusCode.BAD_REQUEST;
 
@@ -38,13 +36,8 @@ public class TeamService {
         return repository.save(team);
     }
     
-    public List<TeamEntity> getTeams(int page, int size, String kw) {
-        var pageable = PageRequest.of(page, size, Sort.by("id"));
+    public Page<TeamEntity> getTeams(String kw, Pageable pageable) {
         return repository.findByNameLike(kw, pageable);
-    }
-    
-    public Integer countTeams(String kw) {
-        return repository.countByNameLike(kw);
     }
     
     public TeamEntity getTeam(Long id) {

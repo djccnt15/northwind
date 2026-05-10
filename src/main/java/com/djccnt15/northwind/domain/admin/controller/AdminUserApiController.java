@@ -1,13 +1,13 @@
 package com.djccnt15.northwind.domain.admin.controller;
 
-import com.djccnt15.northwind.global.api.Api;
 import com.djccnt15.northwind.domain.admin.business.AdminUserBusiness;
-import com.djccnt15.northwind.domain.model.ListCountRes;
 import com.djccnt15.northwind.domain.model.ListBodyReq;
 import com.djccnt15.northwind.domain.user.model.SignupReq;
 import com.djccnt15.northwind.domain.user.model.UserInfoRes;
+import com.djccnt15.northwind.global.api.Api;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -25,12 +25,12 @@ public class AdminUserApiController {
     private final AdminUserBusiness business;
     
     @GetMapping("/all")
-    public ResponseEntity<Api<ListCountRes<UserInfoRes>>> getAllUsers(
+    public ResponseEntity<Api<Page<UserInfoRes>>> getUsers(
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "10") int size,
         @RequestParam(defaultValue = "") String keyword
     ) {
-        var response = business.getAllUsers(page, size, keyword);
+        var response = business.getUsers(page, size, keyword);
         return ResponseEntity.ok(Api.OK(response));
     }
     

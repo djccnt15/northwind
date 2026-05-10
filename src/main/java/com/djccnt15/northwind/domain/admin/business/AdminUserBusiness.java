@@ -1,16 +1,20 @@
 package com.djccnt15.northwind.domain.admin.business;
 
+import com.djccnt15.northwind.db.entity.id.BaseEntity;
 import com.djccnt15.northwind.domain.model.ListBodyReq;
-import com.djccnt15.northwind.domain.model.ListCountRes;
+import com.djccnt15.northwind.domain.role.service.RoleService;
 import com.djccnt15.northwind.domain.user.converter.UserConverter;
 import com.djccnt15.northwind.domain.user.model.SignupReq;
 import com.djccnt15.northwind.domain.user.model.UserInfoRes;
-import com.djccnt15.northwind.domain.role.service.RoleService;
 import com.djccnt15.northwind.domain.user.service.UserRoleService;
 import com.djccnt15.northwind.domain.user.service.UserService;
 import com.djccnt15.northwind.global.annotation.Business;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
@@ -25,16 +29,16 @@ public class AdminUserBusiness {
     private final UserRoleService userRoleService;
     private final RoleService roleService;
     
-    public ListCountRes<UserInfoRes> getAllUsers(int page, int size, String keyword) {
+    public Page<UserInfoRes> getUsers(int page, int size, String keyword) {
         var kw = "%%%s%%".formatted(keyword.trim());
-        var userList = userService.getAllUsers(page, size, kw).stream()
-            .map(userConverter::toResponse).toList();
-        var totalCounts = userService.getUserCount(kw);
+        var pageable = PageRequest.of(page, size, Sort.by("id"));
+        var userPage = userService.getUsers(kw, pageable);
         
-        return ListCountRes.<UserInfoRes>builder()
-            .list(userList)
-            .totalCounts(totalCounts)
-            .build();
+        var userIds = userPage.map(BaseEntity::getId).toList();
+        var entities = userService.getUsers(userIds);
+        var userList = entities.stream().map(userConverter::toResponse).toList();
+        
+        return new PageImpl<>(userList, pageable, userPage.getTotalElements());
     }
     
     public UserInfoRes updateUser(Long userId, SignupReq request) {

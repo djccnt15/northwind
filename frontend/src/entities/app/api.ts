@@ -4,9 +4,16 @@ interface ResultIfs {
   description: string;
 }
 
-export interface ListCountIfs<T = Record<string, unknown>> {
-  totalCounts: number;
-  list: T[];
+interface Page {
+  size: number;
+  page: number;
+  totalPages: number;
+  totalElements: number;
+}
+
+export interface PageIfs<T = Record<string, unknown>> {
+  page: Page;
+  content: T[];
 }
 
 export interface ApiIfs<TBody = Record<string, unknown>> {

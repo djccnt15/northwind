@@ -22,7 +22,7 @@ import {
   useGridApiRef,
 } from "@mui/x-data-grid";
 import type { GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
-import type { ApiIfs, ListCountIfs } from "../entities/app/api";
+import type { ApiIfs, PageIfs } from "../entities/app/api";
 import { useCallback, useEffect, useState } from "react";
 import {
   dataGridInitialState,
@@ -387,9 +387,9 @@ export default function AdminUser() {
           setIsLoading(false);
         });
 
-      const data: ApiIfs<ListCountIfs<UserIfs>> = res?.data;
-      const users = data?.body?.list ?? [];
-      const totalCounts = data?.body?.totalCounts ?? 0;
+      const data: ApiIfs<PageIfs<UserIfs>> = res?.data;
+      const users = data?.body?.content ?? [];
+      const totalCounts = data?.body?.page?.totalElements ?? 0;
 
       return {
         rows: users,

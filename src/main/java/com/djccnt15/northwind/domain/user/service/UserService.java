@@ -9,8 +9,8 @@ import com.djccnt15.northwind.global.exception.exceptions.ApiException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -91,13 +91,12 @@ public class UserService {
         return entity;
     }
     
-    public List<AppUserEntity> getAllUsers(int page, int size, String keyword) {
-        var pageable = PageRequest.of(page, size, Sort.by("id"));
-        return repository.findFullByUsernameLikeOrEmailLike(keyword, keyword, pageable);
+    public Page<AppUserEntity> getUsers(String keyword, Pageable pageable) {
+        return repository.findByUsernameLikeOrEmailLike(keyword, keyword, pageable);
     }
     
-    public Integer getUserCount(String keyword) {
-        return repository.countByUsernameLikeOrEmailLike(keyword, keyword);
+    public List<AppUserEntity> getUsers(List<Long> userIds) {
+        return repository.findFullByIdInOrderById(userIds);
     }
     
     public void resetPassword(AppUserEntity entity) {
