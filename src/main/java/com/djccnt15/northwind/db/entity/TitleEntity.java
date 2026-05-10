@@ -20,7 +20,7 @@ import java.util.List;
 @SuperBuilder
 public class TitleEntity extends BaseEntity {
     
-    @Column
+    @Column(unique = true)
     private String title;
     
     @OneToMany(mappedBy = "title")
