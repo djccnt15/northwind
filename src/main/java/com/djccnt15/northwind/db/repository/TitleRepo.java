@@ -7,5 +7,7 @@ import java.util.Optional;
 
 public interface TitleRepo extends JpaRepository<TitleEntity, Long> {
     
-    Optional<TitleEntity> findByTitle(String title);
+    Optional<TitleEntity> findFirstByTitle(String title);
+    
+    Optional<TitleEntity> findFirstByTitleAndIdNot(String title, Long id);
 }

@@ -14,10 +14,12 @@ import java.util.Optional;
 
 public interface AppUserRepo extends JpaRepository<AppUserEntity, Long> {
     
-    @EntityGraph(attributePaths = {"appUserRole", "appUserRole.userRole" , "team"})
-    Optional<AppUserEntity> findWithRoleTeamFirstByUsername(String username);
+    @EntityGraph(attributePaths = {"appUserRole", "appUserRole.userRole", "team"})
+    Optional<AppUserEntity> findFullFirstByUsername(String username);
     
     Optional<AppUserEntity> findFirstByUsername(String username);
+    
+    Optional<AppUserEntity> findFirstByUsernameAndIdNot(String username, Long id);
     
     @Modifying
     @Query("UPDATE AppUserEntity u SET u.loginFailedCount = u.loginFailedCount + 1 WHERE u.username = :name")
@@ -35,8 +37,10 @@ public interface AppUserRepo extends JpaRepository<AppUserEntity, Long> {
     
     Optional<AppUserEntity> findFirstByEmail(String email);
     
-    @EntityGraph(attributePaths = {"appUserRole", "appUserRole.userRole"})
-    List<AppUserEntity> findWithRoleByUsernameLikeOrEmailLike(String usernameKw, String emailKw, Pageable pageable);
+    Optional<AppUserEntity> findFirstByEmailAndIdNot(String email, Long id);
+    
+    @EntityGraph(attributePaths = {"appUserRole", "appUserRole.userRole", "team"})
+    List<AppUserEntity> findFullByUsernameLikeOrEmailLike(String usernameKw, String emailKw, Pageable pageable);
     
     Integer countByUsernameLikeOrEmailLike(String usernameKw, String emailKw);
     

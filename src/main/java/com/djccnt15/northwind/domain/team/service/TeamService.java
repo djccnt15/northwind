@@ -24,17 +24,13 @@ public class TeamService {
     private final TeamConverter converter;
     
     public void validateTeam(TeamCreateReq request) {
-        repository.findByName(request.getName()).ifPresent(team -> {
-            throw new ApiException(BAD_REQUEST, "Team name already exists: " + request.getName());
-        });
+        repository.findFirstByName(request.getName())
+            .ifPresent(e -> {throw new ApiException(BAD_REQUEST, "Team name already exists");});
     }
     
     public void validateTeam(Long id, TeamCreateReq request) {
-        repository.findByName(request.getName()).ifPresent(e -> {
-            if (!e.getId().equals(id)) {
-                throw new ApiException(BAD_REQUEST, "Team name already exists: " + request.getName());
-            }
-        });
+        repository.findFirstByNameAndIdNot(request.getName(), id)
+            .ifPresent(e -> {throw new ApiException(BAD_REQUEST, "Team name already exists");});
     }
     
     public TeamEntity createTeam(TeamCreateReq request) {

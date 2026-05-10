@@ -46,28 +46,23 @@ public class UserService {
     
     public void validateEmailNotExists(String email) {
         repository.findFirstByEmail(email)
-            .ifPresent(u -> {throw new ApiException(BAD_REQUEST, "Email already exists");});
+            .ifPresent(e -> {throw new ApiException(BAD_REQUEST, "Email already exists");});
     }
     
     public void validateEmailNotExists(String email, Long userId) {
-        repository.findFirstByEmail(email).ifPresent(u -> {
-            if (!u.getId().equals(userId)) {
-                throw new ApiException(BAD_REQUEST, "Email already exists");
-            }
-        });
+        repository.findFirstByEmailAndIdNot(email, userId)
+            .ifPresent(e -> {throw new ApiException(BAD_REQUEST, "Email already exists");});
     }
     
     public void validateUsernameNotExists(String username) {
         repository.findFirstByUsername(username)
-            .ifPresent(u -> {throw new ApiException(BAD_REQUEST, "Username already exists");});
+            .ifPresent(e -> {throw new ApiException(BAD_REQUEST, "Username already exists");});
     }
     
     public void validateUsernameNotExists(String username, Long userId) {
-        repository.findFirstByUsername(username).ifPresent(u -> {
-            if (!u.getId().equals(userId)) {
-                throw new ApiException(BAD_REQUEST, "Username already exists");
-            }
-        });
+        repository.findFirstByUsernameAndIdNot(username, userId)
+            .ifPresent(e -> {throw new ApiException(BAD_REQUEST, "Username already exists");}
+        );
     }
     
     public AppUserEntity createUser(SignupReq request) {
@@ -98,7 +93,7 @@ public class UserService {
     
     public List<AppUserEntity> getAllUsers(int page, int size, String keyword) {
         var pageable = PageRequest.of(page, size, Sort.by("id"));
-        return repository.findWithRoleByUsernameLikeOrEmailLike(keyword, keyword, pageable);
+        return repository.findFullByUsernameLikeOrEmailLike(keyword, keyword, pageable);
     }
     
     public Integer getUserCount(String keyword) {
