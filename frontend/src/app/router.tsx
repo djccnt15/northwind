@@ -13,6 +13,7 @@ import AdminUser from "../pages/admin-user";
 import Profile from "../pages/profile";
 import EmployeeTitle from "../pages/title";
 import Welcome from "../pages/welcome";
+import AdminTeam from "../pages/admin-team";
 
 export const AppRouter = createBrowserRouter([
   {
@@ -35,6 +36,7 @@ export const AppRouter = createBrowserRouter([
       { path: "/home", element: <Home /> },
       { path: "/profile", element: <Profile /> },
       { path: "/employee/titles", element: <EmployeeTitle /> },
+      { path: "/admin/team", element: <AdminTeam /> },
     ],
   },
   {
