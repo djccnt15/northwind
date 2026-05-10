@@ -107,6 +107,7 @@ const RoleForm = styled.form`
   display: flex;
   flex-direction: column;
   gap: 10px;
+  padding: 4px 0;
   overflow-y: scroll;
 `;
 
@@ -301,8 +302,10 @@ export default function AdminUser() {
 
   useKeyDown("Escape", closeModal);
 
-  const handleContentClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    e.stopPropagation();
+  const onModalOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (e.target === e.currentTarget) {
+      closeModal();
+    }
   };
 
   const toggleRole = (role: string, checked: boolean) => {
@@ -422,8 +425,8 @@ export default function AdminUser() {
         }}
       />
       {showModal && (
-        <ModalOverlay onClick={closeModal}>
-          <RoleModal onClick={handleContentClick}>
+        <ModalOverlay onClick={onModalOverlayClick}>
+          <RoleModal>
             <ModalTitleArea>
               <ModalTitle>Role Management</ModalTitle>
               <ModalBtnArea>
