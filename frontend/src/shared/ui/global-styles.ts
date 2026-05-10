@@ -107,7 +107,7 @@ export const PageWrapper = styled.div`
   grid-template-rows: auto 1fr;
 `;
 
-export const TooltipWrapper = styled.div`
+export const TooltipWrapper = styled.span`
   position: relative;
 `;
 
@@ -116,7 +116,6 @@ export const TooltipBase = styled.span`
   background-color: #2f4858;
   white-space: nowrap; // 텍스트가 길어질 경우 줄바꿈 방지
   pointer-events: none; // 마우스 이벤트를 받지 않도록 설정
-  position: absolute;
   color: white;
   z-index: 9999;
   opacity: 0;
@@ -127,9 +126,14 @@ export const TooltipBase = styled.span`
   }
 `;
 
-export const Tooltip = styled(TooltipBase)<{ left?: string; top?: string }>`
+export const Tooltip = styled(TooltipBase)<{
+  left?: string;
+  top?: string;
+  position?: "absolute" | "fixed";
+}>`
   padding: 8px 12px;
   font-size: 13px;
+  position: ${(props) => props.position || "absolute"};
   left: ${(props) => props.left || "0"};
-  top: ${(props) => props.top || "0"};
+  top: ${(props) => props.top || "auto"};
 `;
