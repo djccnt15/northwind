@@ -1,7 +1,7 @@
 package com.djccnt15.northwind.domain.admin.controller;
 
-import com.djccnt15.northwind.domain.admin.business.TeamBusiness;
-import com.djccnt15.northwind.domain.admin.model.TeamCreateReq;
+import com.djccnt15.northwind.domain.admin.business.AdminTeamBusiness;
+import com.djccnt15.northwind.domain.team.model.TeamCreateReq;
 import com.djccnt15.northwind.global.api.Api;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +19,7 @@ import static com.djccnt15.northwind.global.constants.RouteConst.API_V1;
 @RequiredArgsConstructor
 public class AdminTeamApiController {
     
-    private final TeamBusiness business;
+    private final AdminTeamBusiness business;
     
     @PostMapping
     public ResponseEntity<Api<?>> createTeam(@Validated @RequestBody TeamCreateReq request) {

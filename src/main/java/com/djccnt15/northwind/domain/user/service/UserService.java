@@ -25,8 +25,8 @@ import static com.djccnt15.northwind.global.code.StatusCode.NOT_FOUND;
 @RequiredArgsConstructor
 public class UserService {
     
-    private final UserConverter userConverter;
-    private final AppUserRepo userRepo;
+    private final UserConverter converter;
+    private final AppUserRepo repository;
     private final PasswordEncoder encoder;
     
     @Value("${app.defaultPw:1234}")
@@ -45,33 +45,33 @@ public class UserService {
     }
     
     public void validateEmailNotExists(String email) {
-        userRepo.findFirstByEmail(email)
+        repository.findFirstByEmail(email)
             .ifPresent(u -> {throw new ApiException(BAD_REQUEST, "Email already exists");});
     }
     
     public void validateEmailNotExists(String email, Long userId) {
-        userRepo.findFirstByEmailAndIdNot(email, userId)
+        repository.findFirstByEmailAndIdNot(email, userId)
             .ifPresent(u -> {throw new ApiException(BAD_REQUEST, "Email already exists");});
     }
     
     public void validateUsernameNotExists(String username) {
-        userRepo.findFirstByUsername(username)
+        repository.findFirstByUsername(username)
             .ifPresent(u -> {throw new ApiException(BAD_REQUEST, "Username already exists");});
     }
     
     public void validateUsernameNotExists(String username, Long userId) {
-        userRepo.findFirstByUsernameAndIdNot(username, userId)
+        repository.findFirstByUsernameAndIdNot(username, userId)
             .ifPresent(u -> {throw new ApiException(BAD_REQUEST, "Username already exists");});
     }
     
     public AppUserEntity createUser(SignupReq request) {
-        var userEntity = userConverter.toEntity(request);
-        userRepo.save(userEntity);
+        var userEntity = converter.toEntity(request);
+        repository.save(userEntity);
         return userEntity;
     }
     
     public AppUserEntity getUser(Long userId) {
-        return userRepo.findById(userId)
+        return repository.findById(userId)
             .orElseThrow(() -> new ApiException(NOT_FOUND, "User not found"));
     }
     
@@ -80,29 +80,29 @@ public class UserService {
         entity.setEmail(request.getEmail());
         entity.setVerified(request.isEnabled());
         entity.setLiveUntil(request.getLiveUntil());
-        userRepo.save(entity);
+        repository.save(entity);
         return entity;
     }
     
     public AppUserEntity updatePassword(AppUserEntity entity, String password) {
         entity.setPassword(encoder.encode(password));
-        userRepo.save(entity);
+        repository.save(entity);
         return entity;
     }
     
     public List<AppUserEntity> getAllUsers(int page, int size, String keyword) {
         var pageable = PageRequest.of(page, size, Sort.by("id"));
-        return userRepo.findWithRoleByUsernameLikeOrEmailLike(keyword, keyword, pageable);
+        return repository.findWithRoleByUsernameLikeOrEmailLike(keyword, keyword, pageable);
     }
     
     public Integer getUserCount(String keyword) {
-        return userRepo.countByUsernameLikeOrEmailLike(keyword, keyword);
+        return repository.countByUsernameLikeOrEmailLike(keyword, keyword);
     }
     
     public void resetPassword(AppUserEntity entity) {
         entity.setPassword(encoder.encode(defaultPw));
         entity.setPasswordChangedAt(LocalDateTime.now());
         entity.setLoginFailedCount(0);
-        userRepo.save(entity);
+        repository.save(entity);
     }
 }

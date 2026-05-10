@@ -1,6 +1,6 @@
-package com.djccnt15.northwind.domain.title.controller;
+package com.djccnt15.northwind.domain.admin.controller;
 
-import com.djccnt15.northwind.domain.title.business.TitleBusiness;
+import com.djccnt15.northwind.domain.admin.business.AdminTitleBusiness;
 import com.djccnt15.northwind.domain.title.model.TitleCreateReq;
 import com.djccnt15.northwind.domain.title.model.TitleRes;
 import com.djccnt15.northwind.global.api.Api;
@@ -18,11 +18,11 @@ import static com.djccnt15.northwind.global.constants.RouteConst.API_V1;
 @Slf4j
 @RestController
 @RequestMapping(API_V1 + "/employee/titles")
-@PreAuthorize("isAuthenticated()")
+@PreAuthorize("hasAnyAuthority('ADMIN')")
 @RequiredArgsConstructor
-public class TitleApiController {
+public class AdminTitleApiController {
     
-    private final TitleBusiness business;
+    private final AdminTitleBusiness business;
     
     @PostMapping
     public ResponseEntity<Api<TitleRes>> createTitle(@Validated @RequestBody TitleCreateReq request) {

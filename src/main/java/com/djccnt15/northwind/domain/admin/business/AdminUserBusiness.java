@@ -5,7 +5,7 @@ import com.djccnt15.northwind.domain.model.ListCountRes;
 import com.djccnt15.northwind.domain.user.converter.UserConverter;
 import com.djccnt15.northwind.domain.user.model.SignupReq;
 import com.djccnt15.northwind.domain.user.model.UserInfoRes;
-import com.djccnt15.northwind.domain.user.service.RoleService;
+import com.djccnt15.northwind.domain.role.service.RoleService;
 import com.djccnt15.northwind.domain.user.service.UserRoleService;
 import com.djccnt15.northwind.domain.user.service.UserService;
 import com.djccnt15.northwind.global.annotation.Business;

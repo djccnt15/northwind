@@ -1,4 +1,4 @@
-package com.djccnt15.northwind.domain.admin.model;
+package com.djccnt15.northwind.domain.team.model;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;

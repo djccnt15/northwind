@@ -1,8 +1,8 @@
-package com.djccnt15.northwind.domain.admin.converter;
+package com.djccnt15.northwind.domain.team.converter;
 
 import com.djccnt15.northwind.db.entity.TeamEntity;
-import com.djccnt15.northwind.domain.admin.model.TeamCreateReq;
-import com.djccnt15.northwind.domain.admin.model.TeamRes;
+import com.djccnt15.northwind.domain.team.model.TeamCreateReq;
+import com.djccnt15.northwind.domain.team.model.TeamRes;
 import com.djccnt15.northwind.global.annotation.Converter;
 import lombok.extern.slf4j.Slf4j;
 

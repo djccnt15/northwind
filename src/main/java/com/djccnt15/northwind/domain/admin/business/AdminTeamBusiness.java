@@ -1,9 +1,9 @@
 package com.djccnt15.northwind.domain.admin.business;
 
-import com.djccnt15.northwind.domain.admin.converter.TeamConverter;
-import com.djccnt15.northwind.domain.admin.model.TeamCreateReq;
-import com.djccnt15.northwind.domain.admin.model.TeamRes;
-import com.djccnt15.northwind.domain.admin.service.TeamService;
+import com.djccnt15.northwind.domain.team.converter.TeamConverter;
+import com.djccnt15.northwind.domain.team.model.TeamCreateReq;
+import com.djccnt15.northwind.domain.team.model.TeamRes;
+import com.djccnt15.northwind.domain.team.service.TeamService;
 import com.djccnt15.northwind.domain.model.ListCountRes;
 import com.djccnt15.northwind.global.annotation.Business;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Business
 @RequiredArgsConstructor
-public class TeamBusiness {
+public class AdminTeamBusiness {
     
     private final TeamService service;
     private final TeamConverter converter;

@@ -1,4 +1,4 @@
-package com.djccnt15.northwind.domain.user.service;
+package com.djccnt15.northwind.domain.role.service;
 
 import com.djccnt15.northwind.global.exception.exceptions.ApiException;
 import com.djccnt15.northwind.global.storage.DataCacheStorage;

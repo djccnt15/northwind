@@ -1,4 +1,4 @@
-package com.djccnt15.northwind.domain.title.business;
+package com.djccnt15.northwind.domain.admin.business;
 
 import com.djccnt15.northwind.domain.title.converter.TitleConverter;
 import com.djccnt15.northwind.domain.title.model.TitleCreateReq;
@@ -13,7 +13,7 @@ import java.util.List;
 @Slf4j
 @Business
 @RequiredArgsConstructor
-public class TitleBusiness {
+public class AdminTitleBusiness {
     
     private final TitleService service;
     private final TitleConverter converter;

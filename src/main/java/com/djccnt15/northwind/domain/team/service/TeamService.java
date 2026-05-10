@@ -1,9 +1,9 @@
-package com.djccnt15.northwind.domain.admin.service;
+package com.djccnt15.northwind.domain.team.service;
 
 import com.djccnt15.northwind.db.entity.TeamEntity;
 import com.djccnt15.northwind.db.repository.TeamRepo;
-import com.djccnt15.northwind.domain.admin.converter.TeamConverter;
-import com.djccnt15.northwind.domain.admin.model.TeamCreateReq;
+import com.djccnt15.northwind.domain.team.converter.TeamConverter;
+import com.djccnt15.northwind.domain.team.model.TeamCreateReq;
 import com.djccnt15.northwind.global.exception.exceptions.ApiException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
