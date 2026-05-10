@@ -45,7 +45,7 @@ const createTitle = async (
   originalTitle: TitleIfs,
 ): Promise<TitleIfs> => {
   return await privateApi
-    .post("/v1/employee/titles", { title: updatedTitle.title })
+    .post("/v1/admin/titles", { title: updatedTitle.title })
     .then((res) => {
       const data: ApiIfs<TitleIfs> = res.data;
       return data.body ?? updatedTitle;
@@ -64,7 +64,7 @@ const updateTitle = async (
   originalTitle: TitleIfs,
 ): Promise<TitleIfs> => {
   return await privateApi
-    .put(`/v1/employee/titles/${updatedTitle.id}`, {
+    .put(`/v1/admin/titles/${updatedTitle.id}`, {
       title: updatedTitle.title,
     })
     .then((res) => {
@@ -84,19 +84,17 @@ const onEdit = async (
   updatedRow: TitleIfs,
   originalRow: TitleIfs,
 ): Promise<TitleIfs> => {
-  console.log(originalRow);
-
   if (updatedRow.isNew) {
     const { isNew, ...titleData } = updatedRow;
     return await createTitle(titleData, originalRow);
-  } else {
-    return await updateTitle(updatedRow, originalRow);
   }
+
+  return await updateTitle(updatedRow, originalRow);
 };
 
 const onDelete = async (id: number): Promise<void> => {
   await privateApi
-    .delete(`/v1/employee/titles/${id}`)
+    .delete(`/v1/admin/titles/${id}`)
     .then(() => {
       console.log("Title deleted successfully");
     })
@@ -199,19 +197,25 @@ export default function EmployeeTitle() {
     [],
   );
 
-  // const processRowUpdate = (newRow: GridRowModel) => {
-  //   const updatedRow = { ...newRow, isNew: false };
-  //   setRows((prevRows) =>
-  //     prevRows.map((row) => (row.id === newRow.id ? updatedRow : row)),
-  //   );
-  //   return updatedRow;
-  // };
-
   const processRowUpdate = async (
     updatedRow: TitleIfs,
     originalRow: TitleIfs,
   ): Promise<TitleIfs> => {
-    return await onEdit(updatedRow, originalRow);
+    const savedRow = await onEdit(updatedRow, originalRow);
+    const normalizedRow = { ...savedRow, isNew: false };
+
+    setRows((prevRows) =>
+      prevRows.map((row) => (row.id === originalRow.id ? normalizedRow : row)),
+    );
+
+    if (savedRow.id !== originalRow.id) {
+      setRowModesModel((prevRowModesModel) => {
+        const { [originalRow.id]: _, ...rest } = prevRowModesModel;
+        return rest;
+      });
+    }
+
+    return normalizedRow;
   };
 
   return (
