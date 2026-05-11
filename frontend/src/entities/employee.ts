@@ -3,3 +3,9 @@ export interface TitleIfs {
   title: string;
   isNew?: boolean;
 }
+
+export interface TeamIfs {
+  id: number;
+  name: string;
+  isNew?: boolean;
+}

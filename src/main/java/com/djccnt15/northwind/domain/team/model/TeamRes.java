@@ -7,5 +7,7 @@ import lombok.Data;
 @Builder
 public class TeamRes {
     
+    private Long id;
+    
     private String name;
 }

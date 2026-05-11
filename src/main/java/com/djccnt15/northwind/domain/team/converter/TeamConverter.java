@@ -12,6 +12,7 @@ public class TeamConverter {
     
     public TeamRes toResponse(TeamEntity entity) {
         return TeamRes.builder()
+            .id(entity.getId())
             .name(entity.getName())
             .build();
     }
