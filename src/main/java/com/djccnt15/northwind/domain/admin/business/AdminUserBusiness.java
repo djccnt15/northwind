@@ -3,6 +3,7 @@ package com.djccnt15.northwind.domain.admin.business;
 import com.djccnt15.northwind.db.entity.id.BaseEntity;
 import com.djccnt15.northwind.domain.model.ListBodyReq;
 import com.djccnt15.northwind.domain.role.service.RoleService;
+import com.djccnt15.northwind.domain.team.service.TeamService;
 import com.djccnt15.northwind.domain.user.converter.UserConverter;
 import com.djccnt15.northwind.domain.user.model.SignupReq;
 import com.djccnt15.northwind.domain.user.model.UserInfoRes;
@@ -28,6 +29,7 @@ public class AdminUserBusiness {
     private final UserConverter userConverter;
     private final UserRoleService userRoleService;
     private final RoleService roleService;
+    private final TeamService teamService;
     
     public Page<UserInfoRes> getUsers(int page, int size, String keyword) {
         var kw = "%%%s%%".formatted(keyword.trim());
@@ -41,10 +43,13 @@ public class AdminUserBusiness {
         return new PageImpl<>(userList, pageable, userPage.getTotalElements());
     }
     
+    @Transactional
     public UserInfoRes updateUser(Long userId, SignupReq request) {
         userService.validateEmailNotExists(request.getEmail(), userId);
         userService.validateUsernameNotExists(request.getUsername(), userId);
         var entity = userService.getUser(userId);
+        var team = teamService.getTeam(request.getTeam());
+        teamService.addMember(team, entity);
         userService.updateProfile(entity, request);
         return userConverter.toResponse(entity);
     }

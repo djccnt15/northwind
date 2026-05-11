@@ -12,6 +12,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 import static com.djccnt15.northwind.global.constants.RouteConst.API_V1;
 
 @Slf4j
@@ -33,8 +35,15 @@ public class AdminTeamApiController {
     public ResponseEntity<Api<Page<TeamRes>>> getTeams(
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "10") int size,
-        @RequestParam(defaultValue = "") String keyword) {
+        @RequestParam(defaultValue = "") String keyword
+    ) {
         var response = business.getTeams(page, size, keyword);
+        return ResponseEntity.ok(Api.OK(response));
+    }
+    
+    @GetMapping("/all")
+    public ResponseEntity<Api<List<String>>> getAllTeams() {
+        var response = business.getTeams();
         return ResponseEntity.ok(Api.OK(response));
     }
     

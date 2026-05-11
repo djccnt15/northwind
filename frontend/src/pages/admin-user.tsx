@@ -123,7 +123,7 @@ const onResetPassword = (params: GridRenderCellParams<UserIfs>) => {
   if (!ok) return;
 
   privateApi
-    .patch(`/v1/admin/user/${id}/reset-password`)
+    .patch(`/v1/admin/users/${id}/reset-password`)
     .then((res) => {
       const data: ApiIfs<UserIfs> = res.data;
       const updatedUsername = data.body?.username || "Unknown";
@@ -152,6 +152,7 @@ const onResetPassword = (params: GridRenderCellParams<UserIfs>) => {
 const createColumns = (
   onReset: (params: GridRenderCellParams<UserIfs>) => void,
   onRoleClick: (params: GridRenderCellParams<UserIfs>) => void,
+  teamList: string[] = [],
 ): GridColDef[] => [
   {
     ...defaultColOptions,
@@ -181,6 +182,15 @@ const createColumns = (
     headerName: "Email",
     flex: 1,
     editable: true,
+  },
+  {
+    ...defaultColOptions,
+    field: "team",
+    headerName: "Team",
+    type: "singleSelect",
+    flex: 0.5,
+    editable: true,
+    valueOptions: teamList,
   },
   {
     ...defaultColOptions,
@@ -258,13 +268,14 @@ const onEdit = async (
   originalRow: UserIfs,
 ): Promise<UserIfs> => {
   return await privateApi
-    .patch(`/v1/admin/user/${originalRow.id}/profile`, {
+    .patch(`/v1/admin/users/${originalRow.id}/profile`, {
       username: updatedRow.username,
       email: updatedRow.email,
       isEnabled: updatedRow.enabled,
       liveUntil: updatedRow.liveUntil
         ? new Date(updatedRow.liveUntil).toISOString()
         : null,
+      team: updatedRow.team,
     })
     .then((res) => {
       const data: ApiIfs<UserIfs> = res.data;
@@ -288,9 +299,12 @@ const processRowUpdate = async (
 
 export default function AdminUser() {
   const apiRef = useGridApiRef();
-  const [isLoading, setIsLoading] = useState(false);
   const [roles, setRoles] = useState<string[]>([]);
+  const [teamList, setTeamList] = useState<string[]>([]);
+
+  const [isLoading, setIsLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
+
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
   const [selectedRoles, setSelectedRoles] = useState<string[]>([]);
 
@@ -326,7 +340,7 @@ export default function AdminUser() {
     }
 
     privateApi
-      .patch(`/v1/admin/user/${selectedUserId}/roles`, {
+      .patch(`/v1/admin/users/${selectedUserId}/roles`, {
         list: selectedRoles,
       })
       .then((res) => {
@@ -362,6 +376,19 @@ export default function AdminUser() {
       });
   }, []);
 
+  useEffect(() => {
+    privateApi
+      .get("/v1/admin/teams/all")
+      .then((res) => {
+        const data: ApiIfs<string[]> = res.data;
+        const teamList = data.body ?? [];
+        setTeamList(teamList);
+      })
+      .catch((err) => {
+        console.error("Failed to fetch teams:", err);
+      });
+  }, []);
+
   const columns = createColumns(
     (params) => onResetPassword(params),
     (params) => {
@@ -369,6 +396,7 @@ export default function AdminUser() {
       setSelectedRoles(params.row.authorities ?? []);
       setShowModal(true);
     },
+    teamList,
   );
 
   const customDataSource: GridDataSource = {

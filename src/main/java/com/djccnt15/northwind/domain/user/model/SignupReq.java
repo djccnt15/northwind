@@ -47,4 +47,6 @@ public class SignupReq {
         groups = {CreateCheck.class, PasswordUpdate.class}
     )
     private String confirmPassword;
+    
+    private String team;
 }

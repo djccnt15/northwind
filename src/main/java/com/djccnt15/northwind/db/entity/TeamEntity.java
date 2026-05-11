@@ -8,6 +8,7 @@ import jakarta.persistence.Table;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Getter
@@ -26,5 +27,15 @@ public class TeamEntity extends BaseEntity {
     @OneToMany(mappedBy = "team")
     @Builder.Default
     @ToString.Exclude @EqualsAndHashCode.Exclude
-    private Set<AppUserEntity> members = new java.util.HashSet<>();
+    private Set<AppUserEntity> members = new HashSet<>();
+    
+    public void addMember(AppUserEntity user) {
+        members.add(user);
+        user.setTeam(this);
+    }
+    
+    public void removeMember(AppUserEntity user) {
+        members.remove(user);
+        user.setTeam(null);
+    }
 }
