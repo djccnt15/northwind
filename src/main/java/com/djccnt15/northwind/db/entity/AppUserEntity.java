@@ -61,6 +61,10 @@ public class AppUserEntity extends BaseEntity {
     @JoinColumn(name = "team_id", nullable = false)
     @ToString.Exclude @EqualsAndHashCode.Exclude
     private TeamEntity team;
+    
+    @OneToOne(mappedBy = "appUser", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    @ToString.Exclude @EqualsAndHashCode.Exclude
+    private EmployeeEntity employee;
 
     public void addAppUserRole(AppUserRoleEntity roleLink) {
         if (roleLink == null) return;

@@ -81,4 +81,9 @@ public class EmployeeEntity extends BaseEntity {
     @Builder.Default
     @ToString.Exclude @EqualsAndHashCode.Exclude
     private List<EmployeeEntity> subordinate = new ArrayList<>();
+    
+    @JoinColumn(name = "app_user_id", unique = true)
+    @OneToOne(fetch = FetchType.LAZY)
+    @ToString.Exclude @EqualsAndHashCode.Exclude
+    private AppUserEntity appUser;
 }
