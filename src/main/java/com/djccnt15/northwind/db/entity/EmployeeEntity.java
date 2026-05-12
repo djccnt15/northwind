@@ -6,13 +6,13 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
 @Entity
-@Table(name = "employees")
+@Table(name = "employee")
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
@@ -25,13 +25,13 @@ public class EmployeeEntity extends BaseEntity {
     @Column(name = "last_name", nullable = false)
     private String lastName;
     
-    @Column(nullable = false, unique = true)
+    @Column(unique = true)
     private String email;
     
     @Column(name = "job_title")
     private String JobTitle;
     
-    @Column(name = "primary_phone", nullable = false)
+    @Column(name = "primary_phone")
     private String primaryPhone;
     
     @Column(name = "secondary_phone")
@@ -80,7 +80,7 @@ public class EmployeeEntity extends BaseEntity {
     @OneToMany(mappedBy = "supervisor", cascade = CascadeType.ALL)
     @Builder.Default
     @ToString.Exclude @EqualsAndHashCode.Exclude
-    private List<EmployeeEntity> subordinate = new ArrayList<>();
+    private Set<EmployeeEntity> subordinates = new HashSet<>();
     
     @JoinColumn(name = "app_user_id", unique = true)
     @OneToOne(fetch = FetchType.LAZY)
