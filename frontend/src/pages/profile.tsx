@@ -11,15 +11,16 @@ import {
 } from "../shared/ui/global-styles";
 import { SubmitBtn } from "../shared/ui/auth-ui";
 import { useAuth } from "../shared/auth/auth-context";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { privateApi } from "../shared/api";
 import type { ApiIfs } from "../entities/app/api";
+import type { UserIfs } from "../entities/app/user";
 
 const Wrapper = styled.div`
   width: 100%;
   height: 100%;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  min-width: 1200px;
+  display: flex;
 `;
 
 const PageWrapper = styled.div`
@@ -121,10 +122,12 @@ const AuthItem = styled.li`
 `;
 
 export default function Profile() {
-  const { user } = useAuth();
+  const { user, setUser } = useAuth();
 
-  const [username, setUsername] = useState<string>(user?.username || "");
-  const [email, setEmail] = useState<string>(user?.email || "");
+  const [username, setUsername] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [userInfo, setUserInfo] = useState<UserIfs | null>(null);
+
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
 
@@ -147,11 +150,30 @@ export default function Profile() {
     setConfirmPassword(e.target.value);
   };
 
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      privateApi
+        .get(`/v1/user/${user?.id}`)
+        .then((res) => {
+          const data: ApiIfs<UserIfs> = res.data;
+          setUserInfo(data.body || null);
+          setUsername(data.body?.username || "");
+          setEmail(data.body?.email || "");
+        })
+        .catch((err) => {
+          console.error("Failed to fetch user info:", err);
+          alert("Failed to fetch user info. Please try again later.");
+        });
+    };
+
+    fetchUserInfo();
+  }, [user?.id]);
+
   const onSubmitProfile = (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!user || isLoading) return;
 
-    if (username === user.username && email === user.email) {
+    if (username === userInfo?.username && email === userInfo?.email) {
       alert("No changes detected.");
       return;
     }
@@ -165,7 +187,10 @@ export default function Profile() {
 
     privateApi
       .patch(`/v1/user/${user.id}/profile`, { username, email })
-      .then(() => {
+      .then((res) => {
+        const data: ApiIfs<UserIfs> = res.data;
+        setUserInfo(data.body || null);
+        setUser({ ...user, username: data.body?.username || user.username });
         alert("Profile updated successfully.");
       })
       .catch((err) => {
@@ -246,7 +271,7 @@ export default function Profile() {
             <FieldWrapper>
               <Label>Team</Label>
               <TooltipWrapper>
-                <Input type="text" value={user?.team || ""} disabled />
+                <Input type="text" value={userInfo?.team || ""} disabled />
                 <Tooltip
                   left="50%"
                   top="-100%"
@@ -286,7 +311,11 @@ export default function Profile() {
             <FieldWrapper>
               <Label>Live Until</Label>
               <TooltipWrapper>
-                <Input type="datetime-local" value={user?.liveUntil} disabled />
+                <Input
+                  type="datetime-local"
+                  value={userInfo?.liveUntil}
+                  disabled
+                />
                 <Tooltip top="calc(100% + 8px)">
                   Expiration date of your account. You can't use the account
                   after this date.

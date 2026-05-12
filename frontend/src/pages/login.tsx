@@ -14,7 +14,7 @@ import {
 } from "../shared/ui/auth-ui";
 import { responseToUser, useAuth } from "../shared/auth/auth-context";
 import type { ApiIfs } from "../entities/app/api";
-import type { UserIfs } from "../entities/app/user";
+import type { SessionIfs } from "../entities/app/user";
 
 const Wrapper = styled.div`
   display: flex;
@@ -90,7 +90,7 @@ export default function Login() {
         headers: { "content-type": "application/x-www-form-urlencoded" },
       })
       .then((res) => {
-        const data: ApiIfs<UserIfs> = res.data;
+        const data: ApiIfs<SessionIfs> = res.data;
         console.log("login response:", data);
         setUser(responseToUser(data));
 

@@ -50,7 +50,6 @@ public class UserBusiness {
         userService.updateProfile(entity, request);
         
         userSession.setUsername(entity.getUsername());
-        userSession.setEmail(entity.getEmail());
         return userConverter.toResponse(entity);
     }
     
@@ -67,5 +66,11 @@ public class UserBusiness {
         
         userSession.setPassword(entity.getPassword());
         return userConverter.toResponse(entity);
+    }
+    
+    public UserInfoRes getUserInfo(UserSession userSession, Long userId) {
+        userService.validateUserId(userSession, userId);
+        var user = userService.getFullUser(userSession.getId());
+        return userConverter.toResponse(user);
     }
 }

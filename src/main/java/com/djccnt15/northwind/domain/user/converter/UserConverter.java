@@ -1,6 +1,7 @@
 package com.djccnt15.northwind.domain.user.converter;
 
 import com.djccnt15.northwind.db.entity.AppUserEntity;
+import com.djccnt15.northwind.domain.user.model.SessionInfoRes;
 import com.djccnt15.northwind.domain.user.model.SignupReq;
 import com.djccnt15.northwind.domain.user.model.UserInfoRes;
 import com.djccnt15.northwind.global.annotation.Converter;
@@ -22,19 +23,12 @@ public class UserConverter {
     
     private final PasswordEncoder encoder;
     
-    public UserInfoRes toResponse(UserSession userSession) {
-        return UserInfoRes.builder()
+    public SessionInfoRes toResponse(UserSession userSession) {
+        return SessionInfoRes.builder()
             .id(userSession.getId())
             .username(userSession.getUsername())
-            .email(userSession.getEmail())
             .authorities(userSession.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority).toList())
-            .isEnabled(userSession.isEnabled())
-            .liveUntil(userSession.getLiveUntil())
-            .passwordChangedAt(userSession.getPasswordChangedAt())
-            .loginFailedCount(userSession.getLoginFailedCount())
-            .lastLoginAt(userSession.getLastLoginAt())
-            .team(userSession.getTeam())
             .build();
     }
     

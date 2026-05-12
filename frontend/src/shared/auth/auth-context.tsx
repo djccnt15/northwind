@@ -1,10 +1,10 @@
 import { createContext, useContext } from "react";
-import type { UserIfs } from "../../entities/app/user";
+import type { SessionIfs } from "../../entities/app/user";
 import type { ApiIfs } from "../../entities/app/api";
 
 interface AuthContextIfs {
-  user: UserIfs | null;
-  setUser: React.Dispatch<React.SetStateAction<UserIfs | null>>;
+  user: SessionIfs | null;
+  setUser: React.Dispatch<React.SetStateAction<SessionIfs | null>>;
 }
 
 export const AuthContext = createContext<AuthContextIfs | null>(null);
@@ -15,20 +15,13 @@ export const useAuth = () => {
   return context;
 };
 
-export const responseToUser = (data: ApiIfs<UserIfs>): UserIfs => {
+export const responseToUser = (data: ApiIfs<SessionIfs>): SessionIfs => {
   return {
     id: Number(data.body?.id) || 0,
     username: String(data.body?.username) || "",
-    email: String(data.body?.email) || "",
     authorities: Array.isArray(data.body?.authorities)
       ? data.body.authorities.map(String)
       : [],
-    enabled: !!data.body?.enabled,
-    liveUntil: String(data.body?.liveUntil) || "",
-    passwordChangedAt: String(data.body?.passwordChangedAt) || "",
-    loginFailedCount: Number(data.body?.loginFailedCount) || 0,
-    lastLoginAt: String(data.body?.lastLoginAt) || "",
-    team: String(data.body?.team) || "",
     loggedIn: true,
   };
 };

@@ -76,6 +76,11 @@ public class UserService {
             .orElseThrow(() -> new ApiException(NOT_FOUND, "User not found"));
     }
     
+    public AppUserEntity getFullUser(Long userId) {
+        return repository.findFullFirstById(userId)
+            .orElseThrow(() -> new ApiException(NOT_FOUND, "User not found"));
+    }
+    
     public AppUserEntity updateProfile(AppUserEntity entity, SignupReq request) {
         entity.setUsername(request.getUsername());
         entity.setEmail(request.getEmail());

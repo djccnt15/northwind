@@ -1,7 +1,7 @@
 package com.djccnt15.northwind.domain.auth.controller;
 
 import com.djccnt15.northwind.domain.user.converter.UserConverter;
-import com.djccnt15.northwind.domain.user.model.UserInfoRes;
+import com.djccnt15.northwind.domain.user.model.SessionInfoRes;
 import com.djccnt15.northwind.global.api.Api;
 import com.djccnt15.northwind.global.config.security.model.UserSession;
 import lombok.RequiredArgsConstructor;
@@ -25,13 +25,13 @@ public class AuthApiController {
     private final UserConverter converter;
     
     @GetMapping("/check-session")
-    public ResponseEntity<Api<UserInfoRes>> checkSession(@AuthenticationPrincipal UserSession userSession) {
+    public ResponseEntity<Api<SessionInfoRes>> checkSession(@AuthenticationPrincipal UserSession userSession) {
         var response = converter.toResponse(userSession);
         return ResponseEntity.ok(Api.OK(VALIDATED, response));
     }
     
     @PostMapping("/login/success")
-    public ResponseEntity<Api<UserInfoRes>> loginSuccess(@AuthenticationPrincipal UserSession userSession) {
+    public ResponseEntity<Api<SessionInfoRes>> loginSuccess(@AuthenticationPrincipal UserSession userSession) {
         var response = converter.toResponse(userSession);
         return ResponseEntity.ok(Api.OK(response));
     }

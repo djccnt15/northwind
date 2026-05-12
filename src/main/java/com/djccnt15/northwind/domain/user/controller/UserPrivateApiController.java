@@ -24,6 +24,15 @@ public class UserPrivateApiController {
     
     private final UserBusiness business;
     
+    @GetMapping("{userId}")
+    public ResponseEntity<Api<UserInfoRes>> getUserInfo(
+        @AuthenticationPrincipal UserSession userSession,
+        @PathVariable Long userId
+    ) {
+        var response = business.getUserInfo(userSession, userId);
+        return ResponseEntity.ok(Api.OK(response));
+    }
+    
     @PatchMapping("{userId}/profile")
     public ResponseEntity<Api<UserInfoRes>> updateProfile(
         @AuthenticationPrincipal UserSession userSession,

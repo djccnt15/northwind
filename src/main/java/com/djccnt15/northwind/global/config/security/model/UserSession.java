@@ -18,8 +18,6 @@ public class UserSession implements UserDetails {
     
     private String password;
     
-    private String email;
-    
     private Collection<? extends GrantedAuthority> authorities;
     
     private boolean isEnabled;  // TODO. implement email verification to set this to true
@@ -32,14 +30,7 @@ public class UserSession implements UserDetails {
     
     private int loginFailureLimit;
     
-    private LocalDateTime lastLoginAt;
-    
-    private String team;
-    
     private boolean isSuperAdmin;
-    
-    @Builder.Default
-    private boolean isBanned = false;
     
     @Override  // DisabledException. 계정 비활성화(관리자가 계정 정지 등)
     public boolean isEnabled() {

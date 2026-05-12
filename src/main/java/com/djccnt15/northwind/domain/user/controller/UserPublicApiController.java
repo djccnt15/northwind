@@ -16,7 +16,7 @@ import static com.djccnt15.northwind.global.constants.RouteConst.PUBLIC_API_V1;
 @RestController
 @RequestMapping(PUBLIC_API_V1)
 @RequiredArgsConstructor
-public class UserApiController {
+public class UserPublicApiController {
     
     private final UserBusiness business;
     

@@ -1,3 +1,10 @@
+export interface SessionIfs {
+  id: number;
+  username: string;
+  authorities: string[];
+  loggedIn: boolean;
+}
+
 export interface UserIfs {
   id: number;
   username: string;
@@ -9,5 +16,4 @@ export interface UserIfs {
   loginFailedCount: number;
   lastLoginAt: string;
   team: string;
-  loggedIn: boolean;
 }
