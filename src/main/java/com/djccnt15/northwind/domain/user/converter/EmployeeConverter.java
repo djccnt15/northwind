@@ -12,7 +12,7 @@ public class EmployeeConverter {
             .firstName(employee.getFirstName())
             .lastName(employee.getLastName())
             .email(employee.getEmail())
-            .JobTitle(employee.getJobTitle())
+            .jobTitle(employee.getJobTitle())
             .primaryPhone(employee.getPrimaryPhone())
             .secondaryPhone(employee.getSecondaryPhone())
             .notes(employee.getNotes())

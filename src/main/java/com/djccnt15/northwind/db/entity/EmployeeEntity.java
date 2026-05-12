@@ -29,7 +29,7 @@ public class EmployeeEntity extends BaseEntity {
     private String email;
     
     @Column(name = "job_title")
-    private String JobTitle;
+    private String jobTitle;
     
     @Column(name = "primary_phone")
     private String primaryPhone;

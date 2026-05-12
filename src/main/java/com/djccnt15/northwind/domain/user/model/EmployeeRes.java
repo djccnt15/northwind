@@ -17,7 +17,7 @@ public class EmployeeRes {
     
     private String email;
     
-    private String JobTitle;
+    private String jobTitle;
     
     private String primaryPhone;
     

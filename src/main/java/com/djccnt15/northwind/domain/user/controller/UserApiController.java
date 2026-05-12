@@ -20,7 +20,7 @@ import static com.djccnt15.northwind.global.constants.RouteConst.API_V1;
 @RequestMapping(API_V1 + "/user")
 @PreAuthorize("isAuthenticated()")
 @RequiredArgsConstructor
-public class UserPrivateApiController {
+public class UserApiController {
     
     private final UserBusiness business;
     
