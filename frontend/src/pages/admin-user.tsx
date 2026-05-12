@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import type { UserIfs } from "../entities/app/user";
+import type { UserIfs } from "../entities/employee";
 import { privateApi } from "../shared/api";
 import {
   commBorderRadius,

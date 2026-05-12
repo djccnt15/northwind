@@ -23,7 +23,7 @@ import {
   ModalDefault,
 } from "../shared/ui/global-styles";
 import type { ApiIfs } from "../entities/app/api";
-import type { UserIfs } from "../entities/app/user";
+import type { UserIfs } from "../entities/employee";
 
 const Wrapper = styled.div`
   display: flex;

@@ -14,7 +14,7 @@ import { useAuth } from "../shared/auth/auth-context";
 import { useEffect, useState } from "react";
 import { privateApi } from "../shared/api";
 import type { ApiIfs } from "../entities/app/api";
-import type { UserIfs } from "../entities/app/user";
+import type { UserIfs } from "../entities/employee";
 
 const Wrapper = styled.div`
   width: 100%;
