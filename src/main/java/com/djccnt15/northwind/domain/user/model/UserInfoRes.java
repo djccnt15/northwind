@@ -29,4 +29,6 @@ public class UserInfoRes {
     private LocalDateTime lastLoginAt;
     
     private String team;
+    
+    private EmployeeRes employee;
 }
