@@ -21,4 +21,27 @@ export interface UserIfs {
   loginFailedCount: number;
   lastLoginAt: string;
   team: string;
+  employee: EmployeeIfs | null;
+}
+
+export interface EmployeeIfs {
+  firstName: string;
+  lastName: string;
+  email: string;
+  jobTitle: string;
+  primaryPhone: string;
+  secondaryPhone: string;
+  notes: string;
+  titleOfCourtesy: string;
+  birthDate: string;
+  hireDate: string;
+  address: string;
+  city: string;
+  region: string;
+  zipCode: string;
+  country: string;
+  photo: Uint8Array;
+  title: string;
+  supervisor: EmployeeIfs | null;
+  subordinates: Set<EmployeeIfs> | null;
 }
