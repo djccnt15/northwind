@@ -1,8 +1,8 @@
 package com.djccnt15.northwind.sampledata;
 
 import com.djccnt15.northwind.annotation.DevTest;
-import com.djccnt15.northwind.db.entity.TitleEntity;
-import com.djccnt15.northwind.db.repository.TitleRepo;
+import com.djccnt15.northwind.db.entity.TeamEntity;
+import com.djccnt15.northwind.db.repository.TeamRepo;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -11,26 +11,27 @@ import org.springframework.test.context.ActiveProfiles;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 
 @SpringBootTest
 @ActiveProfiles("dev")  // use application-dev.properties for testing
 @DevTest
 @Commit
-public class TitleCreateTest {
+public class TeamCreateTest {
     
-    @Autowired private TitleRepo titleRepo;
+    @Autowired private TeamRepo teamRepo;
     
     @Test
-    void createTitles() {
-        var titles = List.of("system", "CEO", "DIRECTOR", "MANAGER", "STAFF", "INTERN");
-        var titleList = new ArrayList<TitleEntity>();
+    void createTeam() {
+        var teamList = new ArrayList<TeamEntity>();
         
-        titles.stream()
-            .map(it -> new TitleEntity(it, new HashSet<>()))
-            .forEach(titleList::add)
-        ;
+        var adminTeam = new TeamEntity("system", new HashSet<>());
+        teamList.add(adminTeam);
         
-        titleRepo.saveAll(titleList);
+        for (int i = 0; i < 5; i++) {
+            var team = new TeamEntity("Team %d".formatted(i + 1), new HashSet<>());
+            teamList.add(team);
+        }
+        
+        teamRepo.saveAll(teamList);
     }
 }
