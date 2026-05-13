@@ -1,6 +1,6 @@
 spring:
   output.ansi.enabled: always
-  profiles.active: test
+  profiles.active: test  # dev, test. dev is for using real database, test is for using in-memory database
   jpa:
     # show-sql: true
     properties.hibernate:

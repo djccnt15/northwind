@@ -20,4 +20,4 @@ app:
     tokenValiditySeconds: 1209600  # 14 days
   schedule:
     cron:
-      superAdminRefresh: "0 0 * * * *"  # runs every minute
+      superAdminRefresh: "0 0 * * * *"  # runs every hour
