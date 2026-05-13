@@ -1,0 +1,40 @@
+package com.djccnt15.northwind.domain.user.service;
+
+import com.djccnt15.northwind.db.entity.EmployeeEntity;
+import com.djccnt15.northwind.db.repository.EmployeeRepo;
+import com.djccnt15.northwind.domain.user.converter.EmployeeConverter;
+import com.djccnt15.northwind.domain.user.model.EmployeeReq;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+
+@Slf4j
+@Service
+@RequiredArgsConstructor
+public class EmployeeService {
+    
+    private final EmployeeRepo repository;
+    private final EmployeeConverter converter;
+    
+    public EmployeeEntity createEmployee(EmployeeReq request) {
+        var entity = converter.toEntity(request);
+        return repository.save(entity);
+    }
+    
+    public EmployeeEntity updateEmployee(EmployeeEntity employee, EmployeeReq request) {
+        employee.setFirstName(request.getFirstName());
+        employee.setLastName(request.getLastName());
+        employee.setEmail(request.getEmail());
+        employee.setJobTitle(request.getJobTitle());
+        employee.setPrimaryPhone(request.getPrimaryPhone());
+        employee.setSecondaryPhone(request.getSecondaryPhone());
+        employee.setTitleOfCourtesy(request.getTitleOfCourtesy());
+        employee.setBirthDate(request.getBirthDate());
+        employee.setAddress(request.getAddress());
+        employee.setCity(request.getCity());
+        employee.setRegion(request.getRegion());
+        employee.setZipCode(request.getZipCode());
+        employee.setCountry(request.getCountry());
+        return repository.save(employee);
+    }
+}

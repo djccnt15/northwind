@@ -1,6 +1,7 @@
 package com.djccnt15.northwind.domain.user.service;
 
 import com.djccnt15.northwind.db.entity.AppUserEntity;
+import com.djccnt15.northwind.db.entity.EmployeeEntity;
 import com.djccnt15.northwind.db.repository.AppUserRepo;
 import com.djccnt15.northwind.domain.user.converter.UserConverter;
 import com.djccnt15.northwind.domain.user.model.SignupReq;
@@ -86,6 +87,12 @@ public class UserService {
         entity.setEmail(request.getEmail());
         entity.setVerified(request.isEnabled());
         entity.setLiveUntil(request.getLiveUntil());
+        repository.save(entity);
+        return entity;
+    }
+    
+    public AppUserEntity updateProfile(AppUserEntity entity, EmployeeEntity employee) {
+        entity.updateEmployee(employee);
         repository.save(entity);
         return entity;
     }

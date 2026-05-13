@@ -79,4 +79,11 @@ public class AppUserEntity extends BaseEntity {
             roleLink.setAppUser(null);
         }
     }
+    
+    public void updateEmployee(EmployeeEntity employee) {
+        this.employee = employee;
+        if (employee.getAppUser() != this) {
+            employee.setAppUser(this);
+        }
+    }
 }

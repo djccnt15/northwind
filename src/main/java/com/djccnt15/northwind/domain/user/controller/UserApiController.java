@@ -1,9 +1,10 @@
 package com.djccnt15.northwind.domain.user.controller;
 
-import com.djccnt15.northwind.global.api.Api;
 import com.djccnt15.northwind.domain.user.business.UserBusiness;
+import com.djccnt15.northwind.domain.user.model.EmployeeReq;
 import com.djccnt15.northwind.domain.user.model.SignupReq;
 import com.djccnt15.northwind.domain.user.model.UserInfoRes;
+import com.djccnt15.northwind.global.api.Api;
 import com.djccnt15.northwind.global.config.security.model.UserSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -50,6 +51,16 @@ public class UserApiController {
         @Validated(SignupReq.PasswordUpdate.class) @RequestBody SignupReq request
     ) {
         var response = business.updatePassword(userSession, userId, request);
+        return ResponseEntity.ok(Api.OK(response));
+    }
+    
+    @PatchMapping("{userId}/info")
+    public ResponseEntity<Api<UserInfoRes>> updateInfo(
+        @AuthenticationPrincipal UserSession userSession,
+        @PathVariable Long userId,
+        @Validated @RequestBody EmployeeReq request
+    ) {
+        var response = business.updateInfo(userSession, userId, request);
         return ResponseEntity.ok(Api.OK(response));
     }
 }

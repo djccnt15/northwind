@@ -2,8 +2,10 @@ package com.djccnt15.northwind.domain.user.business;
 
 import com.djccnt15.northwind.domain.user.converter.EmployeeConverter;
 import com.djccnt15.northwind.domain.user.converter.UserConverter;
+import com.djccnt15.northwind.domain.user.model.EmployeeReq;
 import com.djccnt15.northwind.domain.user.model.SignupReq;
 import com.djccnt15.northwind.domain.user.model.UserInfoRes;
+import com.djccnt15.northwind.domain.user.service.EmployeeService;
 import com.djccnt15.northwind.domain.user.service.UserRoleService;
 import com.djccnt15.northwind.domain.user.service.UserService;
 import com.djccnt15.northwind.global.annotation.Business;
@@ -23,6 +25,7 @@ public class UserBusiness {
     private final UserService userService;
     private final UserRoleService userRoleService;
     private final EmployeeConverter employeeConverter;
+    private final EmployeeService employeeService;
     
     public void checkEmailExists(String email) {
         userService.validateEmailNotExists(email);
@@ -83,5 +86,24 @@ public class UserBusiness {
         var employee = employeeConverter.toResponse(employeeEntity);
         user.setEmployee(employee);
         return user;
+    }
+    
+    @Transactional
+    public UserInfoRes updateInfo(
+        UserSession userSession,
+        Long userId,
+        EmployeeReq request
+    ) {
+        userService.validateUserId(userSession, userId);
+        var userEntity = userService.getFullUser(userSession.getId());
+        
+        if (userEntity.getEmployee() == null) {
+            var employeeEntity = employeeService.createEmployee(request);
+            userService.updateProfile(userEntity, employeeEntity);
+            return userConverter.toResponse(userEntity);
+        }
+        
+        employeeService.updateEmployee(userEntity.getEmployee(), request);
+        return userConverter.toResponse(userEntity);
     }
 }
