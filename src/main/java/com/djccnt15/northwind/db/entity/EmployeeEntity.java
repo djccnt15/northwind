@@ -1,5 +1,6 @@
 package com.djccnt15.northwind.db.entity;
 
+import com.djccnt15.northwind.db.entity.embaddable.AddressEmbed;
 import com.djccnt15.northwind.db.entity.id.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -50,19 +51,8 @@ public class EmployeeEntity extends BaseEntity {
     private LocalDate hireDate;
     
     @Column
-    private String address;
-    
-    @Column
-    private String city;
-    
-    @Column
-    private String region;
-    
-    @Column
-    private String zipCode;
-    
-    @Column
-    private String country;
+    @Embedded
+    private AddressEmbed address;
     
     @Column
     private byte[] photo;

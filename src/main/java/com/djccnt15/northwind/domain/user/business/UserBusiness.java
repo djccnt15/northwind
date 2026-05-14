@@ -1,5 +1,6 @@
 package com.djccnt15.northwind.domain.user.business;
 
+import com.djccnt15.northwind.domain.address.converter.AddressConverter;
 import com.djccnt15.northwind.domain.user.converter.EmployeeConverter;
 import com.djccnt15.northwind.domain.user.converter.UserConverter;
 import com.djccnt15.northwind.domain.user.model.EmployeeReq;
@@ -26,6 +27,7 @@ public class UserBusiness {
     private final UserRoleService userRoleService;
     private final EmployeeConverter employeeConverter;
     private final EmployeeService employeeService;
+    private final AddressConverter addressConverter;
     
     public void checkEmailExists(String email) {
         userService.validateEmailNotExists(email);
@@ -83,7 +85,8 @@ public class UserBusiness {
             return user;
         }
         
-        var employee = employeeConverter.toResponse(employeeEntity);
+        var address = addressConverter.toResponse(employeeEntity.getAddress());
+        var employee = employeeConverter.toResponse(employeeEntity, address);
         user.setEmployee(employee);
         return user;
     }
