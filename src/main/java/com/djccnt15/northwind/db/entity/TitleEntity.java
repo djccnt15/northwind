@@ -8,7 +8,8 @@ import jakarta.persistence.Table;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -24,6 +25,7 @@ public class TitleEntity extends BaseEntity {
     private String title;
     
     @OneToMany(mappedBy = "title")
+    @Builder.Default
     @ToString.Exclude @EqualsAndHashCode.Exclude
-    private List<EmployeeEntity> employees;
+    private Set<EmployeeEntity> employees = new HashSet<>();
 }

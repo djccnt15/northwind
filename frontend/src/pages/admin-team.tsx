@@ -84,11 +84,10 @@ const onEdit = async (
   updatedRow: TeamIfs,
   originalRow: TeamIfs,
 ): Promise<TeamIfs> => {
-  if (updatedRow.isNew) {
-    const { isNew, ...teamData } = updatedRow;
+  const { isNew, ...teamData } = updatedRow;
+  if (isNew) {
     return await createTeam(teamData, originalRow);
   }
-
   return await updateTeam(updatedRow, originalRow);
 };
 
