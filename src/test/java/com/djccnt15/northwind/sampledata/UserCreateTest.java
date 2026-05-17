@@ -160,4 +160,45 @@ public class UserCreateTest {
         appUserRoleRepo.saveAll(appUserRoleList);
         employeeRepo.saveAll(employeeList);
     }
+    
+    @Test
+    @Transactional
+    void createExternalUser() {
+        // this user is for testing not employed user account
+        // no employee record will be created for this user
+        var userList = new ArrayList<AppUserEntity>();
+        var teamList = new ArrayList<TeamEntity>();
+        var appUserRoleList = new ArrayList<AppUserRoleEntity>();
+        var random = new Random();
+        
+        var userRole = userRoleRepo.findFirstByName(USER).orElseThrow();
+        
+        for (int i = 0; i < 5; i++) {
+            var teamEntity = new TeamEntity("external-%s".formatted(i));
+            teamList.add(teamEntity);
+        }
+        
+        for (int i = 0; i < 30; i++) {
+            var teamEntity = teamList.get(random.nextInt(5));
+            
+            var user = AppUserEntity.builder()
+                .username("external-user%s".formatted(i))
+                .password(encoder.encode("external-user"))
+                .email("externalUser%s@external.com".formatted(i))
+                .isVerified(true)
+                .team(teamEntity)
+                .build();
+            userList.add(user);
+            
+            var appUserRole = AppUserRoleEntity.builder()
+                .appUser(user)
+                .userRole(userRole)
+                .build();
+            appUserRoleList.add(appUserRole);
+        }
+        
+        teamRepo.saveAll(teamList);
+        userRepo.saveAll(userList);
+        appUserRoleRepo.saveAll(appUserRoleList);
+    }
 }
