@@ -1,10 +1,15 @@
 package com.djccnt15.northwind.db.entity;
 
 import com.djccnt15.northwind.db.entity.id.BaseEntity;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -16,5 +21,11 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 public class TaxStatusEntity extends BaseEntity {
     
+    @Column
     private String status;
+    
+    @OneToMany(mappedBy = "taxStatus")
+    @Builder.Default
+    @ToString.Exclude @EqualsAndHashCode.Exclude
+    private Set<CompanyEntity> companies = new HashSet<>();
 }
