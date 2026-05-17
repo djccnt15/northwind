@@ -80,6 +80,10 @@ public class AppUserEntity extends BaseEntity {
         appUserRole.add(roleLink);
         roleLink.setAppUser(this);
     }
+    
+    public void resetAppUserRole() {
+        this.appUserRole = new HashSet<>();
+    }
 
     public void removeAppUserRole(AppUserRoleEntity roleLink) {
         if (roleLink == null) return;

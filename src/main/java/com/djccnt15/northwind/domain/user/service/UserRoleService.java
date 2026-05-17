@@ -46,6 +46,7 @@ public class UserRoleService {
     
     public AppUserEntity deleteUserRoles(AppUserEntity userEntity) {
         appUserRoleRepo.deleteAllByAppUser(userEntity);
+        userEntity.resetAppUserRole();
         return userEntity;
     }
 }

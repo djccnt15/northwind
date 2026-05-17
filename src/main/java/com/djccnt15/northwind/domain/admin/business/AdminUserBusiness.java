@@ -66,7 +66,6 @@ public class AdminUserBusiness {
         
         var entity = userService.getUser(userId);
         userRoleService.deleteUserRoles(entity);
-        entity.setAppUserRole(new HashSet<>());
         
         var roleEntities = roleService.getRoles(request.getList());
         var updatedUser = userRoleService.assignRolesToUser(entity, roleEntities);
