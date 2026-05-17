@@ -5,23 +5,25 @@ import jakarta.persistence.Embeddable;
 import lombok.Builder;
 import lombok.Data;
 
+import static com.djccnt15.northwind.global.constants.validation.AddressModelConst.*;
+
 @Data
 @Embeddable
 @Builder
 public class AddressEmbed {
     
-    @Column
+    @Column(length = ADDRESS_MAX_LENGTH)
     private String address;
     
-    @Column
+    @Column(length = CITY_MAX_LENGTH)
     private String city;
     
-    @Column
+    @Column(length = REGION_MAX_LENGTH)
     private String region;
     
-    @Column
+    @Column(length = ZIP_CODE_MAX_LENGTH)
     private String zipCode;
     
-    @Column
+    @Column(length = COUNTRY_MAX_LENGTH)
     private String country;
 }

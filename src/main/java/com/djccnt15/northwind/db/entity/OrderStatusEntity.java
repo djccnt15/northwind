@@ -1,11 +1,14 @@
 package com.djccnt15.northwind.db.entity;
 
+import com.djccnt15.northwind.db.entity.enums.SortOrderEnum;
 import com.djccnt15.northwind.db.entity.id.BaseEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+
+import static com.djccnt15.northwind.global.constants.validation.OrderStatusModelConst.CODE_MAX_LENGTH;
+import static com.djccnt15.northwind.global.constants.validation.OrderStatusModelConst.NAME_MAX_LENGTH;
 
 @Getter
 @Setter
@@ -17,12 +20,15 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 public class OrderStatusEntity extends BaseEntity {
     
-    @Column
+    @NotNull
+    @Column(length = CODE_MAX_LENGTH, nullable = false, unique = true)
     private String code;
     
-    @Column
+    @NotNull
+    @Column(length = NAME_MAX_LENGTH, nullable = false, unique = true)
     private String name;
     
     @Column
-    private String sortOrder;
+    @Enumerated(EnumType.STRING)
+    private SortOrderEnum sortOrder;
 }

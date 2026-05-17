@@ -20,6 +20,8 @@ import java.util.List;
 
 import static com.djccnt15.northwind.global.code.StatusCode.BAD_REQUEST;
 import static com.djccnt15.northwind.global.code.StatusCode.NOT_FOUND;
+import static com.djccnt15.northwind.global.constants.validation.AppUserModelConst.EMAIL_DUPLICATE_ERR_MSG;
+import static com.djccnt15.northwind.global.constants.validation.AppUserModelConst.USERNAME_DUPLICATE_ERR_MSG;
 
 @Slf4j
 @Service
@@ -47,22 +49,22 @@ public class UserService {
     
     public void validateEmailNotExists(String email) {
         repository.findFirstByEmail(email)
-            .ifPresent(e -> {throw new ApiException(BAD_REQUEST, "Email already exists");});
+            .ifPresent(e -> {throw new ApiException(BAD_REQUEST, EMAIL_DUPLICATE_ERR_MSG);});
     }
     
     public void validateEmailNotExists(String email, Long userId) {
         repository.findFirstByEmailAndIdNot(email, userId)
-            .ifPresent(e -> {throw new ApiException(BAD_REQUEST, "Email already exists");});
+            .ifPresent(e -> {throw new ApiException(BAD_REQUEST, EMAIL_DUPLICATE_ERR_MSG);});
     }
     
     public void validateUsernameNotExists(String username) {
         repository.findFirstByUsername(username)
-            .ifPresent(e -> {throw new ApiException(BAD_REQUEST, "Username already exists");});
+            .ifPresent(e -> {throw new ApiException(BAD_REQUEST, USERNAME_DUPLICATE_ERR_MSG);});
     }
     
     public void validateUsernameNotExists(String username, Long userId) {
         repository.findFirstByUsernameAndIdNot(username, userId)
-            .ifPresent(e -> {throw new ApiException(BAD_REQUEST, "Username already exists");}
+            .ifPresent(e -> {throw new ApiException(BAD_REQUEST, USERNAME_DUPLICATE_ERR_MSG);}
         );
     }
     

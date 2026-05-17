@@ -5,11 +5,14 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.util.HashSet;
 import java.util.Set;
+
+import static com.djccnt15.northwind.global.constants.validation.TeamModelConst.NAME_MAX_LENGTH;
 
 @Getter
 @Setter
@@ -21,7 +24,8 @@ import java.util.Set;
 @SuperBuilder
 public class TeamEntity extends BaseEntity {
     
-    @Column(unique = true)
+    @NotNull
+    @Column(length= NAME_MAX_LENGTH, nullable = false, unique = true)
     private String name;
     
     @OneToMany(mappedBy = "team")

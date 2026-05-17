@@ -2,6 +2,7 @@ package com.djccnt15.northwind.db.entity;
 
 import com.djccnt15.northwind.db.entity.id.BaseEntity;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.ColumnDefault;
@@ -9,6 +10,9 @@ import org.hibernate.annotations.ColumnDefault;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
+
+import static com.djccnt15.northwind.global.constants.validation.AppUserModelConst.EMAIL_MAX_LENGTH;
+import static com.djccnt15.northwind.global.constants.validation.AppUserModelConst.USERNAME_MAX_LENGTH;
 
 @Getter
 @Setter
@@ -24,15 +28,18 @@ import java.util.Set;
 @SuperBuilder
 public class AppUserEntity extends BaseEntity {
     
-    @Column(unique = true, length = 25, nullable = false)
+    @NotNull
+    @Column(unique = true, length = USERNAME_MAX_LENGTH, nullable = false)
     private String username;
     
+    @NotNull
     @Column(nullable = false)
     private String password;
     
-    @Column(unique = true)
+    @Column(unique = true, length = EMAIL_MAX_LENGTH)
     private String email;
     
+    @NotNull
     @Column(name = "is_verified", nullable = false)
     @ColumnDefault(value = "false")  // annotation for ddl-auto
     @Builder.Default  // annotation for lombok default
@@ -44,6 +51,7 @@ public class AppUserEntity extends BaseEntity {
     @Column(name = "password_changed_at")
     private LocalDateTime passwordChangedAt;
     
+    @NotNull
     @Column(name = "login_failed_count", nullable = false)
     @ColumnDefault(value = "0")
     @Builder.Default
@@ -57,6 +65,7 @@ public class AppUserEntity extends BaseEntity {
     @ToString.Exclude @EqualsAndHashCode.Exclude @Setter(AccessLevel.NONE)
     private Set<AppUserRoleEntity> appUserRole = new HashSet<>();
     
+    @NotNull
     @JoinColumn(name = "team_id", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     @ToString.Exclude @EqualsAndHashCode.Exclude

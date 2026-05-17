@@ -5,11 +5,14 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.util.HashSet;
 import java.util.Set;
+
+import static com.djccnt15.northwind.global.constants.validation.TaxStatusModelConst.STATUS_MAX_LENGTH;
 
 @Getter
 @Setter
@@ -21,7 +24,8 @@ import java.util.Set;
 @SuperBuilder
 public class TaxStatusEntity extends BaseEntity {
     
-    @Column
+    @NotNull
+    @Column(length = STATUS_MAX_LENGTH, nullable = false, unique = true)
     private String status;
     
     @OneToMany(mappedBy = "taxStatus")

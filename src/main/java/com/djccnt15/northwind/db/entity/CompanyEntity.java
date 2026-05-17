@@ -3,8 +3,11 @@ package com.djccnt15.northwind.db.entity;
 import com.djccnt15.northwind.db.entity.embaddable.AddressEmbed;
 import com.djccnt15.northwind.db.entity.id.BaseEntity;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+
+import static com.djccnt15.northwind.global.constants.validation.CompanyModelConst.*;
 
 @Getter
 @Setter
@@ -16,13 +19,14 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 public class CompanyEntity extends BaseEntity {
     
-    @Column
+    @NotNull
+    @Column(length = NAME_MAX_LENGTH, nullable = false)
     private String name;
     
-    @Column(name = "business_phone")
+    @Column(name = "business_phone", length = BUSINESS_PHONE_MAX_LENGTH)
     private String businessPhone;
     
-    @Column
+    @Column(length = WEBSITE_MAX_LENGTH)
     private String website;
     
     @Column
@@ -32,11 +36,13 @@ public class CompanyEntity extends BaseEntity {
     @Embedded
     private AddressEmbed address;
     
+    @NotNull
     @JoinColumn(name = "company_type_id", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     @ToString.Exclude @EqualsAndHashCode.Exclude
     private CompanyTypeEntity companyType;
     
+    @NotNull
     @JoinColumn(name = "tax_status_id", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     @ToString.Exclude @EqualsAndHashCode.Exclude

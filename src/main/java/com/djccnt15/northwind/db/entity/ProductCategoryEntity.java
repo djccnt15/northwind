@@ -9,6 +9,9 @@ import lombok.experimental.SuperBuilder;
 import java.util.HashSet;
 import java.util.Set;
 
+import static com.djccnt15.northwind.global.constants.validation.ProductCategoryModelConst.CODE_MAX_LENGTH;
+import static com.djccnt15.northwind.global.constants.validation.ProductCategoryModelConst.NAME_MAX_LENGTH;
+
 @Getter
 @Setter
 @Entity
@@ -19,12 +22,12 @@ import java.util.Set;
 @SuperBuilder
 public class ProductCategoryEntity extends BaseEntity {
     
-    @Column(nullable = false)
     @NotNull
+    @Column(length = NAME_MAX_LENGTH, nullable = false, unique = true)
     private String name;
     
-    @Column(nullable = false)
     @NotNull
+    @Column(length = CODE_MAX_LENGTH, nullable = false, unique = true)
     private String code;
     
     @Column

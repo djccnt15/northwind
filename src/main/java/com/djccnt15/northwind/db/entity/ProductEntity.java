@@ -6,6 +6,9 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
+import static com.djccnt15.northwind.global.constants.validation.ProductModelConst.CODE_MAX_LENGTH;
+import static com.djccnt15.northwind.global.constants.validation.ProductModelConst.NAME_MAX_LENGTH;
+
 @Getter
 @Setter
 @Entity
@@ -16,45 +19,46 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 public class ProductEntity extends BaseEntity {
     
-    @Column(nullable = false)
     @NotNull
+    @Column(length = CODE_MAX_LENGTH, nullable = false, unique = true)
     private String code;
     
-    @Column(nullable = false)
     @NotNull
+    @Column(length = NAME_MAX_LENGTH, nullable = false, unique = true)
     private String name;
     
     @Column
     private String description;
     
-    @Column(name = "standard_unit_cost", nullable = false)
     @NotNull
+    @Column(name = "standard_unit_cost", nullable = false)
     private Integer standardUnitCost;
     
-    @Column(name = "unit_price", nullable = false)
     @NotNull
+    @Column(name = "unit_price", nullable = false)
     private Integer unitPrice;
     
-    @Column(name = "reorder_level", nullable = false)
     @NotNull
+    @Column(name = "reorder_level", nullable = false)
     private Integer reorderLevel;
     
-    @Column(name = "target_level", nullable = false)
     @NotNull
+    @Column(name = "target_level", nullable = false)
     private Integer targetLevel;
     
-    @Column(name = "quantity_per_unit", nullable = false)
     @NotNull
+    @Column(name = "quantity_per_unit", nullable = false)
     private Integer quantityPerUnit;
     
-    @Column(nullable = false)
     @NotNull
+    @Column(nullable = false)
     private Boolean discontinued;
     
-    @Column(name = "minimum_reorder_quantity", nullable = false)
     @NotNull
+    @Column(name = "minimum_reorder_quantity", nullable = false)
     private Integer minimumReorderQuantity;
     
+    @NotNull
     @JoinColumn(name = "product_category", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     @ToString.Exclude @EqualsAndHashCode.Exclude

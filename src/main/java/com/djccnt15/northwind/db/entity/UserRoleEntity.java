@@ -9,6 +9,8 @@ import lombok.experimental.SuperBuilder;
 import java.util.HashSet;
 import java.util.Set;
 
+import static com.djccnt15.northwind.global.constants.validation.UserRoleModelConst.NAME_MAX_LENGTH;
+
 @Getter
 @Setter
 @Entity
@@ -19,8 +21,8 @@ import java.util.Set;
 @SuperBuilder
 public class UserRoleEntity extends BaseEntity {
     
-    @Column(nullable = false, unique = true)
     @NotNull
+    @Column(length = NAME_MAX_LENGTH, nullable = false, unique = true)
     private String name;
     
     @OneToMany(mappedBy = "userRole", cascade = CascadeType.REMOVE)
