@@ -55,7 +55,7 @@ public class ProductEntity extends BaseEntity {
     @NotNull
     private Integer minimumReorderQuantity;
     
-    @JoinColumn(name = "product_category")
+    @JoinColumn(name = "product_category", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     @ToString.Exclude @EqualsAndHashCode.Exclude
     private ProductCategoryEntity productCategory;

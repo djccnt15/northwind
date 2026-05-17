@@ -16,6 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import static com.djccnt15.northwind.global.constants.RoleConst.*;
+
 @SpringBootTest
 @ActiveProfiles("dev")  // use application-dev.properties for testing
 @DevTest
@@ -32,10 +34,10 @@ public class UserCreateTest {
     
     @Test
     void createUserRole() {
-        var superAdmin = new UserRoleEntity("SUPERADMIN", null);
-        var admin = new UserRoleEntity("ADMIN", null);
-        var manager = new UserRoleEntity("MANAGER", null);
-        var user = new UserRoleEntity("USER", null);
+        var superAdmin = new UserRoleEntity(SUPERADMIN);
+        var admin = new UserRoleEntity(ADMIN);
+        var manager = new UserRoleEntity(MANAGER);
+        var user = new UserRoleEntity(USER);
         userRoleRepo.saveAll(List.of(superAdmin, admin, manager, user));
     }
 
@@ -77,7 +79,7 @@ public class UserCreateTest {
     void createTestUser() {
         var teamEntity = teamRepo.findFirstByName("system").orElseThrow();
         var titleEntity = titleRepo.findFirstByTitle("system").orElseThrow();
-        var userRole = userRoleRepo.findFirstByName("USER").orElseThrow();
+        var userRole = userRoleRepo.findFirstByName(USER).orElseThrow();
         
         var user = AppUserEntity.builder()
             .username("test")
@@ -112,7 +114,7 @@ public class UserCreateTest {
         var appUserRoleList = new ArrayList<AppUserRoleEntity>();
         var employeeList = new ArrayList<EmployeeEntity>();
         
-        var userRole = userRoleRepo.findFirstByName("USER").orElseThrow();
+        var userRole = userRoleRepo.findFirstByName(USER).orElseThrow();
         var teamList = teamRepo.findAll();
         var titleList = titleRepo.findAll();
         

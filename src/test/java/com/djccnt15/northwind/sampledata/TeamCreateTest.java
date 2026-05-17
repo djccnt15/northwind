@@ -10,7 +10,6 @@ import org.springframework.test.annotation.Commit;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 
 @SpringBootTest
 @ActiveProfiles("dev")  // use application-dev.properties for testing
@@ -24,11 +23,11 @@ public class TeamCreateTest {
     void createTeam() {
         var teamList = new ArrayList<TeamEntity>();
         
-        var adminTeam = new TeamEntity("system", new HashSet<>());
+        var adminTeam = new TeamEntity("system");
         teamList.add(adminTeam);
         
         for (int i = 0; i < 5; i++) {
-            var team = new TeamEntity("Team %d".formatted(i + 1), new HashSet<>());
+            var team = new TeamEntity("Team %d".formatted(i + 1));
             teamList.add(team);
         }
         

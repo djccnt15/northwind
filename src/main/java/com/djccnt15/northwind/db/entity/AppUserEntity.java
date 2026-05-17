@@ -54,11 +54,11 @@ public class AppUserEntity extends BaseEntity {
     
     @OneToMany(mappedBy = "appUser", cascade = CascadeType.REMOVE)
     @Builder.Default
-    @ToString.Exclude @EqualsAndHashCode.Exclude
+    @ToString.Exclude @EqualsAndHashCode.Exclude @Setter(AccessLevel.NONE)
     private Set<AppUserRoleEntity> appUserRole = new HashSet<>();
     
-    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "team_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     @ToString.Exclude @EqualsAndHashCode.Exclude
     private TeamEntity team;
     

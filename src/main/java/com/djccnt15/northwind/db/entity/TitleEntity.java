@@ -26,6 +26,10 @@ public class TitleEntity extends BaseEntity {
     
     @OneToMany(mappedBy = "title")
     @Builder.Default
-    @ToString.Exclude @EqualsAndHashCode.Exclude
+    @ToString.Exclude @EqualsAndHashCode.Exclude @Setter(AccessLevel.NONE)
     private Set<EmployeeEntity> employees = new HashSet<>();
+    
+    public TitleEntity(String title) {
+        this.title = title;
+    }
 }

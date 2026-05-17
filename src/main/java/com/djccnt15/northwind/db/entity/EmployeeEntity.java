@@ -57,7 +57,7 @@ public class EmployeeEntity extends BaseEntity {
     @Column
     private byte[] photo;
     
-    @JoinColumn(name = "title_id")
+    @JoinColumn(name = "title_id", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     @ToString.Exclude @EqualsAndHashCode.Exclude
     private TitleEntity title;
@@ -69,7 +69,7 @@ public class EmployeeEntity extends BaseEntity {
     
     @OneToMany(mappedBy = "supervisor", cascade = CascadeType.ALL)
     @Builder.Default
-    @ToString.Exclude @EqualsAndHashCode.Exclude
+    @ToString.Exclude @EqualsAndHashCode.Exclude @Setter(AccessLevel.NONE)
     private Set<EmployeeEntity> subordinates = new HashSet<>();
     
     @JoinColumn(name = "app_user_id", unique = true)

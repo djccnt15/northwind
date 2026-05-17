@@ -10,7 +10,6 @@ import org.springframework.test.annotation.Commit;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
 @SpringBootTest
@@ -27,7 +26,7 @@ public class TitleCreateTest {
         var titleList = new ArrayList<TitleEntity>();
         
         titles.stream()
-            .map(it -> new TitleEntity(it, new HashSet<>()))
+            .map(TitleEntity::new)
             .forEach(titleList::add)
         ;
         

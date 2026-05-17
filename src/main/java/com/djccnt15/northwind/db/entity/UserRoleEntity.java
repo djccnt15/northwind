@@ -25,6 +25,10 @@ public class UserRoleEntity extends BaseEntity {
     
     @OneToMany(mappedBy = "userRole", cascade = CascadeType.REMOVE)
     @Builder.Default
-    @ToString.Exclude @EqualsAndHashCode.Exclude
+    @ToString.Exclude @EqualsAndHashCode.Exclude @Setter(AccessLevel.NONE)
     private Set<AppUserRoleEntity> appUserRole = new HashSet<>();
+    
+    public UserRoleEntity(String name) {
+        this.name = name;
+    }
 }

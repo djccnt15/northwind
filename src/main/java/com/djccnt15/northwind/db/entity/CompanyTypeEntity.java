@@ -26,6 +26,10 @@ public class CompanyTypeEntity extends BaseEntity {
     
     @OneToMany(mappedBy = "companyType")
     @Builder.Default
-    @ToString.Exclude @EqualsAndHashCode.Exclude
+    @ToString.Exclude @EqualsAndHashCode.Exclude @Setter(AccessLevel.NONE)
     private Set<CompanyEntity> companies = new HashSet<>();
+    
+    public CompanyTypeEntity (String companyType) {
+        this.companyType = companyType;
+    }
 }
