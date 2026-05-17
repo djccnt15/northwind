@@ -34,7 +34,7 @@ public class RoleService {
     
     public void validateNotSuperAdmin(Long userId) {
         var superAdmins = dataCacheStorage.getSuperAdmins();
-        if (superAdmins.stream().anyMatch(entity -> entity.getId().equals(userId))) {
+        if (superAdmins.contains(userId)) {
             throw new ApiException(BAD_REQUEST, "Cannot modify roles of a super admin user");
         }
     }

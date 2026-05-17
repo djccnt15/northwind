@@ -27,14 +27,14 @@ public class DataLoader {
     @EventListener(ContextRefreshedEvent.class)
     public void onApplicationEvent() {
         log.info("Application context refreshed. Performing data warmup...");
-        var superAdmins = appUserRepo.findByRoleName(SUPERADMIN);
+        var superAdmins = appUserRepo.findIdsByRoleName(SUPERADMIN);
         dataCacheStorage.updateData(superAdmins);
     }
     
     @Scheduled(cron = "${app.schedule.cron.superAdminRefresh:0 0 * * * *}") // default: every hour
     public void refreshSuperAdminCache() {
         log.info("Scheduled task: Refreshing super admin cache...");
-        var superAdmins = appUserRepo.findByRoleName(SUPERADMIN);
+        var superAdmins = appUserRepo.findIdsByRoleName(SUPERADMIN);
         dataCacheStorage.updateData(superAdmins);
     }
 }

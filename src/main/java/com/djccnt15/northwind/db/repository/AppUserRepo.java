@@ -50,12 +50,13 @@ public interface AppUserRepo extends JpaRepository<AppUserEntity, Long> {
     List<AppUserEntity> findFullByIdInOrderById(List<Long> ids);
     
     @Query("""
-        SELECT u FROM AppUserEntity u
-        JOIN FETCH u.appUserRole ur
-        JOIN FETCH ur.userRole r
+        SELECT DISTINCT u.id
+        FROM AppUserEntity u
+        JOIN u.appUserRole ur
+        JOIN ur.userRole r
         WHERE r.name = :name
     """)
-    List<AppUserEntity> findByRoleName(String name);
+    List<Long> findIdsByRoleName(String name);
     
     @EntityGraph(attributePaths = {
         "appUserRole", "appUserRole.userRole",
