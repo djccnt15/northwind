@@ -6,6 +6,9 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import static com.djccnt15.northwind.domain.product.validation.ProductModelConst.CODE_MAX_LENGTH;
 import static com.djccnt15.northwind.domain.product.validation.ProductModelConst.NAME_MAX_LENGTH;
 
@@ -63,4 +66,9 @@ public class ProductEntity extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @ToString.Exclude @EqualsAndHashCode.Exclude
     private ProductCategoryEntity productCategory;
+    
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    @ToString.Exclude @EqualsAndHashCode.Exclude
+    private Set<StockTakeEntity> stockTakes = new HashSet<>();
 }
