@@ -74,6 +74,11 @@ public class AppUserEntity extends BaseEntity {
     @OneToOne(mappedBy = "appUser", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     @ToString.Exclude @EqualsAndHashCode.Exclude
     private EmployeeEntity employee;
+    
+    @OneToMany(mappedBy = "appUser")
+    @Builder.Default @Setter(AccessLevel.NONE)
+    @ToString.Exclude @EqualsAndHashCode.Exclude
+    private Set<OrdersEntity> orders = new HashSet<>();
 
     public void addAppUserRole(AppUserRoleEntity roleLink) {
         if (roleLink == null) return;

@@ -7,6 +7,9 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import static com.djccnt15.northwind.domain.order.validation.OrderStatusModelConst.CODE_MAX_LENGTH;
 import static com.djccnt15.northwind.domain.order.validation.OrderStatusModelConst.NAME_MAX_LENGTH;
 
@@ -31,4 +34,9 @@ public class OrderStatusEntity extends BaseEntity {
     @Column
     @Enumerated(EnumType.STRING)
     private SortOrderEnum sortOrder;
+    
+    @OneToMany(mappedBy = "orderStatus")
+    @Builder.Default @Setter(AccessLevel.NONE)
+    @ToString.Exclude @EqualsAndHashCode.Exclude
+    private Set<OrdersEntity> orders = new HashSet<>();
 }

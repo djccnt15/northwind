@@ -55,4 +55,14 @@ public class CompanyEntity extends BaseEntity {
     @Builder.Default
     @ToString.Exclude @EqualsAndHashCode.Exclude
     private Set<ContactEntity> contacts = new HashSet<>();
+    
+    @OneToMany(mappedBy = "customer")
+    @Builder.Default @Setter(AccessLevel.NONE)
+    @ToString.Exclude @EqualsAndHashCode.Exclude
+    private Set<OrdersEntity> ordersAsCustomer = new HashSet<>();
+    
+    @OneToMany(mappedBy = "shipper")
+    @Builder.Default @Setter(AccessLevel.NONE)
+    @ToString.Exclude @EqualsAndHashCode.Exclude
+    private Set<OrdersEntity> ordersAsShipper = new HashSet<>();
 }
