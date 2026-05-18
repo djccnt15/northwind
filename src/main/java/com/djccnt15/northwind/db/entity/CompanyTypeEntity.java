@@ -12,7 +12,7 @@ import lombok.experimental.SuperBuilder;
 import java.util.HashSet;
 import java.util.Set;
 
-import static com.djccnt15.northwind.global.constants.validation.CompanyTypeModelConst.COMPANY_TYPE_MAX_LENGTH;
+import static com.djccnt15.northwind.domain.company.validation.CompanyTypeModelConst.COMPANY_TYPE_MAX_LENGTH;
 
 @Getter
 @Setter

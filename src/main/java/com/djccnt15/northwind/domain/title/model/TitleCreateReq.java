@@ -5,7 +5,7 @@ import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import static com.djccnt15.northwind.global.constants.validation.TitleModelConst.*;
+import static com.djccnt15.northwind.domain.title.validation.TitleModelConst.*;
 
 @Data
 @AllArgsConstructor

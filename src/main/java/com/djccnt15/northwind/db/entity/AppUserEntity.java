@@ -11,8 +11,8 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
-import static com.djccnt15.northwind.global.constants.validation.AppUserModelConst.EMAIL_MAX_LENGTH;
-import static com.djccnt15.northwind.global.constants.validation.AppUserModelConst.USERNAME_MAX_LENGTH;
+import static com.djccnt15.northwind.domain.user.validation.AppUserModelConst.EMAIL_MAX_LENGTH;
+import static com.djccnt15.northwind.domain.user.validation.AppUserModelConst.USERNAME_MAX_LENGTH;
 
 @Getter
 @Setter

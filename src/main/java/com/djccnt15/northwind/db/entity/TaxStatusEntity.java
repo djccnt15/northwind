@@ -12,7 +12,7 @@ import lombok.experimental.SuperBuilder;
 import java.util.HashSet;
 import java.util.Set;
 
-import static com.djccnt15.northwind.global.constants.validation.TaxStatusModelConst.STATUS_MAX_LENGTH;
+import static com.djccnt15.northwind.domain.tax.validation.TaxStatusModelConst.STATUS_MAX_LENGTH;
 
 @Getter
 @Setter

@@ -20,8 +20,8 @@ import java.util.List;
 
 import static com.djccnt15.northwind.global.code.StatusCode.BAD_REQUEST;
 import static com.djccnt15.northwind.global.code.StatusCode.NOT_FOUND;
-import static com.djccnt15.northwind.global.constants.validation.AppUserModelConst.EMAIL_DUPLICATE_ERR_MSG;
-import static com.djccnt15.northwind.global.constants.validation.AppUserModelConst.USERNAME_DUPLICATE_ERR_MSG;
+import static com.djccnt15.northwind.domain.user.validation.AppUserModelConst.EMAIL_DUPLICATE_ERR_MSG;
+import static com.djccnt15.northwind.domain.user.validation.AppUserModelConst.USERNAME_DUPLICATE_ERR_MSG;
 
 @Slf4j
 @Service

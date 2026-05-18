@@ -1,4 +1,4 @@
-package com.djccnt15.northwind.global.constants.validation;
+package com.djccnt15.northwind.domain.team.validation;
 
 import lombok.experimental.UtilityClass;
 

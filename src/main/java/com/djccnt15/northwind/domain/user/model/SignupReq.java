@@ -8,7 +8,7 @@ import lombok.Data;
 
 import java.time.LocalDateTime;
 
-import static com.djccnt15.northwind.global.constants.validation.AppUserModelConst.*;
+import static com.djccnt15.northwind.domain.user.validation.AppUserModelConst.*;
 
 @Data
 @AllArgsConstructor

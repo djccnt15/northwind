@@ -11,7 +11,7 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
-import static com.djccnt15.northwind.global.constants.validation.EmployeeModelConst.*;
+import static com.djccnt15.northwind.domain.user.validation.EmployeeModelConst.*;
 
 @Getter
 @Setter

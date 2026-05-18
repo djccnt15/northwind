@@ -7,8 +7,8 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
-import static com.djccnt15.northwind.global.constants.validation.OrderStatusModelConst.CODE_MAX_LENGTH;
-import static com.djccnt15.northwind.global.constants.validation.OrderStatusModelConst.NAME_MAX_LENGTH;
+import static com.djccnt15.northwind.domain.order.validation.OrderStatusModelConst.CODE_MAX_LENGTH;
+import static com.djccnt15.northwind.domain.order.validation.OrderStatusModelConst.NAME_MAX_LENGTH;
 
 @Getter
 @Setter

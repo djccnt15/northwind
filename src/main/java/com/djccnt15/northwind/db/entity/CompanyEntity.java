@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
-import static com.djccnt15.northwind.global.constants.validation.CompanyModelConst.*;
+import static com.djccnt15.northwind.domain.company.validation.CompanyModelConst.*;
 
 @Getter
 @Setter

@@ -5,7 +5,7 @@ import jakarta.persistence.Embeddable;
 import lombok.Builder;
 import lombok.Data;
 
-import static com.djccnt15.northwind.global.constants.validation.AddressModelConst.*;
+import static com.djccnt15.northwind.domain.address.validation.AddressModelConst.*;
 
 @Data
 @Embeddable
