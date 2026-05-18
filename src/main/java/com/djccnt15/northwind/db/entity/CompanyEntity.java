@@ -7,6 +7,9 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import static com.djccnt15.northwind.domain.company.validation.CompanyModelConst.*;
 
 @Getter
@@ -47,4 +50,9 @@ public class CompanyEntity extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @ToString.Exclude @EqualsAndHashCode.Exclude
     private TaxStatusEntity taxStatus;
+    
+    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    @ToString.Exclude @EqualsAndHashCode.Exclude
+    private Set<ContactEntity> contacts = new HashSet<>();
 }
