@@ -7,6 +7,8 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -69,4 +71,9 @@ public class OrdersEntity extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @ToString.Exclude @EqualsAndHashCode.Exclude
     private OrderStatusEntity orderStatus;
+    
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default @Setter(AccessLevel.NONE)
+    @ToString.Exclude @EqualsAndHashCode.Exclude
+    private Set<OrderDetailEntity> orderDetails = new HashSet<>();
 }
