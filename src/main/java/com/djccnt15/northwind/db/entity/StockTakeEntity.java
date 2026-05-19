@@ -18,13 +18,13 @@ import java.time.LocalDate;
 @SuperBuilder
 public class StockTakeEntity extends BaseEntity {
     
-    @Column
+    @Column(name = "stock_take_date")
     private LocalDate stockTakeDate;
     
-    @Column
+    @Column(name = "quantity_on_hand")
     private Long quantityOnHand;
     
-    @Column
+    @Column(name = "expected_quantity")
     private Long expectedQuantity;
     
     @NotNull

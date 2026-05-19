@@ -34,7 +34,7 @@ public class ProductCategoryEntity extends BaseEntity {
     private String description;
     
     @OneToMany(mappedBy = "productCategory", cascade = CascadeType.REMOVE)
-    @Builder.Default
-    @ToString.Exclude @EqualsAndHashCode.Exclude @Setter(AccessLevel.NONE)
+    @Builder.Default @Setter(AccessLevel.NONE)
+    @ToString.Exclude @EqualsAndHashCode.Exclude
     private Set<ProductEntity> productEntitySet = new HashSet<>();
 }

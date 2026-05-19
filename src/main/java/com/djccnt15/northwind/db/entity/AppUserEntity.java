@@ -61,8 +61,8 @@ public class AppUserEntity extends BaseEntity {
     private LocalDateTime lastLoginAt;
     
     @OneToMany(mappedBy = "appUser", cascade = CascadeType.REMOVE)
-    @Builder.Default
-    @ToString.Exclude @EqualsAndHashCode.Exclude @Setter(AccessLevel.NONE)
+    @Builder.Default @Setter(AccessLevel.NONE)
+    @ToString.Exclude @EqualsAndHashCode.Exclude
     private Set<AppUserRoleEntity> appUserRole = new HashSet<>();
     
     @NotNull

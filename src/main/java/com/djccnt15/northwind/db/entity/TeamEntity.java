@@ -29,8 +29,8 @@ public class TeamEntity extends BaseEntity {
     private String name;
     
     @OneToMany(mappedBy = "team")
-    @Builder.Default
-    @ToString.Exclude @EqualsAndHashCode.Exclude @Setter(AccessLevel.NONE)
+    @Builder.Default @Setter(AccessLevel.NONE)
+    @ToString.Exclude @EqualsAndHashCode.Exclude
     private Set<AppUserEntity> members = new HashSet<>();
     
     public TeamEntity(String name) {

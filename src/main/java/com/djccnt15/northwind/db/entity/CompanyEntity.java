@@ -52,7 +52,7 @@ public class CompanyEntity extends BaseEntity {
     private TaxStatusEntity taxStatus;
     
     @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
-    @Builder.Default
+    @Builder.Default @Setter(AccessLevel.NONE)
     @ToString.Exclude @EqualsAndHashCode.Exclude
     private Set<ContactEntity> contacts = new HashSet<>();
     

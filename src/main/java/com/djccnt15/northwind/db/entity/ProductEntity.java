@@ -68,7 +68,7 @@ public class ProductEntity extends BaseEntity {
     private ProductCategoryEntity productCategory;
     
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    @Builder.Default
+    @Builder.Default @Setter(AccessLevel.NONE)
     @ToString.Exclude @EqualsAndHashCode.Exclude
     private Set<StockTakeEntity> stockTakes = new HashSet<>();
 }

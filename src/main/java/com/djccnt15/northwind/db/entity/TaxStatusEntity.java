@@ -29,8 +29,8 @@ public class TaxStatusEntity extends BaseEntity {
     private String status;
     
     @OneToMany(mappedBy = "taxStatus")
-    @Builder.Default
-    @ToString.Exclude @EqualsAndHashCode.Exclude @Setter(AccessLevel.NONE)
+    @Builder.Default @Setter(AccessLevel.NONE)
+    @ToString.Exclude @EqualsAndHashCode.Exclude
     private Set<CompanyEntity> companies = new HashSet<>();
     
     @OneToMany(mappedBy = "taxStatus")

@@ -75,8 +75,8 @@ public class EmployeeEntity extends BaseEntity {
     private EmployeeEntity supervisor;
     
     @OneToMany(mappedBy = "supervisor", cascade = CascadeType.ALL)
-    @Builder.Default
-    @ToString.Exclude @EqualsAndHashCode.Exclude @Setter(AccessLevel.NONE)
+    @Builder.Default @Setter(AccessLevel.NONE)
+    @ToString.Exclude @EqualsAndHashCode.Exclude
     private Set<EmployeeEntity> subordinates = new HashSet<>();
     
     @JoinColumn(name = "app_user_id", unique = true)
