@@ -76,4 +76,9 @@ public class ProductEntity extends BaseEntity {
     @Builder.Default @Setter(AccessLevel.NONE)
     @ToString.Exclude @EqualsAndHashCode.Exclude
     private Set<OrderDetailEntity> orderDetails = new HashSet<>();
+    
+    @OneToMany(mappedBy = "product")
+    @Builder.Default @Setter(AccessLevel.NONE)
+    @ToString.Exclude @EqualsAndHashCode.Exclude
+    private Set<ProductVendorEntity> productVendors = new HashSet<>();
 }
