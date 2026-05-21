@@ -5,6 +5,9 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.JdbcTypeCode;
+
+import java.sql.Types;
 
 import static com.djccnt15.northwind.domain.user.validation.EmployeeModelConst.*;
 import static com.djccnt15.northwind.domain.user.validation.EmployeeModelConst.JOB_TITLE_MAX_LENGTH;
@@ -42,6 +45,7 @@ public class ContactEntity extends BaseEntity {
     private String secondaryPhone;
     
     @Column
+    @JdbcTypeCode(Types.LONGNVARCHAR)
     private String notes;
     
     @JoinColumn(name = "company_id", nullable = false)

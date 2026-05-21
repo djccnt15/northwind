@@ -6,7 +6,9 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.JdbcTypeCode;
 
+import java.sql.Types;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
@@ -44,6 +46,7 @@ public class EmployeeEntity extends BaseEntity {
     private String secondaryPhone;
     
     @Column
+    @JdbcTypeCode(Types.LONGNVARCHAR)
     private String notes;
     
     @Column(name = "title_of_courtesy", length = TITLE_OF_COURTESY_MAX_LENGTH)

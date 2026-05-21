@@ -5,7 +5,9 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.JdbcTypeCode;
 
+import java.sql.Types;
 import java.time.LocalDate;
 
 @Getter
@@ -44,6 +46,7 @@ public class PurchaseOrderEntity extends BaseEntity {
     private String paymentMethod;
     
     @Column
+    @JdbcTypeCode(Types.LONGNVARCHAR)
     private String note;
     
     @JoinColumn(name = "vendor_id")
