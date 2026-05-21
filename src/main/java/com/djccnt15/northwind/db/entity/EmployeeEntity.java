@@ -83,4 +83,14 @@ public class EmployeeEntity extends BaseEntity {
     @OneToOne(fetch = FetchType.LAZY)
     @ToString.Exclude @EqualsAndHashCode.Exclude
     private AppUserEntity appUser;
+    
+    @OneToMany(mappedBy = "submittedBy", cascade = CascadeType.ALL)
+    @Builder.Default @Setter(AccessLevel.NONE)
+    @ToString.Exclude @EqualsAndHashCode.Exclude
+    private Set<PurchaseOrderEntity> purchaseOrders = new HashSet<>();
+    
+    @OneToMany(mappedBy = "approvedBy", cascade = CascadeType.ALL)
+    @Builder.Default @Setter(AccessLevel.NONE)
+    @ToString.Exclude @EqualsAndHashCode.Exclude
+    private Set<PurchaseOrderEntity> approvedPurchaseOrders = new HashSet<>();
 }

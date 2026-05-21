@@ -7,6 +7,9 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import static com.djccnt15.northwind.domain.puchase.validation.PurchaseOrderModelConst.NAME_MAX_LENGTH;
 
 @Getter
@@ -26,4 +29,9 @@ public class PurchaseOrderStatusEntity extends BaseEntity {
     @Column
     @Enumerated(EnumType.STRING)
     private SortOrderEnum sortOrder;
+    
+    @OneToMany(mappedBy = "status")
+    @Builder.Default @Setter(AccessLevel.NONE)
+    @ToString.Exclude @EqualsAndHashCode.Exclude
+    private Set<PurchaseOrderEntity> purchaseOrders = new HashSet<>();
 }

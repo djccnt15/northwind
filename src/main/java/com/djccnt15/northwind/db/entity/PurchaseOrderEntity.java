@@ -1,0 +1,69 @@
+package com.djccnt15.northwind.db.entity;
+
+import com.djccnt15.northwind.db.entity.id.BaseEntity;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
+
+import java.time.LocalDate;
+
+@Getter
+@Setter
+@Entity
+@Table(name = "purchase_orders")
+@EqualsAndHashCode(callSuper = true)
+@NoArgsConstructor
+@AllArgsConstructor
+@SuperBuilder
+public class PurchaseOrderEntity extends BaseEntity {
+    
+    @NotNull
+    @Column(name = "submitted_date", nullable = false)
+    private LocalDate submittedDate;
+    
+    @Column(name = "approved_date")
+    private LocalDate approvedDate;
+    
+    @Column(name = "received_date")
+    private LocalDate receivedDate;
+    
+    @Column(name = "shipping_fee")
+    private Integer shippingFee;
+    
+    @Column(name = "tax_amount")
+    private Integer taxAmount;
+    
+    @Column(name = "payment_date")
+    private LocalDate paymentDate;
+    
+    @Column(name = "payment_amount")
+    private Integer paymentAmount;
+    
+    @Column(name = "payment_method")
+    private String paymentMethod;
+    
+    @Column
+    private String note;
+    
+    @JoinColumn(name = "vendor_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @ToString.Exclude @EqualsAndHashCode.Exclude
+    private CompanyEntity vendor;
+    
+    @NotNull
+    @JoinColumn(name = "submitted_by", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @ToString.Exclude @EqualsAndHashCode.Exclude
+    private EmployeeEntity submittedBy;
+    
+    @JoinColumn(name = "approved_by")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @ToString.Exclude @EqualsAndHashCode.Exclude
+    private EmployeeEntity approvedBy;
+    
+    @JoinColumn(name = "status_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @ToString.Exclude @EqualsAndHashCode.Exclude
+    private PurchaseOrderStatusEntity status;
+}
