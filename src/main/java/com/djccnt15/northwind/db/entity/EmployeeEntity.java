@@ -96,4 +96,9 @@ public class EmployeeEntity extends BaseEntity {
     @Builder.Default @Setter(AccessLevel.NONE)
     @ToString.Exclude @EqualsAndHashCode.Exclude
     private Set<PurchaseOrderEntity> approvedPurchaseOrders = new HashSet<>();
+    
+    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL)
+    @Builder.Default @Setter(AccessLevel.NONE)
+    @ToString.Exclude @EqualsAndHashCode.Exclude
+    private Set<MruEntity> mruEntries = new HashSet<>();
 }
