@@ -94,7 +94,8 @@ public class AuthConfig {
             .cors(cors -> cors.configurationSource(corsConfig()))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(PUBLIC_PATHS).permitAll()
-                .requestMatchers(SWAGGER_PATHS).permitAll()  // TODO. production에서는 관리자 권한 필요한 것으로 변경
+                // .requestMatchers(SWAGGER_PATHS).permitAll()  // only for early development, restrict access for production
+                .requestMatchers(SWAGGER_PATHS).hasAnyAuthority("ADMIN")
                 .anyRequest().permitAll()
             );
         return http.build();
