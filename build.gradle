@@ -58,4 +58,7 @@ task buildFrontend(type: Exec) {
     }
 }
 
-processResources.dependsOn buildFrontend
+def isTestTaskIncluded = gradle.startParameter.taskNames.any { it.contains("test") }
+if (!isTestTaskIncluded) {
+    processResources.dependsOn buildFrontend
+}
