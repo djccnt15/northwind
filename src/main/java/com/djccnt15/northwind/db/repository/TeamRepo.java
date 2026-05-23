@@ -9,9 +9,11 @@ import java.util.Optional;
 
 public interface TeamRepo extends JpaRepository<TeamEntity, Long> {
     
-    Optional<TeamEntity> findFirstByName(String name);
+    boolean existsByName(String name);
     
-    Optional<TeamEntity> findFirstByNameAndIdNot(String name, Long id);
+    boolean existsByNameAndIdNot(String name, Long id);
+    
+    Optional<TeamEntity> findFirstByName(String name);
     
     Page<TeamEntity> findByNameLike(String name, Pageable pageable);
 }

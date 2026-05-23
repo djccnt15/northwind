@@ -29,13 +29,15 @@ public class TitleService {
     }
     
     public void validateTitle(TitleCreateReq request) {
-        repository.findFirstByTitle(request.getTitle())
-            .ifPresent(e -> {throw new ApiException(BAD_REQUEST, "Title already exists");});
+        if (repository.existsByTitle(request.getTitle())) {
+            throw new ApiException(BAD_REQUEST, "Title already exists");
+        }
     }
     
     public void validateTitle(Long id, TitleCreateReq request) {
-        repository.findFirstByTitleAndIdNot(request.getTitle(), id)
-            .ifPresent(e -> {throw new ApiException(BAD_REQUEST, "Title already exists");});
+        if (repository.existsByTitleAndIdNot(request.getTitle(), id)) {
+            throw new ApiException(BAD_REQUEST, "Title already exists");
+        }
     }
     
     public TitleEntity createTitle(TitleCreateReq request) {

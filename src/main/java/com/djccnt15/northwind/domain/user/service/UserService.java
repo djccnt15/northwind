@@ -48,24 +48,27 @@ public class UserService {
     }
     
     public void validateEmailNotExists(String email) {
-        repository.findFirstByEmail(email)
-            .ifPresent(e -> {throw new ApiException(BAD_REQUEST, EMAIL_DUPLICATE_ERR_MSG);});
+        if (repository.existsByEmail(email)) {
+            throw new ApiException(BAD_REQUEST, EMAIL_DUPLICATE_ERR_MSG);
+        }
     }
     
     public void validateEmailNotExists(String email, Long userId) {
-        repository.findFirstByEmailAndIdNot(email, userId)
-            .ifPresent(e -> {throw new ApiException(BAD_REQUEST, EMAIL_DUPLICATE_ERR_MSG);});
+        if (repository.existsByEmailAndIdNot(email, userId)) {
+            throw new ApiException(BAD_REQUEST, EMAIL_DUPLICATE_ERR_MSG);
+        }
     }
     
     public void validateUsernameNotExists(String username) {
-        repository.findFirstByUsername(username)
-            .ifPresent(e -> {throw new ApiException(BAD_REQUEST, USERNAME_DUPLICATE_ERR_MSG);});
+        if (repository.existsByUsername(username)) {
+            throw new ApiException(BAD_REQUEST, USERNAME_DUPLICATE_ERR_MSG);
+        }
     }
     
     public void validateUsernameNotExists(String username, Long userId) {
-        repository.findFirstByUsernameAndIdNot(username, userId)
-            .ifPresent(e -> {throw new ApiException(BAD_REQUEST, USERNAME_DUPLICATE_ERR_MSG);}
-        );
+        if (repository.existsByUsernameAndIdNot(username, userId)) {
+            throw new ApiException(BAD_REQUEST, USERNAME_DUPLICATE_ERR_MSG);
+        }
     }
     
     public AppUserEntity createUser(SignupReq request) {

@@ -18,10 +18,6 @@ public interface AppUserRepo extends JpaRepository<AppUserEntity, Long> {
     @EntityGraph(attributePaths = {"appUserRole", "appUserRole.userRole"})
     Optional<AppUserEntity> findWithRoleFirstByUsername(String username);
     
-    Optional<AppUserEntity> findFirstByUsername(String username);
-    
-    Optional<AppUserEntity> findFirstByUsernameAndIdNot(String username, Long id);
-    
     @Modifying
     @Query("""
         UPDATE AppUserEntity u
@@ -40,9 +36,13 @@ public interface AppUserRepo extends JpaRepository<AppUserEntity, Long> {
         """)
     void handleLoginSuccess(@Param("id") Long id, @Param("now") LocalDateTime lastLoginAt);
     
-    Optional<AppUserEntity> findFirstByEmail(String email);
+    boolean existsByUsername(String username);
     
-    Optional<AppUserEntity> findFirstByEmailAndIdNot(String email, Long id);
+    boolean existsByEmail(String email);
+    
+    boolean existsByEmailAndIdNot(String email, Long id);
+    
+    boolean existsByUsernameAndIdNot(String username, Long id);
     
     Page<AppUserEntity> findByUsernameLikeOrEmailLike(String usernameKw, String emailKw, Pageable pageable);
     
