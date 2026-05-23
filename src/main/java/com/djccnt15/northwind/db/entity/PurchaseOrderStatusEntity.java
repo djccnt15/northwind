@@ -16,6 +16,7 @@ import static com.djccnt15.northwind.domain.puchase.validation.PurchaseOrderMode
 @Setter
 @Entity
 @Table(name = "purchase_order_status")
+@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor

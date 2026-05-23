@@ -12,6 +12,7 @@ import java.time.LocalDate;
 @Setter
 @Entity
 @Table(name = "stock_take")
+@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor

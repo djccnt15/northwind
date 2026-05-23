@@ -18,6 +18,7 @@ import static com.djccnt15.northwind.domain.product.validation.ProductModelConst
 @Setter
 @Entity
 @Table(name = "product")
+@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor

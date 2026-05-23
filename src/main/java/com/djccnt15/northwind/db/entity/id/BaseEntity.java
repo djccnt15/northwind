@@ -11,8 +11,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 
-@Getter
-@Setter
+@Data
 @MappedSuperclass  // annotation for abstract table class
 @EntityListeners(AuditingEntityListener.class)
 @NoArgsConstructor

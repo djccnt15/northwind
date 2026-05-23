@@ -18,6 +18,7 @@ import static com.djccnt15.northwind.domain.product.validation.ProductCategoryMo
 @Setter
 @Entity
 @Table(name = "product_category")
+@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor

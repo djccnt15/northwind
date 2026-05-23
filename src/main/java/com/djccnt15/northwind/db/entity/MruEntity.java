@@ -10,6 +10,7 @@ import lombok.experimental.SuperBuilder;
 @Setter
 @Entity
 @Table(name = "mru")
+@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor

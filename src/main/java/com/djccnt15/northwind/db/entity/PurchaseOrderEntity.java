@@ -14,6 +14,7 @@ import java.time.LocalDate;
 @Setter
 @Entity
 @Table(name = "purchase_orders")
+@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor

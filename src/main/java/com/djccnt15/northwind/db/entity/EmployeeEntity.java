@@ -19,6 +19,7 @@ import static com.djccnt15.northwind.domain.user.validation.EmployeeModelConst.*
 @Setter
 @Entity
 @Table(name = "employee")
+@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor

@@ -18,6 +18,7 @@ import static com.djccnt15.northwind.domain.tax.validation.TaxStatusModelConst.S
 @Setter
 @Entity
 @Table(name = "tax_status")
+@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor

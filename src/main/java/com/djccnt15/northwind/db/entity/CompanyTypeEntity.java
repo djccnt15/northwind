@@ -18,6 +18,7 @@ import static com.djccnt15.northwind.domain.company.validation.CompanyTypeModelC
 @Setter
 @Entity
 @Table(name = "company_type")
+@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor

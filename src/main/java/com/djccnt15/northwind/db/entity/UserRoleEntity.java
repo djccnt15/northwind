@@ -15,6 +15,7 @@ import static com.djccnt15.northwind.domain.role.validation.UserRoleModelConst.N
 @Setter
 @Entity
 @Table(name = "user_role", indexes = @Index(columnList = "name"))
+@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor

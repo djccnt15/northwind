@@ -18,6 +18,7 @@ import static com.djccnt15.northwind.domain.title.validation.TitleModelConst.TIT
 @Setter
 @Entity
 @Table(name = "title")
+@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor

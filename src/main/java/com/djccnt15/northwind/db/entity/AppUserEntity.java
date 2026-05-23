@@ -22,6 +22,7 @@ import static com.djccnt15.northwind.domain.user.validation.AppUserModelConst.US
         @Index(columnList = "username"),
         @Index(columnList = "email")
     })
+@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor

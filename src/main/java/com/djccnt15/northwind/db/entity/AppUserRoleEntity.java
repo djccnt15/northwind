@@ -9,6 +9,7 @@ import lombok.*;
 @Entity
 @Table(name = "app_user_role")
 @IdClass(AppUserRoleId.class)
+@ToString(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder

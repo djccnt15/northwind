@@ -18,6 +18,7 @@ import static com.djccnt15.northwind.domain.team.validation.TeamModelConst.NAME_
 @Setter
 @Entity
 @Table(name = "team")
+@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor

@@ -17,6 +17,7 @@ import static com.djccnt15.northwind.domain.order.validation.OrderStatusModelCon
 @Setter
 @Entity
 @Table(name = "order_status")
+@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor

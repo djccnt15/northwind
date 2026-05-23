@@ -16,6 +16,7 @@ import java.util.Set;
 @Setter
 @Entity
 @Table(name = "orders")
+@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor

@@ -18,6 +18,7 @@ import static com.djccnt15.northwind.domain.company.validation.CompanyModelConst
 @Setter
 @Entity
 @Table(name = "company", indexes = @Index(columnList = "name"))
+@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
