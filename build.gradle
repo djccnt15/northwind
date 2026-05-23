@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.5.14'
     id 'io.spring.dependency-management' version '1.1.7'
+    id 'jacoco'
 }
 
 group = 'com.djccnt15'
@@ -54,7 +55,16 @@ dependencies {
 
 tasks.named('test') {
     useJUnitPlatform()
+    finalizedBy jacocoTestReport
     jvmArgs += "-javaagent:${configurations.mockitoAgent.asPath}"
+}
+
+jacoco {
+    toolVersion = "0.8.14"
+}
+
+jacocoTestReport {
+    dependsOn test // tests are required to run before generating the report
 }
 
 task buildFrontend(type: Exec) {
