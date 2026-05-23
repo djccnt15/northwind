@@ -8,8 +8,8 @@ import org.springframework.core.annotation.Order;
 
 import java.io.IOException;
 
+import static com.djccnt15.northwind.global.util.RandomUtil.getRandUuidString;
 import static java.lang.Integer.MIN_VALUE;
-import static java.util.UUID.randomUUID;
 
 @Slf4j
 @AppFilter
@@ -28,7 +28,7 @@ public class LogFilter implements Filter {
         FilterChain chain
     ) throws IOException, ServletException {
         // log.info("log filter doFilter");
-        MDC.put("traceId", randomUUID().toString().substring(0, 8));  // store in thread-local MDC
+        MDC.put("traceId", getRandUuidString());  // store in thread-local MDC
         
         try {
             // log.info("DispatcherType={}", request.getDispatcherType());
