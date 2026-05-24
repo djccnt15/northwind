@@ -49,6 +49,7 @@ public class ContactEntity extends BaseEntity {
     @JdbcTypeCode(Types.LONGNVARCHAR)
     private String notes;
     
+    @NotNull
     @JoinColumn(name = "company_id", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     @ToString.Exclude @EqualsAndHashCode.Exclude

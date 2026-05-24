@@ -1,11 +1,9 @@
 package com.djccnt15.northwind.global.constants;
 
-import lombok.NoArgsConstructor;
+import lombok.experimental.UtilityClass;
 
-import static lombok.AccessLevel.PRIVATE;
-
-@NoArgsConstructor(access = PRIVATE)
-public final class RouteConst {
+@UtilityClass
+public class RouteConst {
     
     public static final String API = "/api";
     public static final String PUBLIC = "/public";

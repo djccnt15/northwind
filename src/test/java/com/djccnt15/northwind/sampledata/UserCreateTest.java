@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import static com.djccnt15.northwind.constants.TestConst.SYSTEM;
 import static com.djccnt15.northwind.global.constants.RoleConst.*;
 
 @SpringBootTest
@@ -44,8 +45,8 @@ public class UserCreateTest {
     @Test
     @Transactional
     void createAdmin() {
-        var teamEntity = teamRepo.findFirstByName("system").orElseThrow();
-        var titleEntity = titleRepo.findFirstByTitle("system").orElseThrow();
+        var teamEntity = teamRepo.findFirstByName(SYSTEM).orElseThrow();
+        var titleEntity = titleRepo.findFirstByTitle(SYSTEM).orElseThrow();
         
         var superAdmin = AppUserEntity.builder()
             .username("admin")
@@ -55,7 +56,7 @@ public class UserCreateTest {
             .team(teamEntity)
             .build();
 
-        var userRole = userRoleRepo.findFirstByName("SUPERADMIN").orElseThrow();
+        var userRole = userRoleRepo.findFirstByName(SUPERADMIN).orElseThrow();
         var appUserRole = AppUserRoleEntity.builder()
             .appUser(superAdmin)
             .userRole(userRole)
@@ -77,8 +78,8 @@ public class UserCreateTest {
     @Test
     @Transactional
     void createTestUser() {
-        var teamEntity = teamRepo.findFirstByName("system").orElseThrow();
-        var titleEntity = titleRepo.findFirstByTitle("system").orElseThrow();
+        var teamEntity = teamRepo.findFirstByName(SYSTEM).orElseThrow();
+        var titleEntity = titleRepo.findFirstByTitle(SYSTEM).orElseThrow();
         var userRole = userRoleRepo.findFirstByName(USER).orElseThrow();
         
         var user = AppUserEntity.builder()

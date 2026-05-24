@@ -1,11 +1,9 @@
 package com.djccnt15.northwind.global.constants;
 
-import lombok.NoArgsConstructor;
+import lombok.experimental.UtilityClass;
 
-import static lombok.AccessLevel.PRIVATE;
-
-@NoArgsConstructor(access = PRIVATE)
-public final class RoleConst {
+@UtilityClass
+public class RoleConst {
     
     public static final String SUPERADMIN = "SUPERADMIN";
     public static final String ADMIN = "ADMIN";

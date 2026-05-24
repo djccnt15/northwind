@@ -1,4 +1,4 @@
-package com.djccnt15.northwind.basedata;
+package com.djccnt15.northwind.db.basedata;
 
 import com.djccnt15.northwind.db.entity.UserRoleEntity;
 import com.djccnt15.northwind.db.repository.TeamRepo;
@@ -11,6 +11,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Arrays;
 
+import static com.djccnt15.northwind.constants.TestConst.SYSTEM;
+import static com.djccnt15.northwind.global.constants.RoleConst.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Slf4j
@@ -21,7 +23,7 @@ class BaseDataTest {
     @Autowired private TeamRepo teamRepo;
     @Autowired private TitleRepo titleRepo;
     
-    private final String[] baseRoles = {"SUPERADMIN", "ADMIN", "MANAGER", "USER"};
+    private final String[] baseRoles = {SUPERADMIN, ADMIN, MANAGER, USER};
     
     @Test
     void testBaseRole() {
@@ -38,21 +40,18 @@ class BaseDataTest {
     @Test
     void testSystemUser() {
         var systemUser = roleRepo.findById(1L).orElseThrow();
-        assertThat(systemUser.getName()).isEqualTo("SUPERADMIN");
-        log.info("System user role: {}", systemUser);
+        assertThat(systemUser.getName()).isEqualTo(SUPERADMIN);
     }
     
     @Test
     void testSystemTeam() {
         var systemTeam = teamRepo.findById(1L).orElseThrow();
-        assertThat(systemTeam.getName()).isEqualTo("system");
-        log.info("System team: {}", systemTeam);
+        assertThat(systemTeam.getName()).isEqualTo(SYSTEM);
     }
     
     @Test
     void testSystemTitle() {
         var systemTitle = titleRepo.findById(1L).orElseThrow();
-        assertThat(systemTitle.getTitle()).isEqualTo("system");
-        log.info("System title: {}", systemTitle);
+        assertThat(systemTitle.getTitle()).isEqualTo(SYSTEM);
     }
 }
