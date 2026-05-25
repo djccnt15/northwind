@@ -1,7 +1,6 @@
 package com.djccnt15.northwind.domain.team.service;
 
 import com.djccnt15.northwind.db.repository.AppUserRepo;
-import com.djccnt15.northwind.db.repository.TeamRepo;
 import com.djccnt15.northwind.domain.team.model.TeamCreateReq;
 import com.djccnt15.northwind.global.exception.exceptions.ApiException;
 import lombok.extern.slf4j.Slf4j;

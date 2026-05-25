@@ -8,8 +8,9 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataIntegrityViolationException;
 
-import static com.djccnt15.northwind.constants.TestConst.TEST;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static com.djccnt15.northwind.constants.TestConst.SYSTEM;
+import static com.djccnt15.northwind.global.util.RandomUtil.getRandUuidString;
 
 @Slf4j
 @SpringBootTest
@@ -20,12 +21,14 @@ class TeamRepoTest {
     
     @Test
     void uniqueName() {
+        var newName = getRandUuidString();
+        
         // given
-        var newTeam = new TeamEntity(TEST);
+        var newTeam = new TeamEntity(newName);
         teamRepo.save(newTeam);
         
         // when
-        var newTeam2 = new TeamEntity(TEST);
+        var newTeam2 = new TeamEntity(newName);
         
         // then
         assertThrows(
