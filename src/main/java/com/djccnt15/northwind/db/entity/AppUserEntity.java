@@ -72,10 +72,6 @@ public class AppUserEntity extends BaseEntity {
     @ToString.Exclude @EqualsAndHashCode.Exclude
     private TeamEntity team;
     
-    @OneToOne(mappedBy = "appUser", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
-    @ToString.Exclude @EqualsAndHashCode.Exclude
-    private EmployeeEntity employee;
-    
     @OneToMany(mappedBy = "appUser")
     @Builder.Default @Setter(AccessLevel.NONE)
     @ToString.Exclude @EqualsAndHashCode.Exclude
@@ -96,13 +92,6 @@ public class AppUserEntity extends BaseEntity {
         appUserRole.remove(roleLink);
         if (roleLink.getAppUser() == this) {
             roleLink.setAppUser(null);
-        }
-    }
-    
-    public void updateEmployee(EmployeeEntity employee) {
-        this.employee = employee;
-        if (employee.getAppUser() != this) {
-            employee.setAppUser(this);
         }
     }
 }

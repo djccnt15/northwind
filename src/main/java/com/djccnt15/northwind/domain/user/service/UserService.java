@@ -96,12 +96,6 @@ public class UserService {
         return entity;
     }
     
-    public AppUserEntity updateProfile(AppUserEntity entity, EmployeeEntity employee) {
-        entity.updateEmployee(employee);
-        repository.save(entity);
-        return entity;
-    }
-    
     public AppUserEntity updatePassword(AppUserEntity entity, String password) {
         entity.setPassword(encoder.encode(password));
         repository.save(entity);

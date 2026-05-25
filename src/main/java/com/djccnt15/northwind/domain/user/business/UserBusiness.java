@@ -79,14 +79,11 @@ public class UserBusiness {
         userService.validateUserId(userSession, userId);
         var userEntity = userService.getFullUser(userSession.getId());
         var user = userConverter.toResponse(userEntity);
-
-        var employeeEntity = userEntity.getEmployee();
-        if (employeeEntity == null) {
-            return user;
-        }
         
-        var employee = employeeConverter.toResponse(employeeEntity);
-        user.setEmployee(employee);
+        employeeService.getEmployee(userEntity)
+            .map(employeeConverter::toResponse)
+            .ifPresent(user::setEmployee);
+        
         return user;
     }
     
@@ -98,14 +95,10 @@ public class UserBusiness {
     ) {
         userService.validateUserId(userSession, userId);
         var userEntity = userService.getFullUser(userSession.getId());
+        var employeeEntity = employeeService.getEmployee(userEntity)
+            .orElseGet(() -> employeeService.createEmployee(request));
         
-        if (userEntity.getEmployee() == null) {
-            var employeeEntity = employeeService.createEmployee(request);
-            userService.updateProfile(userEntity, employeeEntity);
-            return userConverter.toResponse(userEntity);
-        }
-        
-        var employeeEntity = employeeService.updateEmployee(userEntity.getEmployee(), request);
+        employeeService.updateEmployee(employeeEntity, request);
         var employee = employeeConverter.toResponse(employeeEntity);
         var user = userConverter.toResponse(userEntity);
         user.setEmployee(employee);

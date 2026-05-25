@@ -1,5 +1,6 @@
 package com.djccnt15.northwind.domain.user.service;
 
+import com.djccnt15.northwind.db.entity.AppUserEntity;
 import com.djccnt15.northwind.db.entity.EmployeeEntity;
 import com.djccnt15.northwind.db.repository.EmployeeRepo;
 import com.djccnt15.northwind.domain.address.converter.AddressConverter;
@@ -8,6 +9,8 @@ import com.djccnt15.northwind.domain.user.model.EmployeeReq;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -22,6 +25,10 @@ public class EmployeeService {
         var address = addressConverter.toEmbed(request);
         var entity = converter.toEntity(request, address);
         return repository.save(entity);
+    }
+    
+    public Optional<EmployeeEntity> getEmployee(AppUserEntity user) {
+        return repository.findFistByAppUser(user);
     }
     
     public EmployeeEntity updateEmployee(EmployeeEntity employee, EmployeeReq request) {
