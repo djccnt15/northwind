@@ -2,7 +2,6 @@ package com.djccnt15.northwind.domain.user.converter;
 
 import com.djccnt15.northwind.db.entity.EmployeeEntity;
 import com.djccnt15.northwind.db.entity.embaddable.AddressEmbed;
-import com.djccnt15.northwind.domain.user.model.AddressRes;
 import com.djccnt15.northwind.domain.user.model.EmployeeReq;
 import com.djccnt15.northwind.domain.user.model.EmployeeRes;
 import com.djccnt15.northwind.global.annotation.Converter;
@@ -10,7 +9,7 @@ import com.djccnt15.northwind.global.annotation.Converter;
 @Converter
 public class EmployeeConverter {
     
-    public EmployeeRes toResponse(EmployeeEntity employee, AddressRes address) {
+    public EmployeeRes toResponse(EmployeeEntity employee) {
         return EmployeeRes.builder()
             .firstName(employee.getFirstName())
             .lastName(employee.getLastName())
@@ -22,7 +21,11 @@ public class EmployeeConverter {
             .titleOfCourtesy(employee.getTitleOfCourtesy())
             .birthDate(employee.getBirthDate())
             .hireDate(employee.getHireDate())
-            .address(address)
+            .address(employee.getAddress().getAddress())
+            .city(employee.getAddress().getCity())
+            .region(employee.getAddress().getRegion())
+            .zipCode(employee.getAddress().getZipCode())
+            .country(employee.getAddress().getCountry())
             .photo(employee.getPhoto())
             .title(employee.getTitle().getTitle())
             // do not return supervisor and subordinate to prevent circular reference

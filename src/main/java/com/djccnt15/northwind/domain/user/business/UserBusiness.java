@@ -85,8 +85,7 @@ public class UserBusiness {
             return user;
         }
         
-        var address = addressConverter.toResponse(employeeEntity.getAddress());
-        var employee = employeeConverter.toResponse(employeeEntity, address);
+        var employee = employeeConverter.toResponse(employeeEntity);
         user.setEmployee(employee);
         return user;
     }
@@ -106,7 +105,10 @@ public class UserBusiness {
             return userConverter.toResponse(userEntity);
         }
         
-        employeeService.updateEmployee(userEntity.getEmployee(), request);
-        return userConverter.toResponse(userEntity);
+        var employeeEntity = employeeService.updateEmployee(userEntity.getEmployee(), request);
+        var employee = employeeConverter.toResponse(employeeEntity);
+        var user = userConverter.toResponse(userEntity);
+        user.setEmployee(employee);
+        return user;
     }
 }

@@ -145,44 +145,6 @@ export default function Profile() {
   const [isPasswordLoading, setIsPasswordLoading] = useState<boolean>(false);
   const [isInfoLoading, setIsInfoLoading] = useState<boolean>(false);
 
-  const [firstName, setFirstName] = useState<string>(
-    userInfo?.employee?.firstName || "",
-  );
-  const [lastName, setLastName] = useState<string>(
-    userInfo?.employee?.lastName || "",
-  );
-  const [personalEmail, setPersonalEmail] = useState<string>(
-    userInfo?.employee?.email || "",
-  );
-  const [jobTitle, setJobTitle] = useState<string>(
-    userInfo?.employee?.jobTitle || "",
-  );
-  const [primaryPhone, setPrimaryPhone] = useState<string>(
-    userInfo?.employee?.primaryPhone || "",
-  );
-  const [secondaryPhone, setSecondaryPhone] = useState<string>(
-    userInfo?.employee?.secondaryPhone || "",
-  );
-  const [birthDate, setBirthDate] = useState<string>(
-    userInfo?.employee?.birthDate || "",
-  );
-  const [titleOfCourtesy, setTitleOfCourtesy] = useState<string>(
-    userInfo?.employee?.titleOfCourtesy || "",
-  );
-  const [address, setAddress] = useState<string>(
-    userInfo?.employee?.address || "",
-  );
-  const [city, setCity] = useState<string>(userInfo?.employee?.city || "");
-  const [region, setRegion] = useState<string>(
-    userInfo?.employee?.region || "",
-  );
-  const [zipCode, setZipCode] = useState<string>(
-    userInfo?.employee?.zipCode || "",
-  );
-  const [country, setCountry] = useState<string>(
-    userInfo?.employee?.country || "",
-  );
-
   const onChangeUsername = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUsername(e.target.value);
   };
@@ -200,55 +162,107 @@ export default function Profile() {
   };
 
   const onChangeFirstName = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFirstName(e.target.value);
+    const newUserInfo: UserIfs = { ...userInfo } as UserIfs;
+    if (newUserInfo && newUserInfo.employee) {
+      newUserInfo.employee.firstName = e.target.value;
+      setUserInfo({ ...newUserInfo });
+    }
   };
 
   const onChangeLastName = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setLastName(e.target.value);
+    const newUserInfo: UserIfs = { ...userInfo } as UserIfs;
+    if (newUserInfo && newUserInfo.employee) {
+      newUserInfo.employee.lastName = e.target.value;
+      setUserInfo({ ...newUserInfo });
+    }
   };
 
   const onChangePersonalEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPersonalEmail(e.target.value);
+    const newUserInfo: UserIfs = { ...userInfo } as UserIfs;
+    if (newUserInfo && newUserInfo.employee) {
+      newUserInfo.employee.email = e.target.value;
+      setUserInfo({ ...newUserInfo });
+    }
   };
 
   const onChangeJobTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setJobTitle(e.target.value);
+    const newUserInfo: UserIfs = { ...userInfo } as UserIfs;
+    if (newUserInfo && newUserInfo.employee) {
+      newUserInfo.employee.jobTitle = e.target.value;
+      setUserInfo({ ...newUserInfo });
+    }
   };
 
   const onChangePrimaryPhone = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPrimaryPhone(e.target.value);
+    const newUserInfo: UserIfs = { ...userInfo } as UserIfs;
+    if (newUserInfo && newUserInfo.employee) {
+      newUserInfo.employee.primaryPhone = e.target.value;
+      setUserInfo({ ...newUserInfo });
+    }
   };
 
   const onChangeSecondaryPhone = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSecondaryPhone(e.target.value);
+    const newUserInfo: UserIfs = { ...userInfo } as UserIfs;
+    if (newUserInfo && newUserInfo.employee) {
+      newUserInfo.employee.secondaryPhone = e.target.value;
+      setUserInfo({ ...newUserInfo });
+    }
   };
 
   const onChangeBirthDate = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setBirthDate(e.target.value);
+    const newUserInfo: UserIfs = { ...userInfo } as UserIfs;
+    if (newUserInfo && newUserInfo.employee) {
+      newUserInfo.employee.birthDate = e.target.value;
+      setUserInfo({ ...newUserInfo });
+    }
   };
 
   const onChangeTitleOfCourtesy = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setTitleOfCourtesy(e.target.value);
+    const newUserInfo: UserIfs = { ...userInfo } as UserIfs;
+    if (newUserInfo && newUserInfo.employee) {
+      newUserInfo.employee.titleOfCourtesy = e.target.value;
+      setUserInfo({ ...newUserInfo });
+    }
   };
 
   const onChangeAddress = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setAddress(e.target.value);
+    const newUserInfo: UserIfs = { ...userInfo } as UserIfs;
+    if (newUserInfo && newUserInfo.employee) {
+      newUserInfo.employee.address = e.target.value;
+      setUserInfo({ ...newUserInfo });
+    }
   };
 
   const onChangeCity = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCity(e.target.value);
+    const newUserInfo: UserIfs = { ...userInfo } as UserIfs;
+    if (newUserInfo && newUserInfo.employee) {
+      newUserInfo.employee.city = e.target.value;
+      setUserInfo({ ...newUserInfo });
+    }
   };
 
   const onChangeRegion = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setRegion(e.target.value);
+    const newUserInfo: UserIfs = { ...userInfo } as UserIfs;
+    if (newUserInfo && newUserInfo.employee) {
+      newUserInfo.employee.region = e.target.value;
+      setUserInfo({ ...newUserInfo });
+    }
   };
 
   const onChangeZipCode = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setZipCode(e.target.value);
+    const newUserInfo: UserIfs = { ...userInfo } as UserIfs;
+    if (newUserInfo && newUserInfo.employee) {
+      newUserInfo.employee.zipCode = e.target.value;
+      setUserInfo({ ...newUserInfo });
+    }
   };
 
   const onChangeCountry = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCountry(e.target.value);
+    const newUserInfo: UserIfs = { ...userInfo } as UserIfs;
+    if (newUserInfo && newUserInfo.employee) {
+      newUserInfo.employee.country = e.target.value;
+      setUserInfo({ ...newUserInfo });
+    }
   };
 
   useEffect(() => {
@@ -258,8 +272,6 @@ export default function Profile() {
         .then((res) => {
           const data: ApiIfs<UserIfs> = res.data;
           setUserInfo(data.body || null);
-          setUsername(data.body?.username || "");
-          setEmail(data.body?.email || "");
         })
         .catch((err) => {
           console.error("Failed to fetch user info:", err);
@@ -347,22 +359,14 @@ export default function Profile() {
     e.preventDefault();
     if (!user || isInfoLoading) return;
 
+    const employeeInfo = userInfo?.employee;
+    if (!employeeInfo) {
+      alert("Employee information is missing.");
+      return;
+    }
+
     privateApi
-      .patch(`/v1/user/${user.id}/info`, {
-        firstName,
-        lastName,
-        email: personalEmail,
-        jobTitle,
-        primaryPhone,
-        secondaryPhone,
-        titleOfCourtesy,
-        birthDate,
-        address,
-        city,
-        region,
-        zipCode,
-        country,
-      })
+      .patch(`/v1/user/${user.id}/info`, { ...employeeInfo })
       .then((res) => {
         const data: ApiIfs<UserIfs> = res.data;
         setUserInfo(data.body || null);
@@ -500,6 +504,7 @@ export default function Profile() {
                   fontSize="12px"
                   height="30px"
                   onChange={onChangeFirstName}
+                  value={userInfo?.employee?.firstName || ""}
                 />
               </FieldWrapper>
               <FieldWrapper width="10%">
@@ -510,6 +515,7 @@ export default function Profile() {
                   fontSize="12px"
                   height="30px"
                   onChange={onChangeLastName}
+                  value={userInfo?.employee?.lastName || ""}
                 />
               </FieldWrapper>
               <FieldWrapper width="10%">
@@ -520,6 +526,7 @@ export default function Profile() {
                   fontSize="12px"
                   height="30px"
                   onChange={onChangePersonalEmail}
+                  value={userInfo?.employee?.email || ""}
                 />
               </FieldWrapper>
               <FieldWrapper width="10%">
@@ -530,6 +537,7 @@ export default function Profile() {
                   fontSize="12px"
                   height="30px"
                   onChange={onChangeJobTitle}
+                  value={userInfo?.employee?.jobTitle || ""}
                 />
               </FieldWrapper>
               <FieldWrapper width="10%">
@@ -540,6 +548,7 @@ export default function Profile() {
                   fontSize="12px"
                   height="30px"
                   onChange={onChangePrimaryPhone}
+                  value={userInfo?.employee?.primaryPhone || ""}
                 />
               </FieldWrapper>
               <FieldWrapper width="10%">
@@ -550,6 +559,7 @@ export default function Profile() {
                   fontSize="12px"
                   height="30px"
                   onChange={onChangeSecondaryPhone}
+                  value={userInfo?.employee?.secondaryPhone || ""}
                 />
               </FieldWrapper>
               <FieldWrapper width="10%">
@@ -560,6 +570,7 @@ export default function Profile() {
                   fontSize="12px"
                   height="30px"
                   onChange={onChangeBirthDate}
+                  value={userInfo?.employee?.birthDate || ""}
                 />
               </FieldWrapper>
               <FieldWrapper width="10%">
@@ -570,6 +581,7 @@ export default function Profile() {
                   fontSize="12px"
                   height="30px"
                   onChange={onChangeTitleOfCourtesy}
+                  value={userInfo?.employee?.titleOfCourtesy || ""}
                 />
               </FieldWrapper>
             </FlexWrapWrapper>
@@ -582,6 +594,7 @@ export default function Profile() {
                   fontSize="12px"
                   height="30px"
                   onChange={onChangeAddress}
+                  value={userInfo?.employee?.address || ""}
                 />
               </FieldWrapper>
               <FieldWrapper width="10%">
@@ -592,6 +605,7 @@ export default function Profile() {
                   fontSize="12px"
                   height="30px"
                   onChange={onChangeCity}
+                  value={userInfo?.employee?.city || ""}
                 />
               </FieldWrapper>
               <FieldWrapper width="10%">
@@ -602,6 +616,7 @@ export default function Profile() {
                   fontSize="12px"
                   height="30px"
                   onChange={onChangeRegion}
+                  value={userInfo?.employee?.region || ""}
                 />
               </FieldWrapper>
               <FieldWrapper width="10%">
@@ -612,6 +627,7 @@ export default function Profile() {
                   fontSize="12px"
                   height="30px"
                   onChange={onChangeZipCode}
+                  value={userInfo?.employee?.zipCode || ""}
                 />
               </FieldWrapper>
               <FieldWrapper width="10%">
@@ -622,6 +638,7 @@ export default function Profile() {
                   fontSize="12px"
                   height="30px"
                   onChange={onChangeCountry}
+                  value={userInfo?.employee?.country || ""}
                 />
               </FieldWrapper>
             </FlexWrapWrapper>

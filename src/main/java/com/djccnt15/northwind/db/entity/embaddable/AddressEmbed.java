@@ -2,13 +2,17 @@ package com.djccnt15.northwind.db.entity.embaddable;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import static com.djccnt15.northwind.domain.address.validation.AddressModelConst.*;
 
 @Data
 @Embeddable
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class AddressEmbed {
     
