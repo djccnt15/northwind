@@ -7,6 +7,7 @@ import com.djccnt15.northwind.db.repository.UserRoleRepo;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Arrays;
@@ -17,6 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @Slf4j
 @SpringBootTest
+@AutoConfigureMockMvc
 class BaseDataTest {
     
     @Autowired private UserRoleRepo roleRepo;
