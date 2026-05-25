@@ -314,6 +314,16 @@ export default function Profile() {
       .catch((err) => {
         console.error(err);
         const data: ApiIfs<null> = err.response?.data;
+
+        if (data?.result?.code === 1400) {
+          const lines = Object.values(data?.body || {});
+          const message = lines.join("\n");
+          alert(
+            `Invalid input. Please check your information and try again.\n${message}`,
+          );
+          return;
+        }
+
         const description = data?.result?.description;
         const message =
           description ||
