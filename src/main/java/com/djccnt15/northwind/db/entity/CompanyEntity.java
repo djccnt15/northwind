@@ -40,8 +40,8 @@ public class CompanyEntity extends BaseEntity {
     private String notes;
     
     @Column
-    @Embedded
-    private AddressEmbed address;
+    @Embedded @Builder.Default
+    private AddressEmbed address = new AddressEmbed();
     
     @NotNull
     @JoinColumn(name = "company_type_id", nullable = false)
@@ -79,4 +79,11 @@ public class CompanyEntity extends BaseEntity {
     @Builder.Default @Setter(AccessLevel.NONE)
     @ToString.Exclude @EqualsAndHashCode.Exclude
     private Set<PurchaseOrderEntity> purchaseOrders = new HashSet<>();
+    
+    public AddressEmbed getAddress() {
+        if (address == null) {
+            address = new AddressEmbed();
+        }
+        return address;
+    }
 }

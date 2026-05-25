@@ -61,8 +61,8 @@ public class EmployeeEntity extends BaseEntity {
     private LocalDate hireDate;
     
     @Column
-    @Embedded
-    private AddressEmbed address;
+    @Embedded @Builder.Default
+    private AddressEmbed address = new AddressEmbed();
     
     @Column
     private byte[] photo;
@@ -102,4 +102,11 @@ public class EmployeeEntity extends BaseEntity {
     @Builder.Default @Setter(AccessLevel.NONE)
     @ToString.Exclude @EqualsAndHashCode.Exclude
     private Set<MruEntity> mruEntries = new HashSet<>();
+    
+    public AddressEmbed getAddress() {
+        if (address == null) {
+            address = new AddressEmbed();
+        }
+        return address;
+    }
 }
