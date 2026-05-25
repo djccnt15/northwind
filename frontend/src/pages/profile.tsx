@@ -13,7 +13,8 @@ import { useAuth } from "../shared/auth/auth-context";
 import { useEffect, useState } from "react";
 import { privateApi } from "../shared/api";
 import type { ApiIfs } from "../entities/app/api";
-import type { UserIfs } from "../entities/employee";
+import type { EmployeeIfs, UserIfs } from "../entities/employee";
+import { convertEmptyStringToNull } from "../shared/utils";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -161,109 +162,41 @@ export default function Profile() {
     setConfirmPassword(e.target.value);
   };
 
-  const onChangeFirstName = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newUserInfo: UserIfs = { ...userInfo } as UserIfs;
-    if (newUserInfo && newUserInfo.employee) {
-      newUserInfo.employee.firstName = e.target.value;
-      setUserInfo({ ...newUserInfo });
-    }
+  const updateEmployeeField = (field: keyof EmployeeIfs) => {
+    return (e: React.ChangeEvent<HTMLInputElement>) => {
+      const value = e.target.value.trim() === "" ? null : e.target.value;
+
+      setUserInfo((prev) => {
+        if (!prev?.employee) {
+          return prev;
+        }
+
+        const employee = {
+          ...prev.employee,
+          [field]: value,
+        } as unknown as EmployeeIfs;
+
+        return {
+          ...prev,
+          employee,
+        };
+      });
+    };
   };
 
-  const onChangeLastName = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newUserInfo: UserIfs = { ...userInfo } as UserIfs;
-    if (newUserInfo && newUserInfo.employee) {
-      newUserInfo.employee.lastName = e.target.value;
-      setUserInfo({ ...newUserInfo });
-    }
-  };
-
-  const onChangePersonalEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newUserInfo: UserIfs = { ...userInfo } as UserIfs;
-    if (newUserInfo && newUserInfo.employee) {
-      newUserInfo.employee.email = e.target.value;
-      setUserInfo({ ...newUserInfo });
-    }
-  };
-
-  const onChangeJobTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newUserInfo: UserIfs = { ...userInfo } as UserIfs;
-    if (newUserInfo && newUserInfo.employee) {
-      newUserInfo.employee.jobTitle = e.target.value;
-      setUserInfo({ ...newUserInfo });
-    }
-  };
-
-  const onChangePrimaryPhone = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newUserInfo: UserIfs = { ...userInfo } as UserIfs;
-    if (newUserInfo && newUserInfo.employee) {
-      newUserInfo.employee.primaryPhone = e.target.value;
-      setUserInfo({ ...newUserInfo });
-    }
-  };
-
-  const onChangeSecondaryPhone = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newUserInfo: UserIfs = { ...userInfo } as UserIfs;
-    if (newUserInfo && newUserInfo.employee) {
-      newUserInfo.employee.secondaryPhone = e.target.value;
-      setUserInfo({ ...newUserInfo });
-    }
-  };
-
-  const onChangeBirthDate = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newUserInfo: UserIfs = { ...userInfo } as UserIfs;
-    if (newUserInfo && newUserInfo.employee) {
-      newUserInfo.employee.birthDate = e.target.value;
-      setUserInfo({ ...newUserInfo });
-    }
-  };
-
-  const onChangeTitleOfCourtesy = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newUserInfo: UserIfs = { ...userInfo } as UserIfs;
-    if (newUserInfo && newUserInfo.employee) {
-      newUserInfo.employee.titleOfCourtesy = e.target.value;
-      setUserInfo({ ...newUserInfo });
-    }
-  };
-
-  const onChangeAddress = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newUserInfo: UserIfs = { ...userInfo } as UserIfs;
-    if (newUserInfo && newUserInfo.employee) {
-      newUserInfo.employee.address = e.target.value;
-      setUserInfo({ ...newUserInfo });
-    }
-  };
-
-  const onChangeCity = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newUserInfo: UserIfs = { ...userInfo } as UserIfs;
-    if (newUserInfo && newUserInfo.employee) {
-      newUserInfo.employee.city = e.target.value;
-      setUserInfo({ ...newUserInfo });
-    }
-  };
-
-  const onChangeRegion = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newUserInfo: UserIfs = { ...userInfo } as UserIfs;
-    if (newUserInfo && newUserInfo.employee) {
-      newUserInfo.employee.region = e.target.value;
-      setUserInfo({ ...newUserInfo });
-    }
-  };
-
-  const onChangeZipCode = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newUserInfo: UserIfs = { ...userInfo } as UserIfs;
-    if (newUserInfo && newUserInfo.employee) {
-      newUserInfo.employee.zipCode = e.target.value;
-      setUserInfo({ ...newUserInfo });
-    }
-  };
-
-  const onChangeCountry = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newUserInfo: UserIfs = { ...userInfo } as UserIfs;
-    if (newUserInfo && newUserInfo.employee) {
-      newUserInfo.employee.country = e.target.value;
-      setUserInfo({ ...newUserInfo });
-    }
-  };
+  const onChangeFirstName = updateEmployeeField("firstName");
+  const onChangeLastName = updateEmployeeField("lastName");
+  const onChangePersonalEmail = updateEmployeeField("email");
+  const onChangeJobTitle = updateEmployeeField("jobTitle");
+  const onChangePrimaryPhone = updateEmployeeField("primaryPhone");
+  const onChangeSecondaryPhone = updateEmployeeField("secondaryPhone");
+  const onChangeBirthDate = updateEmployeeField("birthDate");
+  const onChangeTitleOfCourtesy = updateEmployeeField("titleOfCourtesy");
+  const onChangeAddress = updateEmployeeField("address");
+  const onChangeCity = updateEmployeeField("city");
+  const onChangeRegion = updateEmployeeField("region");
+  const onChangeZipCode = updateEmployeeField("zipCode");
+  const onChangeCountry = updateEmployeeField("country");
 
   useEffect(() => {
     const fetchUserInfo = async () => {
@@ -272,6 +205,8 @@ export default function Profile() {
         .then((res) => {
           const data: ApiIfs<UserIfs> = res.data;
           setUserInfo(data.body || null);
+          setUsername(data.body?.username || "");
+          setEmail(data.body?.email || "");
         })
         .catch((err) => {
           console.error("Failed to fetch user info:", err);
@@ -365,8 +300,12 @@ export default function Profile() {
       return;
     }
 
+    setIsInfoLoading(true);
+
+    const normalizedInfo = convertEmptyStringToNull(employeeInfo);
+
     privateApi
-      .patch(`/v1/user/${user.id}/info`, { ...employeeInfo })
+      .patch(`/v1/user/${user.id}/info`, normalizedInfo)
       .then((res) => {
         const data: ApiIfs<UserIfs> = res.data;
         setUserInfo(data.body || null);
@@ -491,7 +430,11 @@ export default function Profile() {
             </FieldWrapper>
             <FieldWrapper width="15%">
               <Label>Hire Date</Label>
-              <Input type="date" placeholder="MM/DD/YYYY" disabled />
+              <Input
+                type="date"
+                value={userInfo?.employee?.hireDate || ""}
+                disabled
+              />
             </FieldWrapper>
           </FlexWrapper>
           <Form onSubmit={onSubmitInfo}>
