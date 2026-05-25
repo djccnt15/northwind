@@ -19,9 +19,9 @@ import java.util.Random;
 import static com.djccnt15.northwind.constants.TestConst.SYSTEM;
 import static com.djccnt15.northwind.global.constants.RoleConst.*;
 
+@DevTest
 @SpringBootTest
 @ActiveProfiles("dev")  // use application-dev.properties for testing
-@DevTest
 @Commit // commit the transaction to persist the data == @Rollback(false)
 public class UserCreateTest {
     

@@ -11,9 +11,9 @@ import org.springframework.test.context.ActiveProfiles;
 
 import java.util.ArrayList;
 
+@DevTest
 @SpringBootTest
 @ActiveProfiles("dev")  // use application-dev.properties for testing
-@DevTest
 @Commit
 public class TeamCreateTest {
     
