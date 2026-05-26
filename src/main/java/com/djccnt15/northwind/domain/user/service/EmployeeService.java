@@ -3,14 +3,18 @@ package com.djccnt15.northwind.domain.user.service;
 import com.djccnt15.northwind.db.entity.AppUserEntity;
 import com.djccnt15.northwind.db.entity.EmployeeEntity;
 import com.djccnt15.northwind.db.repository.EmployeeRepo;
+import com.djccnt15.northwind.db.repository.TitleRepo;
 import com.djccnt15.northwind.domain.address.converter.AddressConverter;
 import com.djccnt15.northwind.domain.user.converter.EmployeeConverter;
 import com.djccnt15.northwind.domain.user.model.EmployeeReq;
+import com.djccnt15.northwind.global.exception.exceptions.ApiException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+
+import static com.djccnt15.northwind.global.code.StatusCode.SERVER_ERROR;
 
 @Slf4j
 @Service
@@ -20,10 +24,15 @@ public class EmployeeService {
     private final EmployeeRepo repository;
     private final EmployeeConverter converter;
     private final AddressConverter addressConverter;
+    private final TitleRepo titleRepo;
     
-    public EmployeeEntity createEmployee(EmployeeReq request) {
+    public EmployeeEntity createEmployee(EmployeeReq request, AppUserEntity userEntity) {
         var address = addressConverter.toEmbed(request);
         var entity = converter.toEntity(request, address);
+        var title = titleRepo.findById(1L)
+            .orElseThrow(() -> new ApiException(SERVER_ERROR, "Title not found"));
+        entity.setTitle(title);
+        entity.setAppUser(userEntity);
         return repository.save(entity);
     }
     

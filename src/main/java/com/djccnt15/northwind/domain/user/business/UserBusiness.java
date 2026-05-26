@@ -96,7 +96,7 @@ public class UserBusiness {
         userService.validateUserId(userSession, userId);
         var userEntity = userService.getFullUser(userSession.getId());
         var employeeEntity = employeeService.getEmployee(userEntity)
-            .orElseGet(() -> employeeService.createEmployee(request));
+            .orElseGet(() -> employeeService.createEmployee(request, userEntity));
         
         employeeService.updateEmployee(employeeEntity, request);
         var employee = employeeConverter.toResponse(employeeEntity);
