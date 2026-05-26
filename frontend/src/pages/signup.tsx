@@ -21,9 +21,13 @@ import {
   commLinkSkyBlue,
   globalTransition,
   ModalDefault,
+  commBtnTomatoRed,
+  commBtnTomatoRedBoxShadow,
+  commBtnHoverTomatoRed,
 } from "../shared/ui/global-styles";
 import type { ApiIfs } from "../entities/app/api";
 import type { UserIfs } from "../entities/employee";
+import { useKeyDown } from "../shared/useKeyDown";
 
 const Wrapper = styled.div`
   display: flex;
@@ -75,16 +79,78 @@ const SuccessModal = styled(ModalDefault)`
   }
 `;
 
+const ErrorModal = styled(ModalDefault)`
+  width: 500px;
+  background-color: white;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  font-size: 16px;
+  font-weight: 500;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+`;
+
+const ModalTitle = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`;
+
+const ModalHeader = styled.h2`
+  font-size: 20px;
+  font-weight: 700;
+`;
+
+const ModalCloseBtn = styled.button`
+  ${commBtnTomatoRed}
+  ${globalTransition}
+  ${commBorderRadius}
+  height: 30px;
+  width: 40px;
+  border: none;
+  color: white;
+  font-size: 10px;
+  cursor: pointer;
+
+  &:hover {
+    ${commBtnHoverTomatoRed}
+    ${globalTransition}
+  }
+
+  &:focus {
+    outline: none;
+    ${commBtnTomatoRedBoxShadow}
+  }
+`;
+
+const ModalContent = styled.div`
+  text-align: left;
+`;
+
 export default function Signup() {
   const [errorMsg, setErrorMsg] = useState<string>("");
+  const [validationErrors, setValidationErrors] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isEmailChecked, setIsEmailChecked] = useState<boolean>(false);
   const [isSignupSuccess, setIsSignupSuccess] = useState<boolean>(false);
+  const [isErrorModalOpen, setIsErrorModalOpen] = useState<boolean>(false);
 
   const [username, setUsername] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
+
+  const closeErrorModal = () => {
+    setIsErrorModalOpen(false);
+    setErrorMsg("");
+  };
+
+  useKeyDown("Escape", () => {
+    if (isErrorModalOpen) {
+      closeErrorModal();
+    }
+  });
 
   const onChangeUsername = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUsername(e.target.value);
@@ -135,7 +201,7 @@ export default function Signup() {
 
   const onSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (isLoading) return;
+    if (isLoading || isErrorModalOpen) return;
 
     if (username.trim() === "" || email.trim() === "") {
       alert("Username and Email cannot be empty.");
@@ -160,6 +226,15 @@ export default function Signup() {
       .catch((err) => {
         console.error(err);
         const data: ApiIfs<null> = err.response?.data;
+
+        if (data?.result?.code === 1400) {
+          const validationErrors = data?.body || {};
+          const messages = Object.values(validationErrors) as string[];
+          setValidationErrors(messages);
+          setIsErrorModalOpen(true);
+          return;
+        }
+
         const description = data?.result?.description;
         const message = description
           ? `Signup failed. ${description}`
@@ -233,6 +308,21 @@ export default function Signup() {
           <SuccessModal>
             Sign Up Success! Go to <Link to="/login">Log in &rarr;</Link>
           </SuccessModal>
+        </ModalOverlay>
+      )}
+      {isErrorModalOpen && (
+        <ModalOverlay>
+          <ErrorModal>
+            <ModalTitle>
+              <ModalHeader>Signup Failed</ModalHeader>
+              <ModalCloseBtn onClick={closeErrorModal}>X</ModalCloseBtn>
+            </ModalTitle>
+            <ModalContent>
+              {validationErrors.map((msg, index) => (
+                <p key={index}>{msg}</p>
+              ))}
+            </ModalContent>
+          </ErrorModal>
         </ModalOverlay>
       )}
     </Wrapper>
