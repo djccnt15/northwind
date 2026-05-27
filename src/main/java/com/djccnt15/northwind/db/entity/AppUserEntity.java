@@ -66,8 +66,7 @@ public class AppUserEntity extends BaseEntity {
     @ToString.Exclude @EqualsAndHashCode.Exclude
     private Set<AppUserRoleEntity> appUserRole = new HashSet<>();
     
-    @NotNull
-    @JoinColumn(name = "team_id", nullable = false)
+    @JoinColumn(name = "team_id")
     @ManyToOne(fetch = FetchType.LAZY)
     @ToString.Exclude @EqualsAndHashCode.Exclude
     private TeamEntity team;
