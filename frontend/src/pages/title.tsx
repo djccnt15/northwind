@@ -14,14 +14,15 @@ import {
   type GridSlots,
 } from "@mui/x-data-grid";
 import { randomId } from "@mui/x-data-grid-generator";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
-import type { ApiIfs } from "../entities/app/api";
+import type { ApiIfs, PageIfs } from "../entities/app/api";
 import type { TitleIfs } from "../entities/employee";
 import {
   ActionHandlersContext,
   type ActionHandlers,
 } from "../features/data-grid/action-context";
+import { dataGridInitialState } from "../features/data-grid/constants";
 import ActionsCell from "../features/data-grid/crud-cell";
 import { privateApi } from "../shared/api";
 import { PageWrapper, Title } from "../shared/ui/global-styles";
@@ -85,8 +86,7 @@ const onEdit = async (
   originalRow: TitleIfs,
 ): Promise<TitleIfs> => {
   if (updatedRow.isNew) {
-    const { isNew, ...titleData } = updatedRow;
-    return await createTitle(titleData, originalRow);
+    return await createTitle(updatedRow, originalRow);
   }
 
   return await updateTitle(updatedRow, originalRow);
@@ -132,23 +132,35 @@ function EditToolbar(props: GridSlotProps["toolbar"]) {
 export default function EmployeeTitle() {
   const [rows, setRows] = useState<TitleIfs[]>([]);
   const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
+  const [rowCount, setRowCount] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [paginationModel, setPaginationModel] = useState(
+    dataGridInitialState.pagination.paginationModel,
+  );
+
+  const fetchTitles = useCallback(async (page: number, size: number) => {
+    setLoading(true);
+
+    try {
+      const res = await privateApi.get("/v1/admin/titles", {
+        params: { page, size },
+      });
+      const data: ApiIfs<PageIfs<TitleIfs>> = res.data;
+
+      setRows(data?.body?.content ?? []);
+      setRowCount(data?.body?.page?.totalElements ?? 0);
+    } catch (error) {
+      console.error("Error fetching employee titles:", error);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
-    const fetchTitles = () => {
-      privateApi
-        .get("/v1/admin/titles")
-        .then((res) => {
-          const data: ApiIfs<TitleIfs[]> = res.data;
-          setRows(data?.body || []);
-        })
-        .catch((error) => {
-          console.error("Error fetching employee titles:", error);
-        })
-        .finally(() => {});
-    };
-
-    fetchTitles();
-  }, []);
+    queueMicrotask(() => {
+      void fetchTitles(paginationModel.page, paginationModel.pageSize);
+    });
+  }, [fetchTitles, paginationModel.page, paginationModel.pageSize]);
 
   const handleRowEditStop: GridEventListener<"rowEditStop"> = (
     params,
@@ -175,7 +187,9 @@ export default function EmployeeTitle() {
       },
       handleDeleteClick: (id: GridRowId) => {
         setRows((prevRows) => prevRows.filter((row) => row.id !== id));
-        onDelete(Number(id));
+        void onDelete(Number(id)).then(() =>
+          fetchTitles(paginationModel.page, paginationModel.pageSize),
+        );
       },
       handleCancelClick: (id: GridRowId) => {
         setRowModesModel((prevRowModesModel) => {
@@ -194,7 +208,7 @@ export default function EmployeeTitle() {
         });
       },
     }),
-    [],
+    [fetchTitles, paginationModel.page, paginationModel.pageSize],
   );
 
   const processRowUpdate = async (
@@ -210,7 +224,8 @@ export default function EmployeeTitle() {
 
     if (savedRow.id !== originalRow.id) {
       setRowModesModel((prevRowModesModel) => {
-        const { [originalRow.id]: _, ...rest } = prevRowModesModel;
+        const rest = { ...prevRowModesModel };
+        delete rest[originalRow.id];
         return rest;
       });
     }
@@ -240,6 +255,12 @@ export default function EmployeeTitle() {
             columns={columns}
             editMode="row"
             rowModesModel={rowModesModel}
+            loading={loading}
+            pagination
+            paginationMode="server"
+            rowCount={rowCount}
+            paginationModel={paginationModel}
+            onPaginationModelChange={setPaginationModel}
             pageSizeOptions={[10, 20, 50, 100]}
             onRowModesModelChange={setRowModesModel}
             onRowEditStop={handleRowEditStop}
