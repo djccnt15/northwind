@@ -20,11 +20,12 @@ import ActionsCell from "../features/data-grid/crud-cell";
 import { privateApi } from "../shared/api";
 import { Box, Tooltip } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   ActionHandlersContext,
   type ActionHandlers,
 } from "../features/data-grid/action-context";
+import { dataGridInitialState } from "../features/data-grid/constants";
 
 const Wrapper = styled(PageWrapper)``;
 
@@ -131,23 +132,35 @@ function EditToolbar(props: GridSlotProps["toolbar"]) {
 export default function AdminTeam() {
   const [rows, setRows] = useState<TeamIfs[]>([]);
   const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
+  const [rowCount, setRowCount] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [paginationModel, setPaginationModel] = useState(
+    dataGridInitialState.pagination.paginationModel,
+  );
+
+  const fetchTeams = useCallback(async (page: number, size: number) => {
+    setLoading(true);
+
+    try {
+      const res = await privateApi.get("/v1/admin/teams", {
+        params: { page, size },
+      });
+      const data: ApiIfs<PageIfs<TeamIfs>> = res.data;
+
+      setRows(data?.body?.content ?? []);
+      setRowCount(data?.body?.page?.totalElements ?? 0);
+    } catch (error) {
+      console.error("Error fetching teams:", error);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
-    const fetchTeams = () => {
-      privateApi
-        .get("/v1/admin/teams")
-        .then((res) => {
-          const data: ApiIfs<PageIfs<TeamIfs>> = res.data;
-          setRows(data?.body?.content ?? []);
-        })
-        .catch((error) => {
-          console.error("Error fetching teams:", error);
-        })
-        .finally(() => {});
-    };
-
-    fetchTeams();
-  }, []);
+    queueMicrotask(() => {
+      void fetchTeams(paginationModel.page, paginationModel.pageSize);
+    });
+  }, [fetchTeams, paginationModel.page, paginationModel.pageSize]);
 
   const handleRowEditStop: GridEventListener<"rowEditStop"> = (
     params,
@@ -174,7 +187,9 @@ export default function AdminTeam() {
       },
       handleDeleteClick: (id: GridRowId) => {
         setRows((prevRows) => prevRows.filter((row) => row.id !== id));
-        onDelete(Number(id));
+        void onDelete(Number(id)).then(() =>
+          fetchTeams(paginationModel.page, paginationModel.pageSize),
+        );
       },
       handleCancelClick: (id: GridRowId) => {
         setRowModesModel((prevRowModesModel) => {
@@ -193,7 +208,7 @@ export default function AdminTeam() {
         });
       },
     }),
-    [],
+    [fetchTeams, paginationModel.page, paginationModel.pageSize],
   );
 
   const processRowUpdate = async (
@@ -209,7 +224,8 @@ export default function AdminTeam() {
 
     if (savedRow.id !== originalRow.id) {
       setRowModesModel((prevRowModesModel) => {
-        const { [originalRow.id]: _, ...rest } = prevRowModesModel;
+        const rest = { ...prevRowModesModel };
+        delete rest[originalRow.id];
         return rest;
       });
     }
@@ -239,6 +255,12 @@ export default function AdminTeam() {
             columns={columns}
             editMode="row"
             rowModesModel={rowModesModel}
+            loading={loading}
+            pagination
+            paginationMode="server"
+            rowCount={rowCount}
+            paginationModel={paginationModel}
+            onPaginationModelChange={setPaginationModel}
             pageSizeOptions={[10, 20, 50, 100]}
             onRowModesModelChange={setRowModesModel}
             onRowEditStop={handleRowEditStop}
