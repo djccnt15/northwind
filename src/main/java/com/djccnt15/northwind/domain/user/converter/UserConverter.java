@@ -1,6 +1,7 @@
 package com.djccnt15.northwind.domain.user.converter;
 
 import com.djccnt15.northwind.db.entity.AppUserEntity;
+import com.djccnt15.northwind.db.entity.TeamEntity;
 import com.djccnt15.northwind.domain.user.model.SessionInfoRes;
 import com.djccnt15.northwind.domain.user.model.SignupReq;
 import com.djccnt15.northwind.domain.user.model.UserInfoRes;
@@ -37,6 +38,10 @@ public class UserConverter {
             .orElse(Collections.emptySet()).stream()
             .map(it -> getRoleName(it.getUserRole().getName())).toList();
         
+        var teamName = Optional.ofNullable(entity.getTeam())
+            .map(TeamEntity::getName)
+            .orElse(null);
+        
         return UserInfoRes.builder()
             .id(entity.getId())
             .username(entity.getUsername())
@@ -47,7 +52,7 @@ public class UserConverter {
             .passwordChangedAt(entity.getPasswordChangedAt())
             .loginFailedCount(entity.getLoginFailedCount())
             .lastLoginAt(entity.getLastLoginAt())
-            .team(entity.getTeam().getName())
+            .team(teamName)
             .build();
     }
     
