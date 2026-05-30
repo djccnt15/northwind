@@ -1,0 +1,13 @@
+{
+  "$schema": "https://developer.chrome.com/schemas/devtools/appspecific.json",
+  "version": "1.0.0",
+  "devtools_discoverable": true,
+  "allow_extensions": [
+    "fmkadmapgofadopljbjfombhkmmgmeei",
+    "lmhkpmbekcpmknklioeibfkpmmfibljd"
+  ],
+  "debugging": {
+    "enable_source_maps": true,
+    "allowed_origins": ["http://localhost:3000", "http://localhost:8080"]
+  }
+}
