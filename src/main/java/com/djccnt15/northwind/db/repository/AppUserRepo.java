@@ -1,6 +1,7 @@
 package com.djccnt15.northwind.db.repository;
 
 import com.djccnt15.northwind.db.entity.AppUserEntity;
+import com.djccnt15.northwind.db.projection.UserEmployeeProjection;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
@@ -46,8 +47,19 @@ public interface AppUserRepo extends JpaRepository<AppUserEntity, Long> {
     
     Page<AppUserEntity> findByUsernameLikeOrEmailLike(String usernameKw, String emailKw, Pageable pageable);
     
-    @EntityGraph(attributePaths = {"appUserRole", "appUserRole.userRole", "team"})
-    List<AppUserEntity> findFullByIdInOrderById(List<Long> ids);
+    // @EntityGraph(attributePaths = {"appUserRole", "appUserRole.userRole", "team"})
+    @Query("""
+        SELECT u as appUser, e as employee
+        FROM AppUserEntity u
+        LEFT JOIN FETCH u.appUserRole ur
+        LEFT JOIN FETCH ur.userRole r
+        LEFT JOIN FETCH u.team t
+        LEFT JOIN FETCH EmployeeEntity e ON e.appUser.id = u.id
+        LEFT JOIN FETCH TitleEntity ti ON ti.id = e.title.id
+        WHERE u.id IN :ids
+        ORDER BY u.id
+        """)
+    List<UserEmployeeProjection> findFullByIdInOrderById(List<Long> ids);
     
     @Query("""
         SELECT DISTINCT u.id

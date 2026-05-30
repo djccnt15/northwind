@@ -1,7 +1,7 @@
 package com.djccnt15.northwind.domain.user.service;
 
 import com.djccnt15.northwind.db.entity.AppUserEntity;
-import com.djccnt15.northwind.db.entity.EmployeeEntity;
+import com.djccnt15.northwind.db.projection.UserEmployeeProjection;
 import com.djccnt15.northwind.db.repository.AppUserRepo;
 import com.djccnt15.northwind.domain.user.converter.UserConverter;
 import com.djccnt15.northwind.domain.user.model.SignupReq;
@@ -106,7 +106,7 @@ public class UserService {
         return repository.findByUsernameLikeOrEmailLike(keyword, keyword, pageable);
     }
     
-    public List<AppUserEntity> getUsers(List<Long> userIds) {
+    public List<UserEmployeeProjection> getUsers(List<Long> userIds) {
         return repository.findFullByIdInOrderById(userIds);
     }
     

@@ -4,6 +4,7 @@ import com.djccnt15.northwind.db.entity.id.BaseEntity;
 import com.djccnt15.northwind.domain.model.ListBodyReq;
 import com.djccnt15.northwind.domain.role.service.RoleService;
 import com.djccnt15.northwind.domain.team.service.TeamService;
+import com.djccnt15.northwind.domain.user.converter.EmployeeConverter;
 import com.djccnt15.northwind.domain.user.converter.UserConverter;
 import com.djccnt15.northwind.domain.user.model.SignupReq;
 import com.djccnt15.northwind.domain.user.model.UserInfoRes;
@@ -28,6 +29,7 @@ public class AdminUserBusiness {
     private final UserRoleService userRoleService;
     private final RoleService roleService;
     private final TeamService teamService;
+    private final EmployeeConverter employeeConverter;
     
     public Page<UserInfoRes> getUsers(int page, int size, String keyword) {
         var kw = "%%%s%%".formatted(keyword.trim());
@@ -36,7 +38,13 @@ public class AdminUserBusiness {
         
         var userIds = userPage.map(BaseEntity::getId).toList();
         var entities = userService.getUsers(userIds);
-        var userList = entities.stream().map(userConverter::toResponse).toList();
+        
+        var userList = entities.stream()
+            .map(it -> {
+                var response = userConverter.toResponse(it.getAppUser());
+                response.setEmployee(employeeConverter.toResponse(it.getEmployee()));
+                return response;
+            }).toList();
         
         return new PageImpl<>(userList, pageable, userPage.getTotalElements());
     }

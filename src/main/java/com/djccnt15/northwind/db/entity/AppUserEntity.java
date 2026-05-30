@@ -71,6 +71,11 @@ public class AppUserEntity extends BaseEntity {
     @ToString.Exclude @EqualsAndHashCode.Exclude
     private TeamEntity team;
     
+    // 역방향의 @OneToOne 매핑은 LAZY로 설정하더라도 실제로는 EAGER로 동작함, 필요하다면 별도의 DTO나 쿼리를 통해 데이터를 조회해야함
+    // @OneToOne(mappedBy = "appUser", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    // @ToString.Exclude @EqualsAndHashCode.Exclude
+    // private EmployeeEntity employee;
+    
     @OneToMany(mappedBy = "appUser")
     @Builder.Default @Setter(AccessLevel.NONE)
     @ToString.Exclude @EqualsAndHashCode.Exclude
