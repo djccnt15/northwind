@@ -1,5 +1,6 @@
 package com.djccnt15.northwind.domain.admin.business;
 
+import com.djccnt15.northwind.db.entity.TitleEntity;
 import com.djccnt15.northwind.domain.title.converter.TitleConverter;
 import com.djccnt15.northwind.domain.title.model.TitleCreateReq;
 import com.djccnt15.northwind.domain.title.model.TitleRes;
@@ -24,9 +25,9 @@ public class AdminTitleBusiness {
         return converter.toResponse(entity);
     }
     
-    public List<TitleRes> getAllTitles() {
-        return service.getAllTitles().stream()
-            .map(converter::toResponse).toList();
+    public List<String> getAllTitles() {
+        var titles = service.getAllTitles();
+        return titles.stream().map(TitleEntity::getTitle).toList();
     }
     
     public TitleRes updateTitle(Long id, TitleCreateReq request) {

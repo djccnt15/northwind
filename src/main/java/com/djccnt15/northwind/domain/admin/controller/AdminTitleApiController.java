@@ -31,7 +31,7 @@ public class AdminTitleApiController {
     }
     
     @GetMapping
-    public ResponseEntity<Api<List<TitleRes>>> getTitles() {
+    public ResponseEntity<Api<List<String>>> getTitles() {
         var response = business.getAllTitles();
         return ResponseEntity.ok(Api.OK(response));
     }
