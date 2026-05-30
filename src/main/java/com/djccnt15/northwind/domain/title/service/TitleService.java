@@ -28,6 +28,11 @@ public class TitleService {
             .orElseThrow(() -> new ApiException(NOT_FOUND, "Title not found"));
     }
     
+    public TitleEntity getTitle(String title) {
+        return repository.findFirstByTitle(title)
+            .orElseThrow(() -> new ApiException(NOT_FOUND, "Title not found"));
+    }
+    
     public void validateTitle(TitleCreateReq request) {
         if (repository.existsByTitle(request.getTitle())) {
             throw new ApiException(BAD_REQUEST, "Title already exists");

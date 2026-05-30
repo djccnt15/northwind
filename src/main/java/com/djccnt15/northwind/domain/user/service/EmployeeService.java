@@ -7,6 +7,7 @@ import com.djccnt15.northwind.db.repository.TitleRepo;
 import com.djccnt15.northwind.domain.address.converter.AddressConverter;
 import com.djccnt15.northwind.domain.user.converter.EmployeeConverter;
 import com.djccnt15.northwind.domain.user.model.EmployeeReq;
+import com.djccnt15.northwind.domain.user.model.SignupReq;
 import com.djccnt15.northwind.global.exception.exceptions.ApiException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,6 +34,15 @@ public class EmployeeService {
             .orElseThrow(() -> new ApiException(SERVER_ERROR, "Title not found"));
         entity.setTitle(title);
         entity.setAppUser(userEntity);
+        return repository.save(entity);
+    }
+    
+    public EmployeeEntity createEmployee(SignupReq request, AppUserEntity userEntity) {
+        var entity = new EmployeeEntity();
+        var title = titleRepo.findFirstByTitle(request.getTitle())
+            .orElseThrow(() -> new ApiException(SERVER_ERROR, "Title not found"));
+        entity.setAppUser(userEntity);
+        entity.setTitle(title);
         return repository.save(entity);
     }
     

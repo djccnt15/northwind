@@ -4,10 +4,12 @@ import com.djccnt15.northwind.db.entity.id.BaseEntity;
 import com.djccnt15.northwind.domain.model.ListBodyReq;
 import com.djccnt15.northwind.domain.role.service.RoleService;
 import com.djccnt15.northwind.domain.team.service.TeamService;
+import com.djccnt15.northwind.domain.title.service.TitleService;
 import com.djccnt15.northwind.domain.user.converter.EmployeeConverter;
 import com.djccnt15.northwind.domain.user.converter.UserConverter;
 import com.djccnt15.northwind.domain.user.model.SignupReq;
 import com.djccnt15.northwind.domain.user.model.UserInfoRes;
+import com.djccnt15.northwind.domain.user.service.EmployeeService;
 import com.djccnt15.northwind.domain.user.service.UserRoleService;
 import com.djccnt15.northwind.domain.user.service.UserService;
 import com.djccnt15.northwind.global.annotation.Business;
@@ -30,6 +32,8 @@ public class AdminUserBusiness {
     private final RoleService roleService;
     private final TeamService teamService;
     private final EmployeeConverter employeeConverter;
+    private final EmployeeService employeeService;
+    private final TitleService titleService;
     
     public Page<UserInfoRes> getUsers(int page, int size, String keyword) {
         var kw = "%%%s%%".formatted(keyword.trim());
@@ -53,11 +57,22 @@ public class AdminUserBusiness {
     public UserInfoRes updateUser(Long userId, SignupReq request) {
         userService.validateEmailNotExists(request.getEmail(), userId);
         userService.validateUsernameNotExists(request.getUsername(), userId);
-        var entity = userService.getUser(userId);
-        var team = teamService.getTeam(request.getTeam());
-        teamService.addMember(team, entity);
-        userService.updateProfile(entity, request);
-        return userConverter.toResponse(entity);
+        var userEntity = userService.getUser(userId);
+        var teamEntity = teamService.getTeam(request.getTeam());
+        teamService.addMember(teamEntity, userEntity);
+        userService.updateProfile(userEntity, request);
+        
+        var employeeEntity = employeeService.getEmployee(userEntity)
+            .orElseGet(() -> employeeService.createEmployee(request, userEntity));
+        var title = employeeEntity.getTitle();
+        if (request.getTitle() != null && !request.getTitle().equals(title.getTitle())) {
+            var newTitle = titleService.getTitle(request.getTitle());
+            employeeEntity.setTitle(newTitle);
+        }
+        
+        var response = userConverter.toResponse(userEntity);
+        response.setEmployee(employeeConverter.toResponse(employeeEntity));
+        return response;
     }
     
     public UserInfoRes resetPassword(Long userId) {

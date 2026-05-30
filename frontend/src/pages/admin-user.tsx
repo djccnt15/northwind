@@ -153,6 +153,7 @@ const createColumns = (
   onReset: (params: GridRenderCellParams<UserIfs>) => void,
   onRoleClick: (params: GridRenderCellParams<UserIfs>) => void,
   teamList: string[] = [],
+  titleList: string[] = [],
 ): GridColDef[] => [
   {
     ...defaultColOptions,
@@ -182,6 +183,26 @@ const createColumns = (
     headerName: "Email",
     flex: 1,
     editable: true,
+  },
+  {
+    ...defaultColOptions,
+    field: "title",
+    headerName: "Title",
+    type: "singleSelect",
+    flex: 0.5,
+    editable: true,
+    valueOptions: titleList,
+    valueGetter: (_value, row: UserIfs) => row.employee?.title ?? "",
+    valueSetter: (value, row: UserIfs) => {
+      if (!row.employee) {
+        return row;
+      }
+
+      return {
+        ...row,
+        employee: { ...row.employee, title: String(value ?? "") },
+      };
+    },
   },
   {
     ...defaultColOptions,
@@ -276,6 +297,7 @@ const onEdit = async (
         ? new Date(updatedRow.liveUntil).toISOString()
         : null,
       team: updatedRow.team,
+      title: updatedRow.employee?.title ?? null,
     })
     .then((res) => {
       const data: ApiIfs<UserIfs> = res.data;
@@ -301,6 +323,7 @@ export default function AdminUser() {
   const apiRef = useGridApiRef();
   const [roles, setRoles] = useState<string[]>([]);
   const [teamList, setTeamList] = useState<string[]>([]);
+  const [titleList, setTitleList] = useState<string[]>([]);
 
   const [isLoading, setIsLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
@@ -389,6 +412,19 @@ export default function AdminUser() {
       });
   }, []);
 
+  useEffect(() => {
+    privateApi
+      .get("/v1/admin/titles")
+      .then((res) => {
+        const data: ApiIfs<string[]> = res.data;
+        const titleList = data.body ?? [];
+        setTitleList(titleList);
+      })
+      .catch((err) => {
+        console.error("Failed to fetch titles:", err);
+      });
+  }, []);
+
   const columns = createColumns(
     (params) => onResetPassword(params),
     (params) => {
@@ -397,6 +433,7 @@ export default function AdminUser() {
       setShowModal(true);
     },
     teamList,
+    titleList,
   );
 
   const customDataSource: GridDataSource = {

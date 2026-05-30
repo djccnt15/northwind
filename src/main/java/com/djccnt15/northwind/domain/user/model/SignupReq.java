@@ -64,4 +64,6 @@ public class SignupReq {
     private String confirmPassword;
     
     private String team;
+    
+    private String title;
 }
