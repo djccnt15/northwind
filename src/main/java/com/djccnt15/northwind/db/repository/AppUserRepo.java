@@ -55,7 +55,7 @@ public interface AppUserRepo extends JpaRepository<AppUserEntity, Long> {
         JOIN u.appUserRole ur
         JOIN ur.userRole r
         WHERE r.name = :name
-    """)
+        """)
     List<Long> findIdsByRoleName(String name);
     
     @EntityGraph(attributePaths = {

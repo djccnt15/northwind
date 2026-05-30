@@ -141,19 +141,20 @@ export default function AdminTeam() {
   const fetchTeams = useCallback(async (page: number, size: number) => {
     setLoading(true);
 
-    try {
-      const res = await privateApi.get("/v1/admin/teams", {
-        params: { page, size },
+    await privateApi
+      .get("/v1/admin/teams", { params: { page, size } })
+      .then((res) => {
+        const data: ApiIfs<PageIfs<TeamIfs>> = res.data;
+        setRows(data?.body?.content ?? []);
+        setRowCount(data?.body?.page?.totalElements ?? 0);
+      })
+      .catch((error) => {
+        console.error("Error fetching teams:", error);
+        alert("Failed to fetch teams. Please try again.");
+      })
+      .finally(() => {
+        setLoading(false);
       });
-      const data: ApiIfs<PageIfs<TeamIfs>> = res.data;
-
-      setRows(data?.body?.content ?? []);
-      setRowCount(data?.body?.page?.totalElements ?? 0);
-    } catch (error) {
-      console.error("Error fetching teams:", error);
-    } finally {
-      setLoading(false);
-    }
   }, []);
 
   useEffect(() => {
