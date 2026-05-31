@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.HashMap;
 
-import static com.djccnt15.northwind.global.code.StatusCode.VALIDATION_ERROR;
+import static com.djccnt15.northwind.global.code.StatusCode.*;
 
 @Slf4j
 @RestControllerAdvice
@@ -20,14 +20,22 @@ import static com.djccnt15.northwind.global.code.StatusCode.VALIDATION_ERROR;
 public class ApiExceptionHandler {
     
     @ExceptionHandler(ApiException.class)
-    public ResponseEntity<Api<?>> apiException(ApiException apiException) {
-        log.error("", apiException);
+    public ResponseEntity<Api<?>> apiException(ApiException e) {
+        var status = e.getStatusCode();
+        var message = e.getMessage();
         
-        var errorCode = apiException.getStatusCode();
+        if (status == UNAUTHORIZED || status == FORBIDDEN) {
+            log.info("{} - {}", status, message);
+        } else if (status == SERVER_ERROR) {
+            log.error("{} - {}", status, message, e);
+        } else {
+            log.warn("{} - {}", status, message, e);
+        }
         
+        var errorCode = e.getStatusCode();
         return ResponseEntity
             .status(errorCode.getHttpStatusCode())
-            .body(Api.ERROR(errorCode, apiException.getDescription()));
+            .body(Api.ERROR(errorCode, e.getDescription()));
     }
     
     @ExceptionHandler(MethodArgumentNotValidException.class)
