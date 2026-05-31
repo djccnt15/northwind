@@ -6,6 +6,8 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
+import java.math.BigDecimal;
+
 @Getter
 @Setter
 @Entity
@@ -21,7 +23,7 @@ public class OrderDetailEntity extends BaseEntity {
     private Integer quantity;
     
     @Column(name = "unit_price")
-    private Integer unitPrice;
+    private BigDecimal unitPrice;
     
     @Column
     private Integer discount;

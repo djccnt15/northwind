@@ -7,6 +7,7 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.JdbcTypeCode;
 
+import java.math.BigDecimal;
 import java.sql.Types;
 import java.time.LocalDate;
 
@@ -35,7 +36,7 @@ public class PurchaseOrderEntity extends BaseEntity {
     private Integer shippingFee;
     
     @Column(name = "tax_amount")
-    private Integer taxAmount;
+    private BigDecimal taxAmount;
     
     @Column(name = "payment_date")
     private LocalDate paymentDate;

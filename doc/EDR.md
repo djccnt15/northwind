@@ -213,9 +213,9 @@ product {
     int minimum_reorder_quantity
     int quantity_per_unit
     int reorder_level
-    int standard_unit_cost
+    decimal standard_unit_cost
     int target_level
-    int unit_price
+    decimal unit_price
     bigint product_category FK
     text description
     datetime64 created_at
@@ -243,7 +243,7 @@ purchase_orders {
     int payment_amount
     varchar payment_method
     int shipping_fee
-    int tax_amount
+    decimal tax_amount
     text note
     bigint approved_by FK
     bigint status_id FK
@@ -271,7 +271,7 @@ order_detail {
     bigint id PK
     int discount
     int quantity
-    int unit_price
+    decimal unit_price
     bigint order_id FK
     bigint order_detail_status_id FK
     bigint product_id FK

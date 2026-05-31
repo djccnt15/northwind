@@ -7,6 +7,7 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.JdbcTypeCode;
 
+import java.math.BigDecimal;
 import java.sql.Types;
 import java.util.HashSet;
 import java.util.Set;
@@ -39,11 +40,11 @@ public class ProductEntity extends BaseEntity {
     
     @NotNull
     @Column(name = "standard_unit_cost", nullable = false)
-    private Integer standardUnitCost;
+    private BigDecimal standardUnitCost;
     
     @NotNull
     @Column(name = "unit_price", nullable = false)
-    private Integer unitPrice;
+    private BigDecimal unitPrice;
     
     @NotNull
     @Column(name = "reorder_level", nullable = false)
