@@ -70,9 +70,6 @@ public interface AppUserRepo extends JpaRepository<AppUserEntity, Long> {
         """)
     List<Long> findIdsByRoleName(String name);
     
-    @EntityGraph(attributePaths = {
-        "appUserRole", "appUserRole.userRole",
-        "team",
-    })
+    @EntityGraph(attributePaths = {"appUserRole", "appUserRole.userRole", "team"})
     Optional<AppUserEntity> findFullFirstById(Long userId);
 }
