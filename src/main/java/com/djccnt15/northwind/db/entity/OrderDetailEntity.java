@@ -25,6 +25,9 @@ public class OrderDetailEntity extends BaseEntity {
     @Column(name = "unit_price")
     private BigDecimal unitPrice;
     
+    @Column(name = "standard_unit_cost")
+    private BigDecimal standardUnitCost;
+
     @Column
     private Integer discount;
     

@@ -272,6 +272,7 @@ order_detail {
     int discount
     int quantity
     decimal unit_price
+    decimal standard_unit_cost
     bigint order_id FK
     bigint order_detail_status_id FK
     bigint product_id FK
