@@ -224,6 +224,19 @@ product {
     datetime64 updated_at
 }
 
+product_price_history {
+    bigint id PK
+    bigint product_id FK
+    decimal unit_price
+    decimal standard_unit_cost
+    date effective_from
+    date effective_to
+    datetime64 created_at
+    bigint created_by
+    bigint last_modified_by
+    datetime64 updated_at
+}
+
 product_vendor {
     bigint id PK
     bigint product_id FK
@@ -299,6 +312,7 @@ order_status ||--o{ orders : "tracks status"
 company ||--o{ orders : "as shipper"
 tax_status ||--o{ orders : "determines tax"
 product_category ||--o{ product : "classifies"
+product ||--o{ product_price_history : "has price history"
 product ||--o{ product_vendor : "supplied by"
 company ||--o{ product_vendor : "supplies"
 employee ||--o{ purchase_orders : "approves"
