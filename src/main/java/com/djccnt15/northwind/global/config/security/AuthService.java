@@ -57,12 +57,12 @@ public class AuthService implements UserDetailsService {
             .build();
     }
     
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void handleLoginSuccess(Long id) {
         repository.handleLoginSuccess(id, LocalDateTime.now());
     }
     
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void increaseFailedCount(String username) {
         repository.increaseLoginFailedCount(username);
     }

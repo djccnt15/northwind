@@ -53,7 +53,7 @@ public class AdminUserBusiness {
         return new PageImpl<>(userList, pageable, userPage.getTotalElements());
     }
     
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public UserInfoRes updateUser(Long userId, SignupReq request) {
         userService.validateEmailNotExists(request.getEmail(), userId);
         userService.validateUsernameNotExists(request.getUsername(), userId);
@@ -81,7 +81,7 @@ public class AdminUserBusiness {
         return userConverter.toResponse(entity);
     }
     
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public UserInfoRes updateUserRoles(Long userId, ListBodyReq<String> request) {
         roleService.validateNotSuperAdmin(userId);
         

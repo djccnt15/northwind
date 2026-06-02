@@ -33,7 +33,7 @@ public class UserBusiness {
         userService.validateEmailNotExists(email);
     }
     
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public UserInfoRes createUser(SignupReq request) {
         userService.validatePasswordsMatch(request.getPassword(), request.getConfirmPassword());
         userService.validateEmailNotExists(request.getEmail());
@@ -87,7 +87,7 @@ public class UserBusiness {
         return user;
     }
     
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public UserInfoRes updateInfo(
         UserSession userSession,
         Long userId,
