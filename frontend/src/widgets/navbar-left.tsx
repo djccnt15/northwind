@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { globalTransition } from "../shared/ui/global-styles";
 import { useAuth } from "../shared/auth/auth-context";
 import { Link, useNavigate } from "react-router-dom";
-import { privateApi } from "../shared/api";
+import { api, privateApi } from "../shared/api";
 import { ConfigIcon } from "../shared/ui/icons";
 
 const Nav = styled.nav`
@@ -61,10 +61,11 @@ export default function LeftNavBar() {
 
   const onLogout = async () => {
     privateApi
-      .get("/v1/logout")
-      .then(() => {
+      .post("/v1/logout")
+      .then(async () => {
         setUser(null);
         navigate("/login");
+        await api.get("/v1/auth/csrf-token");
       })
       .catch((err) => {
         console.error(err);

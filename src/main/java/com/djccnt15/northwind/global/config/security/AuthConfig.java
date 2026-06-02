@@ -1,6 +1,7 @@
 package com.djccnt15.northwind.global.config.security;
 
 import com.djccnt15.northwind.global.config.properties.ConfigProperties;
+import com.djccnt15.northwind.global.filter.CsrfCookieFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,6 +22,8 @@ import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.security.web.csrf.*;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -49,7 +52,12 @@ public class AuthConfig {
     public SecurityFilterChain apiSecurityFilterChain(HttpSecurity http) throws Exception {
         http
             .securityMatcher(API_ALL)
-            .csrf(AbstractHttpConfigurer::disable)  // TODO. 초기 개발 시에는 disable, 운영 시에는 설정 필요
+            .csrf(csrf -> csrf
+                .csrfTokenRepository(getCsrfTokenRepository())
+                .csrfTokenRequestHandler(getCsrfRequestHandler())
+                // .ignoringRequestMatchers(PUBLIC_ALL)  // API 중 인증이 필요 없는 경로는 CSRF 보호에서 제외
+            )
+            .addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class)
             .cors(cors -> cors.configurationSource(corsConfig()))
             .exceptionHandling(ex -> ex
                 .defaultAuthenticationEntryPointFor(unauthorizedHandler, getRequestMatcher())
@@ -83,6 +91,22 @@ public class AuthConfig {
     
     private static RequestMatcher getRequestMatcher() {
         return request -> request.getRequestURI().startsWith(API);
+    }
+    
+    private static CsrfTokenRepository getCsrfTokenRepository() {
+        var csrfTokenRepository = CookieCsrfTokenRepository.withHttpOnlyFalse();
+        csrfTokenRepository.setCookieCustomizer(customizer -> customizer
+            .secure(true) // 운영(HTTPS) 환경 필수: HTTP 전송 차단
+            .sameSite("Lax") // 단일 도메인 SPA에 가장 안전한 방식
+            .path("/") // 전체 경로에서 쿠키 사용 가능하도록 지정
+        );
+        return csrfTokenRepository;
+    }
+    
+    private static CsrfTokenRequestHandler getCsrfRequestHandler() {
+        var handler = new CsrfTokenRequestAttributeHandler();
+        handler.setCsrfRequestAttributeName("_csrf");
+        return handler;
     }
     
     @Bean

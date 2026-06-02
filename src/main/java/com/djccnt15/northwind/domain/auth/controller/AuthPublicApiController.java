@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,8 +35,13 @@ public class AuthPublicApiController {
         throw new ApiException(UNAUTHORIZED, "Authentication is required");
     }
     
-    @GetMapping("/forbidden")
+    @PostMapping("/forbidden")
     public ResponseEntity<Api<?>> forbidden() {
         throw new ApiException(FORBIDDEN, "Access denied");
+    }
+    
+    @GetMapping("/csrf-token")
+    public ResponseEntity<Api<Void>> getCsrfToken(CsrfToken csrfToken) {
+        return ResponseEntity.ok(Api.OK(null));
     }
 }
