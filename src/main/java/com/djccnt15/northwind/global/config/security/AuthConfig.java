@@ -114,7 +114,7 @@ public class AuthConfig {
     public SecurityFilterChain spaSecurityFilterChain(HttpSecurity http) throws Exception {
         http
             .securityMatcher(ALL)
-            .csrf(AbstractHttpConfigurer::disable)    // TODO. 초기 개발 시에는 disable, 운영 시에는 설정 필요
+            .csrf(AbstractHttpConfigurer::disable)  // SPA는 API와 별도의 보안 설정 적용, CSRF 보호는 API 필터 체인에서 처리
             .cors(cors -> cors.configurationSource(corsConfig()))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(PUBLIC_PATHS).permitAll()
