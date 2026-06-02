@@ -17,8 +17,8 @@ import static com.djccnt15.northwind.global.code.StatusCode.SERVER_ERROR;
 public class GlobalExceptionHandler {
     
     @ExceptionHandler(NoResourceFoundException.class)
-    public ResponseEntity<Api<?>> noResourceFound(NoResourceFoundException exception) {
-        log.error("", exception);
+    public ResponseEntity<Api<?>> noResourceFound(NoResourceFoundException e) {
+        log.warn("{} - {}", e.getStatusCode(), e.getMessage());
         
         return ResponseEntity
             .status(NOT_FOUND.getHttpStatusCode())
@@ -26,8 +26,8 @@ public class GlobalExceptionHandler {
     }
     
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<Api<?>> exception(Exception exception) {
-        log.error("", exception);
+    public ResponseEntity<Api<?>> exception(Exception e) {
+        log.error(e.getMessage(), e);
         
         return ResponseEntity
             .status(SERVER_ERROR.getHttpStatusCode())

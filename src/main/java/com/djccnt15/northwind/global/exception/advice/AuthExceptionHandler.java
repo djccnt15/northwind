@@ -17,8 +17,8 @@ import static com.djccnt15.northwind.global.code.StatusCode.FORBIDDEN;
 public class AuthExceptionHandler {
     
     @ExceptionHandler({AccessDeniedException.class, AuthorizationDeniedException.class})
-    public ResponseEntity<Api<?>> accessDeniedException(AccessDeniedException exception) {
-        log.error("", exception);
+    public ResponseEntity<Api<?>> accessDeniedException(AccessDeniedException e) {
+        log.error(e.getMessage(), e);
         
         return ResponseEntity
             .status(FORBIDDEN.getHttpStatusCode())

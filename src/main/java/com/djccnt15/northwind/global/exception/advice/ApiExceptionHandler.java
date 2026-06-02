@@ -38,14 +38,15 @@ public class ApiExceptionHandler {
             .body(Api.ERROR(errorCode, e.getDescription()));
     }
     
+    // @Valid 검증 실패 시 발생하는 예외 처리
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Api<?>> methodArgumentNotValidException(MethodArgumentNotValidException ex) {
-        log.error("", ex);
+    public ResponseEntity<Api<?>> methodArgumentNotValidException(MethodArgumentNotValidException e) {
+        log.info(e.getMessage());
         
         var errors = new HashMap<String, String>();
-        ex.getBindingResult().getAllErrors().forEach(error -> {
+        e.getBindingResult().getAllErrors().forEach(error -> {
             var fieldName = ((FieldError) error).getField();
-            var errorMessage = error.getDefaultMessage(); // 여기에 커스텀 메시지가 들어감
+            var errorMessage = error.getDefaultMessage(); // 유효성 검사 실패 시의 메시지
             errors.put(fieldName, errorMessage);
         });
         
