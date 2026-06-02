@@ -26,22 +26,23 @@ src/
 │   ├── layout.tsx
 │   └── provider/           # AuthProvider, 라우트 보호 컴포넌트
 ├── pages/                  # 라우트에 1:1 대응하는 페이지 컴포넌트
-├── features/               # 재사용 가능한 기능 단위 모듈
-│   └── data-grid/          # MUI DataGrid 공통 컴포넌트
 ├── widgets/                # 여러 기능을 조합한 독립 UI 블록
 │   └── navbar-left.tsx
-├── shared/                 # 전 레이어에서 사용하는 공유 리소스
-│   ├── api.ts              # Axios 인스턴스
-│   ├── utils.ts            # 유틸리티 함수
-│   ├── useKeyDown.ts       # 커스텀 훅
-│   ├── auth/               # AuthContext, useAuth
-│   └── ui/                 # 공통 스타일드 컴포넌트
-└── entities/               # 타입 정의만 포함 (로직 없음)
-    ├── app/                # ApiIfs, PageIfs, SessionIfs
-    └── employee.ts         # UserIfs, EmployeeIfs, TitleIfs, TeamIfs
+├── features/               # 재사용 가능한 기능 단위 모듈
+│   ├── auth/               # 인증 관련 훅 (useLogout 등)
+│   └── data-grid/          # MUI DataGrid 공통 컴포넌트
+├── entities/               # 타입 정의만 포함 (로직 없음)
+│   ├── app/                # ApiIfs, PageIfs, SessionIfs
+│   └── employee.ts         # UserIfs, EmployeeIfs, TitleIfs, TeamIfs
+└── shared/                 # 전 레이어에서 사용하는 공유 리소스
+    ├── api.ts              # Axios 인스턴스
+    ├── utils.ts            # 유틸리티 함수
+    ├── useKeyDown.ts       # 커스텀 훅
+    ├── auth/               # AuthContext, useAuth
+    └── ui/                 # 공통 스타일드 컴포넌트
 ```
 
-**레이어 의존 방향**: `pages` → `features` → `widgets` → `shared` → `entities`
+**레이어 의존 방향**: `app` → `pages` → `widgets` → `features` → `entities` → `shared`
 상위 레이어는 하위 레이어만 참조한다. 역방향 참조는 금지.
 
 ---
