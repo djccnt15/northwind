@@ -23,7 +23,10 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
-import org.springframework.security.web.csrf.*;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.csrf.CsrfTokenRepository;
+import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
+import org.springframework.security.web.csrf.CsrfTokenRequestHandler;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -31,6 +34,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.List;
 
+import static com.djccnt15.northwind.global.constants.RoleConst.ADMIN;
 import static com.djccnt15.northwind.global.constants.RouteConst.*;
 
 @Configuration
@@ -49,16 +53,21 @@ public class AuthConfig {
     
     @Bean
     @Order(1)
-    public SecurityFilterChain apiSecurityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain apiSecurityFilterChain(
+        HttpSecurity http,
+        CorsConfigurationSource corsConfig,
+        CsrfTokenRepository csrfTokenRepository,
+        CsrfTokenRequestHandler csrfRequestHandler
+    ) throws Exception {
         http
             .securityMatcher(API_ALL)
             .csrf(csrf -> csrf
-                .csrfTokenRepository(getCsrfTokenRepository())
-                .csrfTokenRequestHandler(getCsrfRequestHandler())
+                .csrfTokenRepository(csrfTokenRepository)
+                .csrfTokenRequestHandler(csrfRequestHandler)
                 // .ignoringRequestMatchers(PUBLIC_ALL)  // API 중 인증이 필요 없는 경로는 CSRF 보호에서 제외
             )
             .addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class)
-            .cors(cors -> cors.configurationSource(corsConfig()))
+            .cors(cors -> cors.configurationSource(corsConfig))
             .exceptionHandling(ex -> ex
                 .defaultAuthenticationEntryPointFor(unauthorizedHandler, getRequestMatcher())
                 .defaultAccessDeniedHandlerFor(forbiddenHandler, getRequestMatcher())
@@ -93,7 +102,26 @@ public class AuthConfig {
         return request -> request.getRequestURI().startsWith(API);
     }
     
-    private static CsrfTokenRepository getCsrfTokenRepository() {
+    @Bean
+    @Order(2)
+    public SecurityFilterChain spaSecurityFilterChain(
+        HttpSecurity http, CorsConfigurationSource corsConfig
+    ) throws Exception {
+        http
+            .securityMatcher(ALL)
+            .csrf(AbstractHttpConfigurer::disable)  // SPA는 API와 별도의 보안 설정 적용, CSRF 보호는 API 필터 체인에서 처리
+            .cors(cors -> cors.configurationSource(corsConfig))
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers(PUBLIC_PATHS).permitAll()
+                // .requestMatchers(SWAGGER_PATHS).permitAll()  // only for early development, restrict access for production
+                .requestMatchers(SWAGGER_PATHS).hasAnyAuthority(ADMIN)
+                .anyRequest().permitAll()
+            );
+        return http.build();
+    }
+    
+    @Bean
+    CsrfTokenRepository csrfTokenRepository() {
         var csrfTokenRepository = CookieCsrfTokenRepository.withHttpOnlyFalse();
         csrfTokenRepository.setCookieCustomizer(customizer -> customizer
             .secure(true) // 운영(HTTPS) 환경 필수: HTTP 전송 차단
@@ -103,31 +131,11 @@ public class AuthConfig {
         return csrfTokenRepository;
     }
     
-    private static CsrfTokenRequestHandler getCsrfRequestHandler() {
+    @Bean
+    CsrfTokenRequestHandler csrfRequestHandler() {
         var handler = new CsrfTokenRequestAttributeHandler();
         handler.setCsrfRequestAttributeName("_csrf");
         return handler;
-    }
-    
-    @Bean
-    @Order(2)
-    public SecurityFilterChain spaSecurityFilterChain(HttpSecurity http) throws Exception {
-        http
-            .securityMatcher(ALL)
-            .csrf(AbstractHttpConfigurer::disable)  // SPA는 API와 별도의 보안 설정 적용, CSRF 보호는 API 필터 체인에서 처리
-            .cors(cors -> cors.configurationSource(corsConfig()))
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers(PUBLIC_PATHS).permitAll()
-                // .requestMatchers(SWAGGER_PATHS).permitAll()  // only for early development, restrict access for production
-                .requestMatchers(SWAGGER_PATHS).hasAnyAuthority("ADMIN")
-                .anyRequest().permitAll()
-            );
-        return http.build();
-    }
-    
-    @Bean
-    PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
     }
     
     @Bean
@@ -143,9 +151,14 @@ public class AuthConfig {
     }
     
     @Bean
-    AuthenticationManager authenticationManager() throws Exception {
+    AuthenticationManager authenticationManager(PasswordEncoder passwordEncoder) throws Exception {
         var authProvider = new DaoAuthenticationProvider(authService);
-        authProvider.setPasswordEncoder(passwordEncoder());
+        authProvider.setPasswordEncoder(passwordEncoder);
         return new ProviderManager(authProvider);
+    }
+    
+    @Bean
+    PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 }
