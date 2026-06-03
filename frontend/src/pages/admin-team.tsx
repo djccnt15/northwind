@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { PageWrapper, Title } from "../shared/ui/global-styles";
+import { PageWrapper, Title } from "../shared/ui";
 import {
   DataGrid,
   GridRowEditStopReasons,
@@ -14,9 +14,9 @@ import {
   type GridSlots,
 } from "@mui/x-data-grid";
 import { randomId } from "@mui/x-data-grid-generator";
-import type { ApiIfs, PageIfs } from "../entities/app/api";
-import type { TeamIfs } from "../entities/employee";
-import ActionsCell from "../features/data-grid/crud-cell";
+import type { ApiIfs, PageIfs } from "../entities/app";
+import type { TeamIfs } from "../entities";
+import { ActionsCell } from "../features/data-grid";
 import { privateApi } from "../shared/api";
 import { Box, Tooltip } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
@@ -24,8 +24,8 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   ActionHandlersContext,
   type ActionHandlers,
-} from "../features/data-grid/action-context";
-import { dataGridInitialState } from "../features/data-grid/constants";
+  dataGridInitialState,
+} from "../features/data-grid";
 
 const Wrapper = styled(PageWrapper)``;
 

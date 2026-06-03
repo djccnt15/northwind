@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { api, privateApi } from "../../shared/api";
-import { useAuth } from "../../shared/auth/auth-context";
+import { useAuth } from "./auth-context";
 
 export const useLogout = () => {
   const { setUser } = useAuth();

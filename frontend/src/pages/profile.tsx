@@ -8,12 +8,12 @@ import {
   Title,
   Tooltip,
   TooltipWrapper,
-} from "../shared/ui/global-styles";
-import { useAuth } from "../shared/auth/auth-context";
+} from "../shared/ui";
+import { useAuth } from "../features/auth";
 import { useEffect, useState } from "react";
 import { privateApi } from "../shared/api";
-import type { ApiIfs } from "../entities/app/api";
-import type { EmployeeIfs, UserIfs } from "../entities/employee";
+import type { ApiIfs } from "../entities/app";
+import type { EmployeeIfs, UserIfs } from "../entities";
 import { convertEmptyStringToNull } from "../shared/utils";
 
 const Wrapper = styled.div`

@@ -16,16 +16,16 @@ import {
 import { randomId } from "@mui/x-data-grid-generator";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
-import type { ApiIfs, PageIfs } from "../entities/app/api";
-import type { TitleIfs } from "../entities/employee";
+import type { ApiIfs, PageIfs } from "../entities/app";
+import type { TitleIfs } from "../entities";
 import {
   ActionHandlersContext,
   type ActionHandlers,
-} from "../features/data-grid/action-context";
-import { dataGridInitialState } from "../features/data-grid/constants";
-import ActionsCell from "../features/data-grid/crud-cell";
+  dataGridInitialState,
+  ActionsCell,
+} from "../features/data-grid";
 import { privateApi } from "../shared/api";
-import { PageWrapper, Title } from "../shared/ui/global-styles";
+import { PageWrapper, Title } from "../shared/ui";
 
 const Wrapper = styled(PageWrapper)``;
 

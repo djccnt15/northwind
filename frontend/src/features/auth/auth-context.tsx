@@ -1,6 +1,5 @@
 import { createContext, useContext } from "react";
-import type { SessionIfs } from "../../entities/app/user";
-import type { ApiIfs } from "../../entities/app/api";
+import type { SessionIfs, ApiIfs } from "../../entities/app";
 
 interface AuthContextIfs {
   user: SessionIfs | null;

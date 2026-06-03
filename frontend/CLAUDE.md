@@ -21,25 +21,32 @@
 
 ```
 src/
-├── app/                    # 진입점, 라우터, 레이아웃, 전역 프로바이더
+├── main.tsx                # 앱 진입점
+├── app/                    # 라우터, 레이아웃, 전역 프로바이더
+│   ├── App.tsx
 │   ├── router.tsx
 │   ├── layout.tsx
 │   └── provider/           # AuthProvider, 라우트 보호 컴포넌트
 ├── pages/                  # 라우트에 1:1 대응하는 페이지 컴포넌트
 ├── widgets/                # 여러 기능을 조합한 독립 UI 블록
+│   ├── index.ts            # public API
 │   └── navbar-left.tsx
 ├── features/               # 재사용 가능한 기능 단위 모듈
-│   ├── auth/               # 인증 관련 훅 (useLogout 등)
+│   ├── auth/               # AuthContext, useAuth, useLogout
+│   │   └── index.ts        # public API
 │   └── data-grid/          # MUI DataGrid 공통 컴포넌트
+│       └── index.ts        # public API
 ├── entities/               # 타입 정의만 포함 (로직 없음)
-│   ├── app/                # ApiIfs, PageIfs, SessionIfs
+│   ├── index.ts            # public API (employee 타입)
+│   ├── app/                # ApiIfs, PageIfs, SessionIfs, ChildNodeIfs
+│   │   └── index.ts        # public API
 │   └── employee.ts         # UserIfs, EmployeeIfs, TitleIfs, TeamIfs
 └── shared/                 # 전 레이어에서 사용하는 공유 리소스
     ├── api.ts              # Axios 인스턴스
     ├── utils.ts            # 유틸리티 함수
     ├── useKeyDown.ts       # 커스텀 훅
-    ├── auth/               # AuthContext, useAuth
     └── ui/                 # 공통 스타일드 컴포넌트
+        └── index.ts        # public API
 ```
 
 **레이어 의존 방향**: `app` → `pages` → `widgets` → `features` → `entities` → `shared`
@@ -121,7 +128,7 @@ interface PageIfs<T = Record<string, unknown>> {
 
 ### 전역 상태
 
-`shared/auth/auth-context.tsx`의 `useAuth()` 훅으로 어디서나 접근한다.
+`features/auth`의 `useAuth()` 훅으로 어디서나 접근한다.
 
 ```typescript
 const { user, setUser } = useAuth();
@@ -385,7 +392,7 @@ import { useKeyDown } from "@/shared/useKeyDown";
 useKeyDown("Escape", () => setIsModalOpen(false));
 ```
 
-### useAuth (`shared/auth/auth-context.tsx`)
+### useAuth (`features/auth`)
 
 ```typescript
 const { user, setUser } = useAuth();
