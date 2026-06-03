@@ -30,7 +30,7 @@ public class AdminTeamBusiness {
     
     public Page<TeamRes> getTeams(int page, int size, String keyword) {
         var kw = "%%%s%%".formatted(keyword.trim());
-        var pageable = PageRequest.of(page, size, Sort.by("id"));
+        var pageable = PageRequest.of(page, size, Sort.by("name"));
         var teams = service.getTeams(kw, pageable);
         return teams.map(converter::toResponse);
     }

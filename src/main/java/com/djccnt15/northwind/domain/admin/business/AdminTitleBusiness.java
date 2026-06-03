@@ -30,7 +30,7 @@ public class AdminTitleBusiness {
     
     public Page<TitleRes> getTitles(int page, int size, String keyword) {
         var kw = "%%%s%%".formatted(keyword.trim());
-        var pageable = PageRequest.of(page, size, Sort.by("id"));
+        var pageable = PageRequest.of(page, size, Sort.by("title"));
         var titles = service.getTitles(kw, pageable);
         return titles.map(converter::toResponse);
     }
