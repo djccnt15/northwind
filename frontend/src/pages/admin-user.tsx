@@ -414,7 +414,7 @@ export default function AdminUser() {
 
   useEffect(() => {
     privateApi
-      .get("/v1/admin/titles")
+      .get("/v1/admin/titles/all")
       .then((res) => {
         const data: ApiIfs<string[]> = res.data;
         const titleList = data.body ?? [];

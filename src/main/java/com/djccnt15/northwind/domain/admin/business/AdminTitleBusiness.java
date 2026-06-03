@@ -8,6 +8,9 @@ import com.djccnt15.northwind.domain.title.service.TitleService;
 import com.djccnt15.northwind.global.annotation.Business;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 
 import java.util.List;
 
@@ -25,8 +28,15 @@ public class AdminTitleBusiness {
         return converter.toResponse(entity);
     }
     
-    public List<String> getAllTitles() {
-        var titles = service.getAllTitles();
+    public Page<TitleRes> getTitles(int page, int size, String keyword) {
+        var kw = "%%%s%%".formatted(keyword.trim());
+        var pageable = PageRequest.of(page, size, Sort.by("id"));
+        var titles = service.getTitles(kw, pageable);
+        return titles.map(converter::toResponse);
+    }
+    
+    public List<String> getTitles() {
+        var titles = service.getTitles();
         return titles.stream().map(TitleEntity::getTitle).toList();
     }
     

@@ -7,6 +7,8 @@ import com.djccnt15.northwind.domain.title.model.TitleCreateReq;
 import com.djccnt15.northwind.global.exception.exceptions.ApiException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -51,8 +53,12 @@ public class TitleService {
         return entity;
     }
     
-    public List<TitleEntity> getAllTitles() {
-        return repository.findAll(Sort.by("id"));
+    public Page<TitleEntity> getTitles(String kw, Pageable pageable) {
+        return repository.findByTitleLike(kw, pageable);
+    }
+    
+    public List<TitleEntity> getTitles() {
+        return repository.findAll(Sort.by("title"));
     }
     
     public TitleEntity updateTitle(TitleEntity entity, TitleCreateReq request) {

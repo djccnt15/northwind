@@ -6,6 +6,7 @@ import com.djccnt15.northwind.domain.title.model.TitleRes;
 import com.djccnt15.northwind.global.api.Api;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -31,8 +32,18 @@ public class AdminTitleApiController {
     }
     
     @GetMapping
-    public ResponseEntity<Api<List<String>>> getTitles() {
-        var response = business.getAllTitles();
+    public ResponseEntity<Api<Page<TitleRes>>> getTitles(
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "10") int size,
+        @RequestParam(defaultValue = "") String keyword
+    ) {
+        var response = business.getTitles(page, size, keyword);
+        return ResponseEntity.ok(Api.OK(response));
+    }
+    
+    @GetMapping("/all")
+    public ResponseEntity<Api<List<String>>> getAllTitles() {
+        var response = business.getTitles();
         return ResponseEntity.ok(Api.OK(response));
     }
     
