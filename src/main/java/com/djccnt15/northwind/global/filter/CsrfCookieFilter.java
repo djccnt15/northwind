@@ -9,6 +9,12 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+/**
+ * <p>CSRF 토큰을 쿠키에 저장하는 필터</p>
+ * <p>@Component를 사용해서 등록하면 서블릿 컨테이너 레벨에서 전역 필터로 등록됨</p>
+ * <p>Spring Security의 CsrfFilter보다 뒤에 실행되어야 하므로, SecurityFilterChain 설정에서 addFilterAfter로 명시적으로 추가해야 함</p>
+ * <p>CsrfToken이 Request Attribute에 저장된 시점은 CsrfFilter가 실행된 이후이므로, 이 필터는 CsrfFilter 다음에 위치해야 함</p>
+ */
 public class CsrfCookieFilter extends OncePerRequestFilter {
     
     @Override
