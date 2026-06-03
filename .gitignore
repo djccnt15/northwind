@@ -343,3 +343,8 @@ gradle-app.setting
 
 # React build output
 /src/main/resources/static
+
+# worktree
+.git/worktree
+.claude/worktree
+.worktree
