@@ -1,9 +1,7 @@
 import styled from "styled-components";
-import { globalTransition } from "../shared/ui/global-styles";
-import { useAuth } from "../shared/auth/auth-context";
+import { globalTransition, ConfigIcon } from "../shared/ui";
+import { useAuth, useLogout } from "../features/auth";
 import { Link } from "react-router-dom";
-import { ConfigIcon } from "../shared/ui/icons";
-import { useLogout } from "../features/auth/logout";
 
 const Nav = styled.nav`
   display: flex;

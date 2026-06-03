@@ -11,10 +11,9 @@ import {
   SubmitBtnHoverMsg,
   SubmitBtnWrapper,
   Switcher,
-} from "../shared/ui/auth-ui";
-import { responseToUser, useAuth } from "../shared/auth/auth-context";
-import type { ApiIfs } from "../entities/app/api";
-import type { SessionIfs } from "../entities/app/user";
+} from "../shared/ui";
+import { responseToUser, useAuth } from "../features/auth";
+import type { ApiIfs, SessionIfs } from "../entities/app";
 
 const Wrapper = styled.div`
   display: flex;

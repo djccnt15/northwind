@@ -11,8 +11,6 @@ import {
   SubmitBtnHoverMsg,
   SubmitBtnWrapper,
   Switcher,
-} from "../shared/ui/auth-ui";
-import {
   commBorderRadius,
   commBtnSkyBlue,
   commBtnHoverSkyBlue,
@@ -24,9 +22,9 @@ import {
   commBtnTomatoRed,
   commBtnTomatoRedBoxShadow,
   commBtnHoverTomatoRed,
-} from "../shared/ui/global-styles";
-import type { ApiIfs } from "../entities/app/api";
-import type { UserIfs } from "../entities/employee";
+} from "../shared/ui";
+import type { ApiIfs } from "../entities/app";
+import type { UserIfs } from "../entities";
 import { useKeyDown } from "../shared/useKeyDown";
 
 const Wrapper = styled.div`

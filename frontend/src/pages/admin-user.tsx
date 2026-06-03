@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import type { UserIfs } from "../entities/employee";
+import type { UserIfs } from "../entities";
 import { privateApi } from "../shared/api";
 import {
   commBorderRadius,
@@ -14,7 +14,7 @@ import {
   ModalOverlay,
   PageWrapper,
   Title,
-} from "../shared/ui/global-styles";
+} from "../shared/ui";
 import {
   DataGrid,
   type GridDataSource,
@@ -22,13 +22,13 @@ import {
   useGridApiRef,
 } from "@mui/x-data-grid";
 import type { GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
-import type { ApiIfs, PageIfs } from "../entities/app/api";
+import type { ApiIfs, PageIfs } from "../entities/app";
 import { useCallback, useEffect, useState } from "react";
 import {
   dataGridInitialState,
   defaultColOptions,
-} from "../features/data-grid/constants";
-import QuickToolbar from "../features/data-grid/quick-toolbar";
+  QuickToolbar,
+} from "../features/data-grid";
 import { useKeyDown } from "../shared/useKeyDown";
 
 const Wrapper = styled(PageWrapper)``;

@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import { commLinkSkyBlue } from "../shared/ui/global-styles";
+import { commLinkSkyBlue } from "../shared/ui";
 
 const Wrapper = styled.div`
   width: 100%;
