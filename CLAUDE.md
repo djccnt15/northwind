@@ -82,7 +82,7 @@ cd frontend; npm run dev   # http://localhost:5173
 
 ### 라우트 규칙
 
-- `/api/v1/public/*` — 인증 불필요 (로그인, 회원가입, 헬스 체크)
+- `/api/public/v1/*` — 인증 불필요 (로그인, 회원가입, 헬스 체크)
 - `/api/v1/*` — 세션 인증 필요
 
 ## Coding Convention
