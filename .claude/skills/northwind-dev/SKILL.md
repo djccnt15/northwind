@@ -29,12 +29,12 @@ description: >
 `_workspace/` 디렉토리 존재 여부를 확인한다.
 
 - **`_workspace/` 없음** → 초기 실행: Phase 1부터 진행
-- **`_workspace/` 있음 + 사용자가 새 기능 요청** → 새 실행: 기존 `_workspace/`를 `_workspace_prev/`로 이동 후 진행
-- **`_workspace/` 있음 + 사용자가 "수정/보완" 요청** → 부분 재실행: 해당 Phase 에이전트만 재호출
+- **`_workspace/` 있음 + 사용자가 새 기능 요청** → 새 실행: 기존 `_workspace/`를 `_workspace_prev/`로 이동 후 진행 + 새 worktree 생성
+- **`_workspace/` 있음 + 사용자가 "수정/보완" 요청** → 부분 재실행: `_workspace/00_requirements.md`에서 `WORKTREE_PATH`를 읽어 기존 worktree 재사용, 해당 Phase 에이전트만 재호출
 
 ---
 
-## Phase 1: 요구사항 분석
+## Phase 1: 요구사항 분석 + Worktree 생성
 
 사용자 요청을 분석하여 구현 범위를 결정한다.
 
@@ -53,7 +53,27 @@ description: >
 ## 범위: 풀스택 / 백엔드 전용 / 프론트엔드 전용
 ## 참고 도메인 (유사한 기존 구현)
 ## 특이사항
+
+## Worktree
+- 브랜치: feature/<name>
+- 경로: C:/projects/northwind/.worktree/feature/<name>
 ```
+
+**요구사항 저장 직후, Phase 2 시작 전에 반드시 git worktree를 생성한다:**
+
+```bash
+# 브랜치명: feature/<kebab-case-task-name>
+# 예: feature/product-category, feature/order-management, feature/company-crm
+
+# 신규 브랜치로 worktree 생성
+git -C C:/projects/northwind worktree add .worktree/feature/<name> -b feature/<name>
+
+# 브랜치가 이미 존재하면 기존 브랜치 재사용
+git -C C:/projects/northwind worktree add .worktree/feature/<name> feature/<name>
+```
+
+- worktree 경로(`C:/projects/northwind/.worktree/feature/<name>`)를 `_workspace/00_requirements.md`의 `## Worktree` 섹션에 기록한다.
+- **이후 모든 sub-agent에게는 이 worktree 경로를 `[프로젝트 루트]`로 전달한다. `C:/projects/northwind`를 직접 전달하지 않는다.**
 
 ---
 
@@ -76,7 +96,7 @@ Agent(
     4. 완료 후 `_workspace/02_backend_contract.md`를 작성한다.
 
     [프로젝트 루트]
-    C:/projects/northwind
+    {_workspace/00_requirements.md의 Worktree 경로}
   """
 )
 ```
@@ -107,7 +127,7 @@ Agent(
     4. 완료 후 `_workspace/03_frontend_summary.md`를 작성한다.
 
     [프로젝트 루트]
-    C:/projects/northwind
+    {_workspace/00_requirements.md의 Worktree 경로}
   """
 )
 ```
@@ -134,7 +154,7 @@ Agent(
     4. `_workspace/04_qa_report.md`를 작성한다.
 
     [프로젝트 루트]
-    C:/projects/northwind
+    {_workspace/00_requirements.md의 Worktree 경로}
   """
 )
 ```
@@ -149,6 +169,7 @@ QA 리포트를 기반으로 사용자에게 다음을 보고한다:
 2. **API 엔드포인트** (경로, 메서드, 인증 여부)
 3. **QA 결과** (PASS / CONDITIONAL PASS / FAIL)
 4. **잔존 이슈** (있는 경우)
+5. **브랜치**: `feature/<name>` — PR 생성 또는 `git worktree remove .worktree/feature/<name>`로 정리 가능
 
 ---
 
