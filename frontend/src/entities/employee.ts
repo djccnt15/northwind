@@ -45,3 +45,26 @@ export interface EmployeeIfs {
   supervisor: EmployeeIfs | null;
   subordinates: Set<EmployeeIfs> | null;
 }
+
+export interface ProductCategoryIfs {
+  id: number;
+  code: string;
+  name: string;
+  description?: string;
+  isNew?: boolean;
+}
+
+export interface ProductIfs {
+  id: number;
+  code: string;
+  name: string;
+  description?: string;
+  standardUnitCost: number;
+  unitPrice: number;
+  reorderLevel: number;
+  targetLevel: number;
+  quantityPerUnit: number;
+  minimumReorderQuantity: number;
+  discontinued: boolean;
+  category: ProductCategoryIfs;
+}

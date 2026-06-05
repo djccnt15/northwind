@@ -14,6 +14,9 @@ import Profile from "../pages/profile";
 import EmployeeTitle from "../pages/title";
 import Welcome from "../pages/welcome";
 import AdminTeam from "../pages/admin-team";
+import AdminCategory from "../pages/admin-category";
+import Products from "../pages/products";
+import ProductDetail from "../pages/product-detail";
 
 export const AppRouter = createBrowserRouter([
   {
@@ -35,6 +38,8 @@ export const AppRouter = createBrowserRouter([
     children: [
       { path: "/home", element: <Home /> },
       { path: "/profile", element: <Profile /> },
+      { path: "/products", element: <Products /> },
+      { path: "/products/:id", element: <ProductDetail /> },
     ],
   },
   {
@@ -48,6 +53,7 @@ export const AppRouter = createBrowserRouter([
       { path: "/admin/user", element: <AdminUser /> },
       { path: "/admin/titles", element: <EmployeeTitle /> },
       { path: "/admin/team", element: <AdminTeam /> },
+      { path: "/admin/categories", element: <AdminCategory /> },
     ],
   },
   { path: "*", element: <NotFoundRoute /> },

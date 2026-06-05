@@ -25,3 +25,10 @@ VALUES
     (1, 1),
     (2, 2)
 ;
+
+INSERT INTO product_category (name, code, description, created_by, last_modified_by)
+VALUES ('Beverages', 'BEV', 'Soft drinks and teas', 1, 1);
+
+INSERT INTO product (code, name, standard_unit_cost, unit_price, reorder_level, target_level,
+    quantity_per_unit, minimum_reorder_quantity, discontinued, product_category, created_by, last_modified_by)
+VALUES ('P001', 'Chai', 10.00, 18.00, 10, 40, 10, 20, false, 1, 1, 1);
