@@ -18,7 +18,7 @@ import type { ApiIfs, PageIfs } from "../entities/app";
 import type { TeamIfs } from "../entities";
 import { ActionsCell } from "../features/data-grid";
 import { privateApi } from "../shared/api";
-import { Box, Tooltip } from "@mui/material";
+import { Box, Tooltip, Typography } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import {
@@ -120,6 +120,9 @@ function EditToolbar(props: GridSlotProps["toolbar"]) {
 
   return (
     <Toolbar>
+      <Typography sx={{ fontWeight: "medium", flex: 1, mx: 0.5 }}>
+        {props.toolbarName}
+      </Typography>
       <Tooltip title="Add record">
         <ToolbarButton onClick={handleClick}>
           <AddIcon fontSize="small" />
@@ -269,7 +272,11 @@ export default function AdminTeam() {
             showToolbar
             slots={{ toolbar: EditToolbar as GridSlots["toolbar"] }}
             slotProps={{
-              toolbar: { setRows, setRowModesModel },
+              toolbar: {
+                toolbarName: "Team Management",
+                setRows,
+                setRowModesModel,
+              },
             }}
           />
         </ActionHandlersContext>
