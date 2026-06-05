@@ -11,6 +11,9 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: { username }
     password: { password }
+springdoc:
+  api-docs.enabled: false
+  swagger-ui.enable: false
 app:
   remember-me:
     key: { remember-me-key }

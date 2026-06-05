@@ -9,7 +9,6 @@ logging:
     total-size-cap: 300MB
     file-name-pattern: ${LOG_FILE}.%d{yyyy-MM-dd}-%i.log
   file.name: D:\log\spring\logFile.log
-  pattern.dateformat: yyyy-MM-dd HH:mm:ss.SSS,Asia/Seoul
 springdoc.swagger-ui:
   docExpansion: none
   operationsSorter: alpha

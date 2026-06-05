@@ -3,9 +3,13 @@ server:
 spring:
   application.name: northwind
   output.ansi.enabled: always
-  profiles.active: dev  # TODO. change profile to prod
-  lifecycle:
-    timeout-per-shutdown-phase: 30s
+  profiles:
+    active: dev  # TODO. change profile to prod
+    group:
+      test: test,sql,local
+      dev: dev,sql,local
+      prod: prod
+  lifecycle.timeout-per-shutdown-phase: 30s  # wait up to 30s for graceful shutdown, default is 30s
 logging:
   level:
     root: info
