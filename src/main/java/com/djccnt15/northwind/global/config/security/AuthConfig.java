@@ -26,7 +26,6 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
-import org.springframework.security.web.csrf.CsrfTokenRequestHandler;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -56,14 +55,13 @@ public class AuthConfig {
     public SecurityFilterChain apiSecurityFilterChain(
         HttpSecurity http,
         CorsConfigurationSource corsConfig,
-        CsrfTokenRepository csrfTokenRepository,
-        CsrfTokenRequestHandler csrfRequestHandler
+        CsrfTokenRepository csrfTokenRepository
     ) throws Exception {
         http
             .securityMatcher(API_ALL)
             .csrf(csrf -> csrf
                 .csrfTokenRepository(csrfTokenRepository)
-                .csrfTokenRequestHandler(csrfRequestHandler)
+                .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler())
                 // .ignoringRequestMatchers(PUBLIC_ALL)  // API 중 인증이 필요 없는 경로는 CSRF 보호에서 제외
             )
             .addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class)
@@ -129,13 +127,6 @@ public class AuthConfig {
             .path("/") // 전체 경로에서 쿠키 사용 가능하도록 지정
         );
         return csrfTokenRepository;
-    }
-    
-    @Bean
-    CsrfTokenRequestHandler csrfRequestHandler() {
-        var handler = new CsrfTokenRequestAttributeHandler();
-        handler.setCsrfRequestAttributeName("_csrf");
-        return handler;
     }
     
     @Bean
