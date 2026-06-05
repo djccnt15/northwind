@@ -11,7 +11,7 @@ export const useLogout = () => {
       .post("/v1/logout")
       .then(async () => {
         setUser(null);
-        navigate("/login");
+        navigate("/login", { replace: true });
         await api.get("/v1/auth/csrf-token");
       })
       .catch((err) => {
