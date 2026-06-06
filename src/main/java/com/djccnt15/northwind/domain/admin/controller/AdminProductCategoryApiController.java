@@ -19,7 +19,7 @@ import static com.djccnt15.northwind.global.constants.RouteConst.API_V1;
 @Slf4j
 @RestController
 @RequestMapping(API_V1 + "/admin/categories")
-@PreAuthorize("hasAnyAuthority('ADMIN')")
+@PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER')")
 @RequiredArgsConstructor
 public class AdminProductCategoryApiController {
 

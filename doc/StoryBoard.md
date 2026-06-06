@@ -18,19 +18,19 @@
 | S-20 | 사용자 관리 | `/admin/user` | ADMIN | ✅ |
 | S-21 | 직함 관리 | `/admin/titles` | ADMIN | ✅ |
 | S-22 | 팀 관리 | `/admin/team` | ADMIN | ✅ |
-| S-30 | 거래처 목록 | `/companies` | 로그인 | 🔲 |
-| S-31 | 거래처 상세 | `/companies/:id` | 로그인 | 🔲 |
-| S-32 | 담당자 관리 | `/companies/:id/contacts` | 로그인 | 🔲 |
-| S-40 | 주문 목록 | `/orders` | 로그인 | 🔲 |
-| S-41 | 주문 상세 | `/orders/:id` | 로그인 | 🔲 |
-| S-42 | 주문 생성 | `/orders/new` | 로그인 | 🔲 |
-| S-50 | 발주 목록 | `/purchase-orders` | 로그인 | 🔲 |
-| S-51 | 발주 상세 | `/purchase-orders/:id` | 로그인 | 🔲 |
-| S-52 | 발주 생성 | `/purchase-orders/new` | 로그인 | 🔲 |
-| S-60 | 상품 목록 | `/products` | 로그인 | 🔲 |
-| S-61 | 상품 상세 | `/products/:id` | 로그인 | 🔲 |
-| S-62 | 카테고리 관리 | `/admin/categories` | ADMIN | 🔲 |
-| S-63 | 재고 실사 | `/stock-take` | 로그인 | 🔲 |
+| S-30 | 거래처 목록 | `/companies` | ADMIN, COMPANY | 🔲 |
+| S-31 | 거래처 상세 | `/companies/:id` | ADMIN, COMPANY | 🔲 |
+| S-32 | 담당자 관리 | `/companies/:id/contacts` | ADMIN, COMPANY | 🔲 |
+| S-40 | 주문 목록 | `/orders` | ADMIN, ORDER | 🔲 |
+| S-41 | 주문 상세 | `/orders/:id` | ADMIN, ORDER | 🔲 |
+| S-42 | 주문 생성 | `/orders/new` | ADMIN, ORDER | 🔲 |
+| S-50 | 발주 목록 | `/purchase-orders` | ADMIN, PURCHASE | 🔲 |
+| S-51 | 발주 상세 | `/purchase-orders/:id` | ADMIN, PURCHASE | 🔲 |
+| S-52 | 발주 생성 | `/purchase-orders/new` | ADMIN, PURCHASE | 🔲 |
+| S-60 | 상품 목록 | `/products` | ADMIN, PRODUCT | ✅ |
+| S-61 | 상품 상세 | `/products/:id` | ADMIN, PRODUCT | ✅ |
+| S-62 | 카테고리 관리 | `/admin/categories` | ADMIN, MANAGER | ✅ |
+| S-63 | 재고 실사 | `/stock-take` | ADMIN, STOCK | 🔲 |
 
 ---
 

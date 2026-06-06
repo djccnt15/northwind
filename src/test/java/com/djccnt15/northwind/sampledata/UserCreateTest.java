@@ -40,6 +40,13 @@ public class UserCreateTest {
         var manager = new UserRoleEntity(MANAGER);
         var user = new UserRoleEntity(USER);
         userRoleRepo.saveAll(List.of(superAdmin, admin, manager, user));
+        
+        var company = new UserRoleEntity(COMPANY);
+        var order = new UserRoleEntity(ORDER);
+        var purchase = new UserRoleEntity(PURCHASE);
+        var product = new UserRoleEntity(PRODUCT);
+        var stock = new UserRoleEntity(STOCK);
+        userRoleRepo.saveAll(List.of(company, order, purchase, product, stock));
     }
 
     @Test

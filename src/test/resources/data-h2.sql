@@ -1,9 +1,7 @@
 INSERT INTO user_role (name)
 VALUES
-    ('SUPERADMIN'),
-    ('ADMIN'),
-    ('MANAGER'),
-    ('USER')
+    ('SUPERADMIN'), ('ADMIN'), ('MANAGER'), ('USER'),
+    ('COMPANY'), ('ORDER'), ('PURCHASE'), ('PRODUCT'), ('STOCK')
 ;
 
 INSERT INTO team (name)
