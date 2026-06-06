@@ -8,8 +8,9 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataIntegrityViolationException;
 
+import static com.djccnt15.northwind.constants.TestConst.SYSTEM;
 import static com.djccnt15.northwind.constants.TestConst.TEST;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 @Slf4j
 @SpringBootTest
@@ -32,5 +33,23 @@ class TitleRepoTest {
             DataIntegrityViolationException.class,
             () -> titleRepo.save(newTitle2)
         );
+    }
+    
+    @Test
+    void existsByTitle() {
+        var exists = titleRepo.existsByTitle(SYSTEM);
+        assertTrue(exists);
+    }
+    
+    @Test
+    void existsByTitleAndIdNot() {
+        var exists = titleRepo.existsByTitleAndIdNot(SYSTEM, 1L);
+        assertFalse(exists);
+    }
+    
+    @Test
+    void findFirstByTitle() {
+        var systemTitle = titleRepo.findFirstByTitle(SYSTEM).orElseThrow();
+        assertEquals(SYSTEM, systemTitle.getTitle());
     }
 }

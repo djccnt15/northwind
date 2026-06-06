@@ -74,9 +74,9 @@ class TitleServiceTest {
     }
     
     @Test
-    void getAllTitles() {
+    void getTitles() {
         // when
-        var titles = service.getAllTitles();
+        var titles = service.getTitles();
         
         // then
         assertNotNull(titles);
