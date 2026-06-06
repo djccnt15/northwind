@@ -24,6 +24,38 @@ export function AdminRoute({ children }: ChildNodeIfs) {
   return <>{children}</>;
 }
 
+export function ProductRoute({ children }: ChildNodeIfs) {
+  const { user } = useAuth();
+
+  if (
+    !user ||
+    !(
+      user.authorities.includes("ADMIN") ||
+      user.authorities.includes("PRODUCT")
+    )
+  ) {
+    return <Navigate to="/home" replace />;
+  }
+
+  return <>{children}</>;
+}
+
+export function ManagerRoute({ children }: ChildNodeIfs) {
+  const { user } = useAuth();
+
+  if (
+    !user ||
+    !(
+      user.authorities.includes("ADMIN") ||
+      user.authorities.includes("MANAGER")
+    )
+  ) {
+    return <Navigate to="/home" replace />;
+  }
+
+  return <>{children}</>;
+}
+
 export function AuthRedirectRoute() {
   // 이미 로그인한 사용자 접근시 홈 페이지로 리다이렉트
   const { user } = useAuth();
