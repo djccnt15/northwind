@@ -5,7 +5,9 @@ import Home from "../pages/home";
 import {
   AdminRoute,
   AuthRedirectRoute,
+  ManagerRoute,
   NotFoundRoute,
+  ProductRoute,
   ProtectedRoute,
 } from "./provider/redirect-route";
 import Signup from "../pages/signup";
@@ -38,6 +40,16 @@ export const AppRouter = createBrowserRouter([
     children: [
       { path: "/home", element: <Home /> },
       { path: "/profile", element: <Profile /> },
+    ],
+  },
+  {
+    path: "/",
+    element: (
+      <ProductRoute>
+        <Layout />
+      </ProductRoute>
+    ),
+    children: [
       { path: "/products", element: <Products /> },
       { path: "/products/new", element: <ProductDetail /> },
       { path: "/products/:id", element: <ProductDetail /> },
@@ -54,8 +66,16 @@ export const AppRouter = createBrowserRouter([
       { path: "/admin/user", element: <AdminUser /> },
       { path: "/admin/titles", element: <EmployeeTitle /> },
       { path: "/admin/team", element: <AdminTeam /> },
-      { path: "/admin/categories", element: <AdminCategory /> },
     ],
+  },
+  {
+    path: "/admin",
+    element: (
+      <ManagerRoute>
+        <Layout />
+      </ManagerRoute>
+    ),
+    children: [{ path: "/admin/categories", element: <AdminCategory /> }],
   },
   { path: "*", element: <NotFoundRoute /> },
 ]);

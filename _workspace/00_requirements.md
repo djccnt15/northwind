@@ -1,28 +1,43 @@
 # 요구사항
 
 ## 기능 설명
-상품 관리 권한을 ADMIN 전용에서 로그인 사용자 전체로 변경하고, 신규 상품 생성 기능을 추가한다.
+백엔드 권한 체계 변경(commit 73b9be66)에 맞게 프론트엔드 라우트 가드와 내비게이션 바를 업데이트한다.
 
-## 범위: 풀스택
+## 범위: 프론트엔드 전용
 
 ## 참고 도메인 (유사한 기존 구현)
-- `domain/product/` — 기존 상품 도메인 (수정 대상)
-- `domain/admin/` — 기존 admin 상품 비즈니스/컨트롤러 (제거 대상)
-- `domain/title/` — 일반 사용자 CRUD 패턴 참고
+- `frontend/src/app/provider/redirect-route.tsx` — 기존 라우트 가드 (수정 대상)
+- `frontend/src/app/router.tsx` — 라우터 구성 (수정 대상)
+- `frontend/src/widgets/navbar-left.tsx` — 내비게이션 바 (수정 대상)
 
 ## 특이사항
 
-### 백엔드
-- `ProductBusiness`에 `createProduct`, `updateProduct`, `discontinueProduct` 추가 (`@Transactional`)
-- `ProductApiController`에 POST/PUT/DELETE 엔드포인트 추가 (`@PreAuthorize` 없음, 로그인만 필요)
-- `AdminProductBusiness`, `AdminProductApiController` 제거 (상품 관련 내용이 없어지면 파일 삭제)
-- 기존 `ProductService`에 create/update/discontinue가 이미 구현되어 있으므로 Business 레이어만 추가하면 됨
+### 백엔드 변경 내용 (commit 73b9be66)
+- `ProductApiController`: `@PreAuthorize("hasAnyAuthority('PRODUCT')")` 추가
+- `AdminProductCategoryApiController`: `ADMIN` → `ADMIN, MANAGER` 로 확장
+- 신규 역할 상수: `COMPANY`, `ORDER`, `PURCHASE`, `PRODUCT`, `STOCK`
 
-### 프론트엔드
-- `product-detail.tsx`: `isAdmin` 가드 제거, API 경로 `/v1/admin/products` → `/v1/products`, create 모드 추가 (id 없을 때 빈 폼 + POST)
-- `products.tsx`: `[+ 신규 상품]` 버튼 추가 (isAdmin 없음), 클릭 시 `/products/new` navigate
-- `router.tsx`: `/products/new` 라우트 추가 (`:id` 경로보다 먼저 선언)
+### StoryBoard 권한 기준
+| 화면 | 경로 | 필요 권한 |
+|------|------|----------|
+| S-60 상품 목록 | `/products` | ADMIN, PRODUCT |
+| S-61 상품 상세 | `/products/:id` | ADMIN, PRODUCT |
+| S-62 카테고리 관리 | `/admin/categories` | ADMIN, MANAGER |
+
+### 프론트엔드 변경 목록
+1. `redirect-route.tsx`
+   - `ProductRoute` 추가: `ADMIN` 또는 `PRODUCT` 권한 없으면 `/home` 리다이렉트
+   - `ManagerRoute` 추가: `ADMIN` 또는 `MANAGER` 권한 없으면 `/home` 리다이렉트
+
+2. `router.tsx`
+   - `/products`, `/products/new`, `/products/:id` → `ProtectedRoute` → `ProductRoute` 그룹으로 이동
+   - `/admin/categories` → `AdminRoute` 그룹 → 별도 `ManagerRoute` 그룹으로 분리
+
+3. `navbar-left.tsx`
+   - Products 링크: `ADMIN` 또는 `PRODUCT` 권한 있는 사용자만 표시
+   - Admin - Category 링크: `ADMIN` 또는 `MANAGER` 권한 있는 사용자만 표시
+   - Admin - User / Title / Team / OpenAPI: 기존 ADMIN only 유지
 
 ## Worktree
-- 브랜치: feature/product-user-management
-- 경로: C:/projects/northwind/.worktree/feature/product-user-management
+- 브랜치: feature/frontend-permission-routes
+- 경로: C:/projects/northwind/.worktree/feature/frontend-permission-routes
