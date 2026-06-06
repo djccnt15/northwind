@@ -91,6 +91,33 @@ const SearchBtn = styled.button`
   }
 `;
 
+const Spacer = styled.div`
+  flex: 1;
+`;
+
+const NewProductBtn = styled.button`
+  ${commBorderRadius}
+  ${commBtnSkyBlue}
+  ${globalTransition}
+  height: 38px;
+  padding: 0 16px;
+  border: none;
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+
+  &:hover {
+    ${commBtnHoverSkyBlue}
+    ${globalTransition}
+  }
+
+  &:focus {
+    outline: none;
+    ${commBtnSkyBlueBoxShadow}
+  }
+`;
+
 export default function Products() {
   const navigate = useNavigate();
 
@@ -254,6 +281,10 @@ export default function Products() {
           <SearchBtn type="button" onClick={handleSearch}>
             Search
           </SearchBtn>
+          <Spacer />
+          <NewProductBtn type="button" onClick={() => navigate("/products/new")}>
+            + New Product
+          </NewProductBtn>
         </FilterBar>
         <Box sx={{ flex: 1, minHeight: 0, width: "100%" }}>
           <DataGrid
