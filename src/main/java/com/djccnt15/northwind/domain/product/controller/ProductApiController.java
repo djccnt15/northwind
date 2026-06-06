@@ -2,12 +2,14 @@ package com.djccnt15.northwind.domain.product.controller;
 
 import com.djccnt15.northwind.domain.product.business.ProductBusiness;
 import com.djccnt15.northwind.domain.product.model.ProductCategoryRes;
+import com.djccnt15.northwind.domain.product.model.ProductCreateReq;
 import com.djccnt15.northwind.domain.product.model.ProductRes;
 import com.djccnt15.northwind.global.api.Api;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -44,5 +46,28 @@ public class ProductApiController {
     public ResponseEntity<Api<List<ProductCategoryRes>>> getAllCategories() {
         var response = business.getCategories();
         return ResponseEntity.ok(Api.OK(response));
+    }
+
+    @PostMapping("/products")
+    public ResponseEntity<Api<ProductRes>> createProduct(
+        @Validated @RequestBody ProductCreateReq request
+    ) {
+        var response = business.createProduct(request);
+        return ResponseEntity.ok(Api.CREATED(response));
+    }
+
+    @PutMapping("/products/{id}")
+    public ResponseEntity<Api<ProductRes>> updateProduct(
+        @PathVariable Long id,
+        @Validated @RequestBody ProductCreateReq request
+    ) {
+        var response = business.updateProduct(id, request);
+        return ResponseEntity.ok(Api.OK(response));
+    }
+
+    @DeleteMapping("/products/{id}")
+    public ResponseEntity<Api<?>> discontinueProduct(@PathVariable Long id) {
+        business.discontinueProduct(id);
+        return ResponseEntity.ok(Api.OK(null));
     }
 }
