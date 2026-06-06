@@ -3,7 +3,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import type { ApiIfs } from "../entities/app";
 import type { ProductCategoryIfs, ProductIfs } from "../entities";
-import { useAuth } from "../features/auth";
 import { privateApi } from "../shared/api";
 import {
   commBorderRadius,
@@ -245,19 +244,18 @@ const productToForm = (product: ProductIfs): ProductFormState => ({
 
 export default function ProductDetail() {
   const { id } = useParams<{ id: string }>();
-  const { user } = useAuth();
   const navigate = useNavigate();
 
+  const isCreateMode = !id || id === "new";
+
   const [product, setProduct] = useState<ProductIfs | null>(null);
-  const [isEditing, setIsEditing] = useState(false);
+  const [isEditing, setIsEditing] = useState(isCreateMode);
   const [form, setForm] = useState<ProductFormState>(emptyForm);
   const [categories, setCategories] = useState<ProductCategoryIfs[]>([]);
   const [loading, setLoading] = useState(false);
 
-  const isAdmin = user?.authorities.includes("ADMIN") ?? false;
-
   const fetchProduct = () => {
-    if (!id) return;
+    if (isCreateMode) return;
     setLoading(true);
     privateApi
       .get(`/v1/products/${id}`)
@@ -285,6 +283,13 @@ export default function ProductDetail() {
 
   useEffect(() => {
     queueMicrotask(() => {
+      if (isCreateMode) {
+        setProduct(null);
+        setForm(emptyForm);
+        setIsEditing(true);
+        fetchCategories();
+        return;
+      }
       fetchProduct();
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -307,12 +312,16 @@ export default function ProductDetail() {
   };
 
   const handleCancelClick = () => {
+    if (isCreateMode) {
+      navigate("/products");
+      return;
+    }
     if (product) setForm(productToForm(product));
     setIsEditing(false);
   };
 
   const handleSaveClick = () => {
-    if (!product) return;
+    if (!isCreateMode && !product) return;
     if (form.categoryId === "") {
       alert("Please select a category.");
       return;
@@ -333,10 +342,18 @@ export default function ProductDetail() {
       categoryId: form.categoryId,
     };
 
-    privateApi
-      .put(`/v1/admin/products/${product.id}`, body)
+    const request = isCreateMode
+      ? privateApi.post("/v1/products", body)
+      : privateApi.put(`/v1/products/${product?.id}`, body);
+
+    request
       .then((res) => {
         const data: ApiIfs<ProductIfs> = res.data;
+        if (isCreateMode) {
+          alert("Product created successfully.");
+          navigate("/products");
+          return;
+        }
         setProduct(data?.body ?? null);
         if (data?.body) setForm(productToForm(data.body));
         setIsEditing(false);
@@ -350,7 +367,9 @@ export default function ProductDetail() {
           return;
         }
         const message = data?.result?.description || "Unknown error";
-        alert(`Failed to update product: ${message}`);
+        alert(
+          `Failed to ${isCreateMode ? "create" : "update"} product: ${message}`,
+        );
       })
       .finally(() => setLoading(false));
   };
@@ -366,7 +385,7 @@ export default function ProductDetail() {
     }
     setLoading(true);
     privateApi
-      .delete(`/v1/admin/products/${product.id}`)
+      .delete(`/v1/products/${product.id}`)
       .then(() => {
         alert("Product discontinued successfully.");
         fetchProduct();
@@ -379,7 +398,7 @@ export default function ProductDetail() {
       .finally(() => setLoading(false));
   };
 
-  if (!product) {
+  if (!isCreateMode && !product) {
     return (
       <Wrapper>
         <Title>Product Detail</Title>
@@ -393,23 +412,25 @@ export default function ProductDetail() {
 
   return (
     <Wrapper>
-      <Title>Product Detail</Title>
+      <Title>{isCreateMode ? "New Product" : "Product Detail"}</Title>
       <Content>
         <Header>
           <BackBtn onClick={() => navigate("/products")}>← Back</BackBtn>
-          <HeaderTitle>{product.name}</HeaderTitle>
-          {product.discontinued && <Badge>판매중단</Badge>}
+          <HeaderTitle>
+            {isCreateMode ? "New Product" : product?.name}
+          </HeaderTitle>
+          {product?.discontinued && <Badge>판매중단</Badge>}
         </Header>
 
         <Grid>
           <Card>
-            <CardTitle>기본 정보</CardTitle>
+            <CardTitle>Basic Info</CardTitle>
             <FieldRow>
               <Label>Code</Label>
               {isEditing ? (
                 <Input value={form.code} onChange={updateField("code")} />
               ) : (
-                <ReadValue>{product.code}</ReadValue>
+                <ReadValue>{product?.code}</ReadValue>
               )}
             </FieldRow>
             <FieldRow>
@@ -417,7 +438,7 @@ export default function ProductDetail() {
               {isEditing ? (
                 <Input value={form.name} onChange={updateField("name")} />
               ) : (
-                <ReadValue>{product.name}</ReadValue>
+                <ReadValue>{product?.name}</ReadValue>
               )}
             </FieldRow>
             <FieldRow>
@@ -441,7 +462,7 @@ export default function ProductDetail() {
                   ))}
                 </Select>
               ) : (
-                <ReadValue>{product.category?.name ?? ""}</ReadValue>
+                <ReadValue>{product?.category?.name ?? ""}</ReadValue>
               )}
             </FieldRow>
             <FieldRow>
@@ -454,7 +475,7 @@ export default function ProductDetail() {
                 />
               ) : (
                 <ReadValue>
-                  ${Number(product.standardUnitCost).toFixed(2)}
+                  ${Number(product?.standardUnitCost).toFixed(2)}
                 </ReadValue>
               )}
             </FieldRow>
@@ -467,7 +488,7 @@ export default function ProductDetail() {
                   onChange={updateField("unitPrice")}
                 />
               ) : (
-                <ReadValue>${Number(product.unitPrice).toFixed(2)}</ReadValue>
+                <ReadValue>${Number(product?.unitPrice).toFixed(2)}</ReadValue>
               )}
             </FieldRow>
             <FieldRow>
@@ -478,7 +499,7 @@ export default function ProductDetail() {
                   onChange={updateField("description")}
                 />
               ) : (
-                <ReadValue>{product.description ?? ""}</ReadValue>
+                <ReadValue>{product?.description ?? ""}</ReadValue>
               )}
             </FieldRow>
             {isEditing && (
@@ -499,7 +520,7 @@ export default function ProductDetail() {
           </Card>
 
           <Card>
-            <CardTitle>재고 정보</CardTitle>
+            <CardTitle>Stock Info</CardTitle>
             <FieldRow>
               <Label>Reorder Level</Label>
               {isEditing ? (
@@ -509,7 +530,7 @@ export default function ProductDetail() {
                   onChange={updateField("reorderLevel")}
                 />
               ) : (
-                <ReadValue>{product.reorderLevel}</ReadValue>
+                <ReadValue>{product?.reorderLevel}</ReadValue>
               )}
             </FieldRow>
             <FieldRow>
@@ -521,7 +542,7 @@ export default function ProductDetail() {
                   onChange={updateField("targetLevel")}
                 />
               ) : (
-                <ReadValue>{product.targetLevel}</ReadValue>
+                <ReadValue>{product?.targetLevel}</ReadValue>
               )}
             </FieldRow>
             <FieldRow>
@@ -533,7 +554,7 @@ export default function ProductDetail() {
                   onChange={updateField("minimumReorderQuantity")}
                 />
               ) : (
-                <ReadValue>{product.minimumReorderQuantity}</ReadValue>
+                <ReadValue>{product?.minimumReorderQuantity}</ReadValue>
               )}
             </FieldRow>
             <FieldRow>
@@ -545,47 +566,45 @@ export default function ProductDetail() {
                   onChange={updateField("quantityPerUnit")}
                 />
               ) : (
-                <ReadValue>{product.quantityPerUnit}</ReadValue>
+                <ReadValue>{product?.quantityPerUnit}</ReadValue>
               )}
             </FieldRow>
           </Card>
         </Grid>
 
-        {isAdmin && (
-          <ActionBar>
-            {isEditing ? (
-              <>
-                <PrimaryBtn
-                  type="button"
-                  onClick={handleSaveClick}
-                  disabled={loading}
-                >
-                  Save
-                </PrimaryBtn>
-                <SecondaryBtn
-                  type="button"
-                  onClick={handleCancelClick}
-                  disabled={loading}
-                >
-                  Cancel
-                </SecondaryBtn>
-              </>
-            ) : (
-              <>
-                <PrimaryBtn type="button" onClick={handleEditClick}>
-                  Edit
-                </PrimaryBtn>
-                <DangerBtn
-                  type="button"
-                  onClick={handleDiscontinueClick}
-                  disabled={loading || product.discontinued}
-                >
-                  Discontinue
-                </DangerBtn>
-              </>
-            )}
-          </ActionBar>
-        )}
+        <ActionBar>
+          {isEditing ? (
+            <>
+              <PrimaryBtn
+                type="button"
+                onClick={handleSaveClick}
+                disabled={loading}
+              >
+                {isCreateMode ? "Create" : "Save"}
+              </PrimaryBtn>
+              <SecondaryBtn
+                type="button"
+                onClick={handleCancelClick}
+                disabled={loading}
+              >
+                Cancel
+              </SecondaryBtn>
+            </>
+          ) : (
+            <>
+              <PrimaryBtn type="button" onClick={handleEditClick}>
+                Edit
+              </PrimaryBtn>
+              <DangerBtn
+                type="button"
+                onClick={handleDiscontinueClick}
+                disabled={loading || product?.discontinued}
+              >
+                Discontinue
+              </DangerBtn>
+            </>
+          )}
+        </ActionBar>
       </Content>
     </Wrapper>
   );
