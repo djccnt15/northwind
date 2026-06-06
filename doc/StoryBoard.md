@@ -27,9 +27,9 @@
 | S-50 | 발주 목록 | `/purchase-orders` | 로그인 | 🔲 |
 | S-51 | 발주 상세 | `/purchase-orders/:id` | 로그인 | 🔲 |
 | S-52 | 발주 생성 | `/purchase-orders/new` | 로그인 | 🔲 |
-| S-60 | 상품 목록 | `/products` | 로그인 | 🔲 |
-| S-61 | 상품 상세 | `/products/:id` | 로그인 | 🔲 |
-| S-62 | 카테고리 관리 | `/admin/categories` | ADMIN | 🔲 |
+| S-60 | 상품 목록 | `/products` | 로그인 | ✅ |
+| S-61 | 상품 상세 | `/products/:id` | 로그인 | ✅ |
+| S-62 | 카테고리 관리 | `/admin/categories` | ADMIN | ✅ |
 | S-63 | 재고 실사 | `/stock-take` | 로그인 | 🔲 |
 
 ---
