@@ -67,12 +67,11 @@ const companyToForm = (company: CompanyIfs): CompanyFormState => ({
 });
 
 const isCustomerType = (label?: string) =>
-  !!label && (label.includes("고객") || label.toLowerCase().includes("customer"));
+  !!label && label.toLowerCase().includes("customer");
 
 const isSupplierType = (label?: string) =>
   !!label &&
-  (label.includes("공급") ||
-    label.toLowerCase().includes("supplier") ||
+  (label.toLowerCase().includes("supplier") ||
     label.toLowerCase().includes("vendor"));
 
 export default function CompanyDetail() {
@@ -235,9 +234,9 @@ export default function CompanyDetail() {
   if (!company) {
     return (
       <Wrapper>
-        <Title>거래처 상세</Title>
+        <Title>Company Detail</Title>
         <Content>
-          <BackBtn onClick={() => navigate("/companies")}>← 목록으로</BackBtn>
+          <BackBtn onClick={() => navigate("/companies")}>← Back to list</BackBtn>
           <ReadValue>{loading ? "Loading..." : "Company not found."}</ReadValue>
         </Content>
       </Wrapper>
@@ -251,22 +250,22 @@ export default function CompanyDetail() {
 
   return (
     <Wrapper>
-      <Title>거래처 상세</Title>
+      <Title>Company Detail</Title>
       <Content>
         <Header>
-          <BackBtn onClick={() => navigate("/companies")}>← 목록으로</BackBtn>
+          <BackBtn onClick={() => navigate("/companies")}>← Back to list</BackBtn>
           <HeaderTitle>{company.name}</HeaderTitle>
           {typeLabel && <BadgeBlue>{typeLabel}</BadgeBlue>}
           {company.taxStatus?.status && (
-            <BadgeGray>과세: {company.taxStatus.status}</BadgeGray>
+            <BadgeGray>Tax: {company.taxStatus.status}</BadgeGray>
           )}
         </Header>
 
         <Grid>
           <Card>
-            <CardTitle>기본 정보</CardTitle>
+            <CardTitle>Basic Information</CardTitle>
             <FieldRow>
-              <Label>거래처명</Label>
+              <Label>Company Name</Label>
               {isEditing ? (
                 <Input value={form.name} onChange={updateField("name")} />
               ) : (
@@ -274,7 +273,7 @@ export default function CompanyDetail() {
               )}
             </FieldRow>
             <FieldRow>
-              <Label>거래처 유형</Label>
+              <Label>Company Type</Label>
               {isEditing ? (
                 <Select
                   value={form.companyTypeId}
@@ -286,7 +285,7 @@ export default function CompanyDetail() {
                     }))
                   }
                 >
-                  <option value="">유형 선택</option>
+                  <option value="">Select type</option>
                   {companyTypes.map((type) => (
                     <option key={type.id} value={type.id}>
                       {type.companyType}
@@ -298,7 +297,7 @@ export default function CompanyDetail() {
               )}
             </FieldRow>
             <FieldRow>
-              <Label>과세 유형</Label>
+              <Label>Tax Status</Label>
               {isEditing ? (
                 <Select
                   value={form.taxStatusId}
@@ -310,7 +309,7 @@ export default function CompanyDetail() {
                     }))
                   }
                 >
-                  <option value="">과세 유형 선택</option>
+                  <option value="">Select tax status</option>
                   {taxStatuses.map((status) => (
                     <option key={status.id} value={status.id}>
                       {status.status}
@@ -322,7 +321,7 @@ export default function CompanyDetail() {
               )}
             </FieldRow>
             <FieldRow>
-              <Label>전화번호</Label>
+              <Label>Phone</Label>
               {isEditing ? (
                 <Input
                   value={form.businessPhone}
@@ -333,7 +332,7 @@ export default function CompanyDetail() {
               )}
             </FieldRow>
             <FieldRow>
-              <Label>홈페이지</Label>
+              <Label>Website</Label>
               {isEditing ? (
                 <Input value={form.website} onChange={updateField("website")} />
               ) : (
@@ -353,7 +352,7 @@ export default function CompanyDetail() {
               )}
             </FieldRow>
             <FieldRow>
-              <Label>주소</Label>
+              <Label>Address</Label>
               {isEditing ? (
                 <Input value={form.address} onChange={updateField("address")} />
               ) : (
@@ -362,7 +361,7 @@ export default function CompanyDetail() {
             </FieldRow>
             <FieldGroup>
               <FieldRow>
-                <Label>도시</Label>
+                <Label>City</Label>
                 {isEditing ? (
                   <Input value={form.city} onChange={updateField("city")} />
                 ) : (
@@ -370,7 +369,7 @@ export default function CompanyDetail() {
                 )}
               </FieldRow>
               <FieldRow>
-                <Label>지역</Label>
+                <Label>Region</Label>
                 {isEditing ? (
                   <Input value={form.region} onChange={updateField("region")} />
                 ) : (
@@ -380,7 +379,7 @@ export default function CompanyDetail() {
             </FieldGroup>
             <FieldGroup>
               <FieldRow>
-                <Label>우편번호</Label>
+                <Label>Zip Code</Label>
                 {isEditing ? (
                   <Input
                     value={form.zipCode}
@@ -391,7 +390,7 @@ export default function CompanyDetail() {
                 )}
               </FieldRow>
               <FieldRow>
-                <Label>국가</Label>
+                <Label>Country</Label>
                 {isEditing ? (
                   <Input
                     value={form.country}
@@ -403,7 +402,7 @@ export default function CompanyDetail() {
               </FieldRow>
             </FieldGroup>
             <FieldRow>
-              <Label>비고</Label>
+              <Label>Notes</Label>
               {isEditing ? (
                 <TextArea value={form.notes} onChange={updateField("notes")} />
               ) : (
@@ -419,27 +418,27 @@ export default function CompanyDetail() {
                     onClick={handleSaveClick}
                     disabled={loading}
                   >
-                    저장
+                    Save
                   </PrimaryBtn>
                   <SecondaryBtn
                     type="button"
                     onClick={handleCancelClick}
                     disabled={loading}
                   >
-                    취소
+                    Cancel
                   </SecondaryBtn>
                 </>
               ) : (
                 <>
                   <PrimaryBtn type="button" onClick={handleEditClick}>
-                    수정
+                    Edit
                   </PrimaryBtn>
                   <DangerBtn
                     type="button"
                     onClick={handleDeleteClick}
                     disabled={loading}
                   >
-                    삭제
+                    Delete
                   </DangerBtn>
                 </>
               )}
@@ -453,20 +452,20 @@ export default function CompanyDetail() {
 
         {showOrders && (
           <Card>
-            <CardTitle>주문 이력</CardTitle>
+            <CardTitle>Order History</CardTitle>
             {orders.length === 0 ? (
               <ReadValue style={{ color: "#888" }}>
-                주문 이력이 없습니다.
+                No order history.
               </ReadValue>
             ) : (
               <HistoryTable>
                 <thead>
                   <tr>
-                    <th>주문번호</th>
-                    <th>주문일</th>
-                    <th>배송일</th>
-                    <th>결제일</th>
-                    <th>상태</th>
+                    <th>Order No.</th>
+                    <th>Order Date</th>
+                    <th>Shipped Date</th>
+                    <th>Paid Date</th>
+                    <th>Status</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -487,20 +486,20 @@ export default function CompanyDetail() {
 
         {showPurchaseOrders && (
           <Card>
-            <CardTitle>발주 이력</CardTitle>
+            <CardTitle>Purchase Order History</CardTitle>
             {purchaseOrders.length === 0 ? (
               <ReadValue style={{ color: "#888" }}>
-                발주 이력이 없습니다.
+                No purchase order history.
               </ReadValue>
             ) : (
               <HistoryTable>
                 <thead>
                   <tr>
-                    <th>발주번호</th>
-                    <th>제출일</th>
-                    <th>승인일</th>
-                    <th>입고일</th>
-                    <th>상태</th>
+                    <th>PO No.</th>
+                    <th>Submitted Date</th>
+                    <th>Approved Date</th>
+                    <th>Received Date</th>
+                    <th>Status</th>
                   </tr>
                 </thead>
                 <tbody>

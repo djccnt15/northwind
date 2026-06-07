@@ -61,11 +61,11 @@ export default function CompanyCreateModal({
 
   useKeyDown("Escape", onClose);
 
-  // 사용자가 아직 선택하지 않았다면 첫 번째 옵션을 기본값으로 표시 (렌더 시 파생)
+  // Derive default selection from the first option until the user picks one
   const selectedCompanyTypeId =
-    form.companyTypeId !== "" ? form.companyTypeId : (companyTypes[0]?.id ?? "");
+    form.companyTypeId !== "" ? form.companyTypeId : (companyTypes.at(0)?.id ?? "");
   const selectedTaxStatusId =
-    form.taxStatusId !== "" ? form.taxStatusId : (taxStatuses[0]?.id ?? "");
+    form.taxStatusId !== "" ? form.taxStatusId : (taxStatuses.at(0)?.id ?? "");
 
   const updateField =
     (field: keyof CompanyFormState) =>

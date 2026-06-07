@@ -163,7 +163,7 @@ export default function Companies() {
       .finally(() => setLoading(false));
   };
 
-  // 메타데이터 로딩 (탭/모달 셀렉트용)
+  // Load metadata (for tab/modal selects)
   useEffect(() => {
     privateApi
       .get("/v1/company-types")
@@ -181,13 +181,13 @@ export default function Companies() {
       .catch(console.error);
   }, []);
 
-  // 검색어 디바운스 (400ms)
+  // Debounce search keyword (400ms)
   useEffect(() => {
     const timer = setTimeout(() => setDebouncedKeyword(keyword), 400);
     return () => clearTimeout(timer);
   }, [keyword]);
 
-  // 페이지네이션 변경 시 조회
+  // Refetch on pagination change
   useEffect(() => {
     queueMicrotask(() => {
       fetchCompanies(paginationModel.page, paginationModel.pageSize);
@@ -195,7 +195,7 @@ export default function Companies() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [paginationModel]);
 
-  // 필터(검색어/유형) 변경 시 첫 페이지로 이동 후 조회
+  // Reset to first page and refetch when filters (keyword/type) change
   useEffect(() => {
     if (isFirstFilterRun.current) {
       isFirstFilterRun.current = false;
@@ -210,7 +210,7 @@ export default function Companies() {
 
   return (
     <Wrapper>
-      <Title>거래처 관리</Title>
+      <Title>Company Management</Title>
       <Box
         sx={{
           height: "100%",
@@ -223,7 +223,7 @@ export default function Companies() {
         <Toolbar>
           <Input
             type="text"
-            placeholder="거래처명 검색"
+            placeholder="Search by company name"
             value={keyword}
             onChange={(e) => setKeyword(e.target.value)}
           />
@@ -233,7 +233,7 @@ export default function Companies() {
               $active={typeFilter === ""}
               onClick={() => setTypeFilter("")}
             >
-              전체
+              All
             </Tab>
             {companyTypes.map((type) => (
               <Tab
@@ -248,7 +248,7 @@ export default function Companies() {
           </Tabs>
           <Spacer />
           <NewBtn type="button" onClick={() => setIsModalOpen(true)}>
-            + 신규 거래처
+            + New Company
           </NewBtn>
         </Toolbar>
         <Box sx={{ flex: 1, minHeight: 0, width: "100%" }}>
