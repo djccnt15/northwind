@@ -124,7 +124,7 @@ Agent(
     1. `frontend/CLAUDE.md`를 읽어 컨벤션을 확인한다.
     2. 유사한 기존 페이지를 탐색하여 패턴을 파악한다.
     3. FSD 레이어 규칙을 준수하여 프론트엔드 기능을 완전히 구현한다.
-    4. 완료 후 `_workspace/03_frontend_summary.md`를 작성한다.
+    4. 구현 완료 후 `cd frontend; npm run build`로 빌드를 검증하고, 통과한 뒤에만 `_workspace/03_frontend_summary.md`를 작성한다 (`npx tsc --noEmit` 단독 실행은 솔루션 스타일 tsconfig 때문에 아무 파일도 검사하지 않으므로 사용 금지).
 
     [프로젝트 루트]
     {_workspace/00_requirements.md의 Worktree 경로}
@@ -150,7 +150,7 @@ Agent(
     [작업 지시]
     1. `src/CLAUDE.md`, `frontend/CLAUDE.md`를 읽어 컨벤션을 확인한다.
     2. 구현된 코드를 검토하고 위반 사항을 수정한다.
-    3. 백엔드 테스트를 실행하여 통과 여부를 확인한다 (`.\gradlew.bat test`).
+    3. 백엔드 테스트(`.\gradlew.bat test`)와 프론트엔드 빌드(`cd frontend; npm run build`)를 모두 실행하여 통과 여부를 확인한다 (`npx tsc --noEmit` 단독 실행은 솔루션 스타일 tsconfig로 인해 거짓 양성을 내므로 사용 금지).
     4. `_workspace/04_qa_report.md`를 작성한다.
 
     [프로젝트 루트]
@@ -180,6 +180,7 @@ QA 리포트를 기반으로 사용자에게 다음을 보고한다:
 | 에이전트 산출물 파일 없음 | 해당 에이전트 1회 재호출 후, 재실패 시 누락 명시하고 계속 진행 |
 | QA FAIL | QA 에이전트에게 수정 요청 후 재검토 1회 |
 | 백엔드 테스트 실패 | northwind-backend에 실패 원인 전달하여 수정 요청 |
+| 프론트엔드 빌드 실패 | northwind-frontend에 실패 원인 전달하여 수정 요청 후 재검증 |
 
 ---
 

@@ -32,7 +32,7 @@ model: opus
 ## 작업 원칙
 
 1. **수정 우선**: 단순 보고에 그치지 않고 발견한 위반을 직접 수정한다.
-2. **테스트 실행**: 백엔드 테스트(`.\gradlew.bat test`)를 실행하여 통과 여부를 확인한다.
+2. **테스트/빌드 실행**: 백엔드 테스트(`.\gradlew.bat test`)와 프론트엔드 빌드(`cd frontend; npm run build`)를 모두 실행하여 통과 여부를 확인한다(프론트엔드 변경이 있는 경우). **`npx tsc --noEmit`만 단독 실행하지 않는다** — 루트 `tsconfig.json`은 `"files": []`인 솔루션 스타일 설정이라 0개 파일을 검사하고 거짓으로 "오류 없음"을 출력하는 거짓 양성(false negative)을 낸다. 반드시 `npm run build`(`tsc -b && vite build`) 또는 `npx tsc -p tsconfig.app.json --noEmit`로 실제 프로젝트 설정을 사용해 검증한다.
 3. **중요도 분류**: Critical(빌드/런타임 오류 가능) → Major(컨벤션 위반) → Minor(스타일) 순으로 처리한다.
 4. **이유 명시**: 수정 시 왜 수정하는지 설명한다.
 
@@ -60,6 +60,7 @@ model: opus
 
 ## 테스트 결과
 - 백엔드: PASS / FAIL (실패 시 원인)
+- 프론트엔드: PASS / FAIL (`npm run build` 기준, 실패 시 원인)
 
 ## 최종 판정
 PASS / CONDITIONAL PASS (minor 잔존) / FAIL
@@ -67,7 +68,7 @@ PASS / CONDITIONAL PASS (minor 잔존) / FAIL
 
 ## 에러 핸들링
 
-- 테스트 실패: 근본 원인을 분석하고 코드를 수정한다. 테스트를 약화시키지 않는다.
+- 테스트/빌드 실패: 근본 원인을 분석하고 코드를 수정한다. 테스트를 약화시키거나 타입 캐스팅(`as`)으로 우회하지 않는다.
 - 경계면 불일치: 백엔드 계약(`02_backend_contract.md`)을 기준으로 프론트엔드를 수정한다.
 
 ## 협업
