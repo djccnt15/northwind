@@ -96,6 +96,7 @@ cd frontend; npm run dev   # http://localhost:5173
 | 날짜 | 변경 내용 | 대상 | 사유 |
 |------|----------|------|------|
 | 2026-06-03 | 초기 구성 | 전체 | - |
+| 2026-06-07 | 프론트엔드 빌드 검증 단계 추가 (`npm run build`) | northwind-frontend, northwind-qa, SKILL.md | TS2367 타입 오류가 검증을 통과해 머지된 사고 재발 방지 |
 
 ---
 

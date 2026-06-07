@@ -66,6 +66,8 @@ build: {
 
 개발 서버(`npm run dev`)는 Vite 프록시 없이 직접 백엔드(`localhost:8080`)와 통신한다. Axios baseURL을 `/api`로 설정하면 브라우저가 같은 오리진으로 요청을 보낸다.
 
+> **타입/빌드 검증 시 주의**: 루트 `tsconfig.json`은 `"files": []`에 `references`만 있는 솔루션 스타일 설정이다. `frontend/` 디렉터리에서 `npx tsc --noEmit`을 직접 실행하면 이 루트 설정을 읽어 **0개 파일을 검사하고 거짓으로 "오류 없음"을 출력**한다 (`npx tsc --noEmit --listFilesOnly`로 확인 가능). 실제 타입 검사를 하려면 반드시 `npm run build`(`tsc -b && vite build`, 프로젝트의 공식 빌드 스크립트) 또는 `npx tsc -p tsconfig.app.json --noEmit`을 사용해야 한다.
+
 ---
 
 ## API 클라이언트 패턴
