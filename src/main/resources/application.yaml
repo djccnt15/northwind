@@ -10,6 +10,10 @@ spring:
       dev: dev,sql,local
       prod: prod
   lifecycle.timeout-per-shutdown-phase: 30s  # wait up to 30s for graceful shutdown, default is 30s
+  messages:
+    basename: messages,errors  # setting for spring boot message source
+    encoding: UTF-8
+    fallback-to-system-locale: false
 logging:
   level:
     root: info
