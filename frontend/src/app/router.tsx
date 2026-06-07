@@ -5,6 +5,7 @@ import Home from "../pages/home";
 import {
   AdminRoute,
   AuthRedirectRoute,
+  CompanyRoute,
   ManagerRoute,
   NotFoundRoute,
   ProductRoute,
@@ -19,6 +20,8 @@ import AdminTeam from "../pages/admin-team";
 import AdminCategory from "../pages/admin-category";
 import Products from "../pages/products";
 import ProductDetail from "../pages/product-detail";
+import Companies from "../pages/companies";
+import CompanyDetail from "../pages/company-detail";
 
 export const AppRouter = createBrowserRouter([
   {
@@ -40,6 +43,18 @@ export const AppRouter = createBrowserRouter([
     children: [
       { path: "/home", element: <Home /> },
       { path: "/profile", element: <Profile /> },
+    ],
+  },
+  {
+    path: "/",
+    element: (
+      <CompanyRoute>
+        <Layout />
+      </CompanyRoute>
+    ),
+    children: [
+      { path: "/companies", element: <Companies /> },
+      { path: "/companies/:id", element: <CompanyDetail /> },
     ],
   },
   {
