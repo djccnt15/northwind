@@ -24,6 +24,19 @@ description: >
 
 ---
 
+## ⚠️ 오케스트레이터 제약 (중요)
+
+이 스킬을 실행하는 에이전트(오케스트레이터)는 **구현 코드를 직접 작성·수정하지 않는다.** 모든 실제 구현/검증은 반드시 서브 에이전트(`northwind-backend`, `northwind-frontend`, `northwind-qa`)에게 위임한다.
+
+- 오케스트레이터의 역할은 **요구사항 정리 → worktree 생성 → 서브 에이전트 호출 → 산출물 확인 → 결과 보고**로 한정된다.
+- "간단해 보이는 수정"이라도 오케스트레이터가 `Edit`/`Write`로 `src/main`, `src/test`, `frontend/src` 등 구현 코드를 직접 변경하지 않는다 — 사소해 보이는 변경도 컨벤션 누락(예: `*ErrorConst` 분리, `@MockitoBean` 보강 등)이나 테스트 누락으로 이어질 수 있으므로 전문 서브 에이전트의 점검을 거쳐야 한다.
+- 직접 `.\gradlew.bat test`, `npm run build` 등을 실행해 "검증까지 끝냈다"고 판단하지 않는다 — 검증은 Phase 4의 `northwind-qa` 책임이다.
+- 예외적으로 오케스트레이터가 직접 수행하는 것: `_workspace/*.md` 산출물 작성, git worktree 생성/정리, 요구사항 분석·문서화 같은 오케스트레이션 메타 작업
+
+> 이 규칙이 필요했던 이유: i18n 적용 작업(`feature/backend-i18n-validation-error`)에서 오케스트레이터가 Phase 2/4를 건너뛰고 직접 13개 `*ErrorConst` 클래스 생성, 16개 서비스/컨트롤러/핸들러 수정, 테스트 보강까지 전부 수행한 뒤 산출물(`_workspace/*.md`) 없이 완료 보고만 한 사례가 있었음.
+
+---
+
 ## Phase 0: 컨텍스트 확인
 
 `_workspace/` 디렉토리 존재 여부를 확인한다.
