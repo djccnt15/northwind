@@ -302,6 +302,48 @@ public class TeamModelConst {
 
 ---
 
+## 국제화 (i18n)
+
+메시지 번들: `messages.properties`/`messages_ko.properties`(일반 메시지), `errors.properties`/`errors_ko.properties`(에러 메시지). `spring.messages.basename: messages,errors`로 등록한다.
+
+### MessageUtil
+
+`global/message/MessageUtil.java` — `MessageSource` + `LocaleContextHolder.getLocale()`을 감싼 `@Component`. `@RequiredArgsConstructor` + `private final MessageUtil messageUtil;`로 주입받아 사용한다.
+
+```java
+throw new ApiException(BAD_REQUEST, messageUtil.getMessage(PASSWORD_MISMATCH_ERR_MSG));
+```
+
+### *ModelConst vs *ErrorConst
+
+검증 상수(`*ModelConst`)와 에러 메시지 키 상수(`*ErrorConst`)는 역할이 다르므로 분리한다.
+
+| 클래스 | 용도 | 값 형식 | 사용처 |
+|--------|------|---------|--------|
+| `*ModelConst` | Bean Validation 어노테이션 `message` 속성 | `"{key}"` (Hibernate Validator `MessageInterpolator`가 해석) | `@NotBlank(message = NAME_NOT_BLANK_MSG)` |
+| `*ErrorConst` | `messageUtil.getMessage()` 전달용 메시지 키 | 평문 키 문자열 (`"error.user.notFound"`, `{}` 없음) | `messageUtil.getMessage(NOT_FOUND_ERR_MSG)` |
+
+**`*ErrorConst` 작성 규칙:**
+- 도메인별로 `domain/<domain>/validation/<Entity>ErrorConst.java`에 위치 (`*ModelConst`와 동일한 패키지)
+- 특정 도메인에 속하지 않는 전역 핸들러 메시지(`error.validation.failed` 등)는 `global/exception/GlobalErrorConst`에 위치
+- 상수명은 `..._ERR_MSG` 접미사, `@UtilityClass` + `public static final String`으로 선언
+- **메시지 키 문자열을 `messageUtil.getMessage("error.xxx")`처럼 직접 하드코딩하지 않는다** — 반드시 `*ErrorConst` 상수를 `static import`해서 사용한다
+
+```java
+@UtilityClass
+public class AppUserErrorConst {
+    public static final String NOT_FOUND_ERR_MSG = "error.user.notFound";
+    public static final String PASSWORD_MISMATCH_ERR_MSG = "error.user.passwordMismatch";
+}
+```
+
+### 테스트 환경 주의사항
+
+- `src/test/resources/application.yaml`은 `src/main/resources/application.yaml`을 완전히 덮어쓴다(병합 아님). `spring.messages.basename: messages,errors` 등 메시지 설정을 테스트 프로파일에도 동일하게 작성해야 한다. 누락 시 `NoSuchMessageException: No message found under code 'error.xxx' for locale 'ko_KR'`가 발생한다.
+- `@WebMvcTest` 슬라이스는 `@RestControllerAdvice` 핸들러가 의존하는 `MessageUtil`을 자동으로 주입하지 않는다. `@MockitoBean private MessageUtil messageUtil;`을 추가해 모킹한다.
+
+---
+
 ## 보안 패턴
 
 ### 접근 제어
