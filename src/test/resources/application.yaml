@@ -1,6 +1,10 @@
 spring:
   output.ansi.enabled: always
   profiles.active: test  # dev, test. dev is for using real database, test is for using in-memory database
+  messages:
+    basename: messages,errors  # setting for spring boot message source
+    encoding: UTF-8
+    fallback-to-system-locale: false
   jpa:
     # show-sql: true
     properties.hibernate:

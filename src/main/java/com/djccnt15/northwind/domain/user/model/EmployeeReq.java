@@ -6,29 +6,31 @@ import lombok.Data;
 
 import java.time.LocalDate;
 
+import static com.djccnt15.northwind.domain.user.validation.EmployeeModelConst.*;
+
 @Data
 @AllArgsConstructor
 public class EmployeeReq {
-    
-    @NotBlank(message = "First name must not be blank")
+
+    @NotBlank(message = FIRST_NAME_NOT_BLANK_MSG)
     private String firstName;
-    
-    @NotBlank(message = "Last name must not be blank")
+
+    @NotBlank(message = LAST_NAME_NOT_BLANK_MSG)
     private String lastName;
-    
+
     private String email;
-    
-    @NotBlank(message = "Job title must not be blank")
+
+    @NotBlank(message = JOB_TITLE_NOT_BLANK_MSG)
     private String jobTitle;
-    
-    @NotBlank(message = "Primary phone must not be blank")
+
+    @NotBlank(message = PRIMARY_PHONE_NOT_BLANK_MSG)
     private String primaryPhone;
-    
+
     private String secondaryPhone;
-    
+
     private String notes;
-    
-    @NotBlank(message = "Title of courtesy must not be blank")
+
+    @NotBlank(message = TITLE_OF_COURTESY_NOT_BLANK_MSG)
     private String titleOfCourtesy;
     
     private LocalDate birthDate;

@@ -2,6 +2,7 @@ package com.djccnt15.northwind.domain.auth.controller;
 
 import com.djccnt15.northwind.domain.user.converter.UserConverter;
 import com.djccnt15.northwind.global.code.StatusCode;
+import com.djccnt15.northwind.global.message.MessageUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ class AuthApiControllerTest {
     
     @Autowired private MockMvc mockMvc;
     @MockitoBean private UserConverter converter;
+    @MockitoBean private MessageUtil messageUtil;
     
     @Test
     @WithMockUser

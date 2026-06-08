@@ -4,6 +4,7 @@ import com.djccnt15.northwind.domain.product.business.ProductBusiness;
 import com.djccnt15.northwind.domain.product.model.ProductCategoryRes;
 import com.djccnt15.northwind.domain.product.model.ProductCreateReq;
 import com.djccnt15.northwind.domain.product.model.ProductRes;
+import com.djccnt15.northwind.global.message.MessageUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -38,6 +39,7 @@ class ProductApiControllerTest {
     @Autowired private MockMvc mockMvc;
     @Autowired private ObjectMapper objectMapper;
     @MockitoBean private ProductBusiness business;
+    @MockitoBean private MessageUtil messageUtil;
 
     private ProductCreateReq sampleRequest() {
         return new ProductCreateReq(

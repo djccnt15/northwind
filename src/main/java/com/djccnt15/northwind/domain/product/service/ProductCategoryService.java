@@ -5,6 +5,7 @@ import com.djccnt15.northwind.db.repository.ProductCategoryRepo;
 import com.djccnt15.northwind.domain.product.converter.ProductCategoryConverter;
 import com.djccnt15.northwind.domain.product.model.ProductCategoryCreateReq;
 import com.djccnt15.northwind.global.exception.exceptions.ApiException;
+import com.djccnt15.northwind.global.message.MessageUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -16,6 +17,7 @@ import java.util.List;
 
 import static com.djccnt15.northwind.global.code.StatusCode.BAD_REQUEST;
 import static com.djccnt15.northwind.global.code.StatusCode.NOT_FOUND;
+import static com.djccnt15.northwind.domain.product.validation.ProductCategoryErrorConst.*;
 
 @Slf4j
 @Service
@@ -24,33 +26,34 @@ public class ProductCategoryService {
 
     private final ProductCategoryRepo repository;
     private final ProductCategoryConverter converter;
+    private final MessageUtil messageUtil;
 
     public ProductCategoryEntity getCategory(Long id) {
         return repository.findById(id)
-            .orElseThrow(() -> new ApiException(NOT_FOUND, "Product category not found"));
+            .orElseThrow(() -> new ApiException(NOT_FOUND, messageUtil.getMessage(NOT_FOUND_ERR_MSG)));
     }
 
     public void validateCategory(ProductCategoryCreateReq request) {
         if (repository.existsByName(request.getName())) {
-            throw new ApiException(BAD_REQUEST, "Category name already exists");
+            throw new ApiException(BAD_REQUEST, messageUtil.getMessage(NAME_DUPLICATE_ERR_MSG));
         }
         if (repository.existsByCode(request.getCode())) {
-            throw new ApiException(BAD_REQUEST, "Category code already exists");
+            throw new ApiException(BAD_REQUEST, messageUtil.getMessage(CODE_DUPLICATE_ERR_MSG));
         }
     }
 
     public void validateCategory(Long id, ProductCategoryCreateReq request) {
         if (repository.existsByNameAndIdNot(request.getName(), id)) {
-            throw new ApiException(BAD_REQUEST, "Category name already exists");
+            throw new ApiException(BAD_REQUEST, messageUtil.getMessage(NAME_DUPLICATE_ERR_MSG));
         }
         if (repository.existsByCodeAndIdNot(request.getCode(), id)) {
-            throw new ApiException(BAD_REQUEST, "Category code already exists");
+            throw new ApiException(BAD_REQUEST, messageUtil.getMessage(CODE_DUPLICATE_ERR_MSG));
         }
     }
 
     public void validateCategoryDeletion(ProductCategoryEntity entity) {
         if (!entity.getProductEntitySet().isEmpty()) {
-            throw new ApiException(BAD_REQUEST, "Category has associated products");
+            throw new ApiException(BAD_REQUEST, messageUtil.getMessage(HAS_PRODUCTS_ERR_MSG));
         }
     }
 

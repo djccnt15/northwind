@@ -6,6 +6,7 @@ import com.djccnt15.northwind.db.repository.ContactRepo;
 import com.djccnt15.northwind.domain.company.converter.ContactConverter;
 import com.djccnt15.northwind.domain.company.model.ContactCreateReq;
 import com.djccnt15.northwind.global.exception.exceptions.ApiException;
+import com.djccnt15.northwind.global.message.MessageUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,8 @@ import java.util.List;
 
 import static com.djccnt15.northwind.global.code.StatusCode.BAD_REQUEST;
 import static com.djccnt15.northwind.global.code.StatusCode.NOT_FOUND;
+import static com.djccnt15.northwind.domain.company.validation.ContactErrorConst.EMAIL_DUPLICATE_ERR_MSG;
+import static com.djccnt15.northwind.domain.company.validation.ContactErrorConst.NOT_FOUND_ERR_MSG;
 
 @Slf4j
 @Service
@@ -23,6 +26,7 @@ public class ContactService {
 
     private final ContactRepo repository;
     private final ContactConverter converter;
+    private final MessageUtil messageUtil;
 
     public List<ContactEntity> getContacts(Long companyId) {
         return repository.findByCompanyIdOrderByLastNameAscFirstNameAsc(companyId);
@@ -30,19 +34,19 @@ public class ContactService {
 
     public ContactEntity getContact(Long companyId, Long contactId) {
         return repository.findByIdAndCompanyId(contactId, companyId)
-            .orElseThrow(() -> new ApiException(NOT_FOUND, "Contact not found"));
+            .orElseThrow(() -> new ApiException(NOT_FOUND, messageUtil.getMessage(NOT_FOUND_ERR_MSG)));
     }
 
     public void validateContact(ContactCreateReq request) {
         if (StringUtils.hasText(request.getEmail()) && repository.existsByEmail(request.getEmail())) {
-            throw new ApiException(BAD_REQUEST, "Contact email already exists");
+            throw new ApiException(BAD_REQUEST, messageUtil.getMessage(EMAIL_DUPLICATE_ERR_MSG));
         }
     }
 
     public void validateContact(Long contactId, ContactCreateReq request) {
         if (StringUtils.hasText(request.getEmail())
             && repository.existsByEmailAndIdNot(request.getEmail(), contactId)) {
-            throw new ApiException(BAD_REQUEST, "Contact email already exists");
+            throw new ApiException(BAD_REQUEST, messageUtil.getMessage(EMAIL_DUPLICATE_ERR_MSG));
         }
     }
 
