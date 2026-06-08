@@ -1,48 +1,50 @@
 # 프론트엔드 구현 요약
 
-상품 관리 권한을 ADMIN 전용에서 로그인 사용자 전체로 변경하고, 신규 상품 생성 UI를 추가했다. 프론트엔드 전용 작업이며 백엔드 계약(요구사항에 제공된 `/api/v1/products` 통합 엔드포인트)을 기준으로 구현했다.
-
 ## 생성/수정된 파일
+- frontend/src/app/provider/redirect-route.tsx (가드 추가: `ProductRoute`, `ManagerRoute`)
+- frontend/src/app/router.tsx (라우트 그룹 재구성)
+- frontend/src/widgets/navbar-left.tsx (내비게이션 조건부 표시 변경)
 
-- `frontend/src/pages/product-detail.tsx` (수정) — isAdmin 가드 제거, API 경로 통합, create 모드 추가
-- `frontend/src/pages/products.tsx` (수정) — `[+ 신규 상품]` 버튼 추가
-- `frontend/src/app/router.tsx` (수정) — `/products/new` 라우트 추가
+> 신규 파일/타입 정의는 없음. 기존 가드 패턴(`ChildNodeIfs`, `useAuth`)을 재사용하여 인라인 타입 정의 없이 구현.
 
-신규 entities/features 모듈은 추가하지 않았다. 기존 `ProductIfs`, `ProductCategoryIfs`(`entities/employee.ts`) 타입을 그대로 재사용했고, 인터페이스 인라인 정의는 없다. (단, 폼 로컬 상태 타입 `ProductFormState`는 기존 코드부터 페이지 파일 내에 정의되어 있던 것으로, 이번 변경 범위 밖이라 유지함.)
+## 추가된 라우트 가드 (redirect-route.tsx)
 
-## 추가된 라우트
+| 가드 | 조건 | 리다이렉트 |
+|------|------|-----------|
+| `ProductRoute` | `ADMIN` 또는 `PRODUCT` 권한 없음 | `/home` |
+| `ManagerRoute` | `ADMIN` 또는 `MANAGER` 권한 없음 | `/home` |
 
-| 경로 | 페이지 컴포넌트 | 인증 |
-|------|----------------|------|
-| `/products/new` | `ProductDetail` (create 모드) | 세션 필요 (ProtectedRoute) |
-| `/products/:id` | `ProductDetail` (조회/수정 모드) | 세션 필요 (ProtectedRoute) |
+- 기존 `AdminRoute` 패턴과 동일하게 `!user || !(...)` 형태로 작성하여 비로그인 사용자도 안전하게 처리.
 
-`/products/new`를 `/products/:id`보다 먼저 선언하여 `:id`가 `"new"`를 가로채지 않도록 했다. (라우트 우선순위로 1차 방어, 컴포넌트 내 `id === "new"` 체크로 2차 방어.)
+## 라우트 구성 변경 (router.tsx)
 
-## 주요 구현 사항
+| 경로 | 페이지 컴포넌트 | 가드 (인증) |
+|------|--------------|------------|
+| `/products` | `Products` | `ProductRoute` (ADMIN/PRODUCT) |
+| `/products/new` | `ProductDetail` | `ProductRoute` (ADMIN/PRODUCT) |
+| `/products/:id` | `ProductDetail` | `ProductRoute` (ADMIN/PRODUCT) |
+| `/admin/categories` | `AdminCategory` | `ManagerRoute` (ADMIN/MANAGER) |
+| `/admin/user` `/admin/titles` `/admin/team` | (각 페이지) | `AdminRoute` (ADMIN) — 유지 |
+| `/home` `/profile` | `Home` / `Profile` | `ProtectedRoute` (로그인) — 유지 |
 
-### product-detail.tsx
-- `isAdmin` 가드 및 `useAuth` import 제거 → 로그인 사용자 전체에게 Edit/Discontinue/Save/Cancel 버튼 표시.
-- API 경로 통합: PUT/DELETE 모두 `/v1/admin/products/:id` → `/v1/products/:id`.
-- create 모드 추가:
-  - `isCreateMode = !id || id === "new"`로 판정.
-  - create 모드는 처음부터 편집 상태(`isEditing` 초기값 = `isCreateMode`)로 빈 폼 시작, 진입 시 카테고리 목록 fetch.
-  - 저장은 `POST /v1/products` 호출, 성공 시 alert 후 `/products`로 navigate.
-  - Save 버튼 라벨은 create 모드에서 `Create`, 수정 모드에서 `Save`.
-  - create 모드 Cancel은 `/products`로 navigate (수정 모드는 폼 원복).
-  - create 모드에서는 편집 상태가 유지되므로 Discontinue 버튼은 렌더되지 않음(읽기 모드 분기에만 존재).
-  - 검증 오류(result.code=1400)는 기존 패턴대로 `body`의 field→message Map을 alert로 표시.
-- `product`가 null일 수 있는 create 모드를 위해 읽기 분기의 `product.xxx` 참조를 `product?.xxx` 옵셔널 체이닝으로 변경, `if (!isCreateMode && !product)` 가드로 "not found" 오표시 방지.
+- `/products*` 3개 라우트를 `ProtectedRoute` 그룹에서 분리하여 별도 `ProductRoute` 그룹(`path="/"`)으로 이동.
+- `/admin/categories`를 `AdminRoute` 그룹에서 꺼내 별도 `ManagerRoute` 그룹(`path="/admin"`)으로 분리. 나머지 admin 라우트는 `AdminRoute` 유지.
 
-### products.tsx
-- 기존 FilterBar(커스텀 toolbar 영역, 페이지가 QuickToolbar 대신 사용 중) 내 Search 버튼 옆에 `Spacer` + `NewProductBtn`(`+ 신규 상품`) 배치.
-- `isAdmin` 조건 없이 모든 로그인 사용자에게 노출, 클릭 시 `navigate("/products/new")`.
+## 내비게이션 변경 (navbar-left.tsx)
 
-### 검증
-- 타입 체크(`tsc -p tsconfig.app.json --noEmit`): 통과 (0 errors).
-- ESLint(변경 3개 파일): 통과 (0 errors). `react-hooks/set-state-in-effect` 경고를 피하기 위해 create 모드 초기화 setState를 기존 fetch와 동일하게 `queueMicrotask`로 감쌌다.
+| 메뉴 | 표시 조건 (변경 후) |
+|------|--------------------|
+| Products | `ADMIN \|\| PRODUCT` |
+| Admin - Category | `ADMIN \|\| MANAGER` (별도 `NavList` 블록으로 분리) |
+| Admin - User / Title / Team | `ADMIN` 전용 (유지) |
+| OpenAPI (Swagger) | `ADMIN` 전용 (유지) |
 
-## QA 주의사항
-- 백엔드가 `/api/v1/admin/products` 제거 + `/api/v1/products` POST(ADMIN 불요)를 실제로 제공하는지 확인 필요. 프론트는 계약대로 구현됨.
-- create 성공/실패 모두 `window.alert` 사용(기존 페이지 컨벤션 유지).
-- 워크트리에 `node_modules`가 없어 검증은 메인 레포의 동일 버전 의존성을 임시 junction으로 연결해 수행 후 junction을 제거함. CI/실제 빌드 시에는 워크트리에서 `npm install` 필요.
+## 주요 구현 사항 / QA 주의사항
+- FSD 레이어 규칙 준수: `app`(router, redirect-route) → `widgets`(navbar-left) → `features`(useAuth) 방향만 참조. 역방향 없음.
+- 권한 비교는 `user?.authorities.includes(...)` 패턴을 그대로 사용 (기존 navbar 컨벤션과 일치).
+- React Compiler 활성화 환경이므로 수동 메모이제이션 없음.
+- TypeScript strict 빌드(`tsc -b`) 통과 — 미사용 변수/파라미터, `import type` 위반 없음. (worktree에 node_modules 설치 후 검증, EXIT=0)
+- 백엔드 권한 매핑 일치 확인:
+  - `ProductApiController` `hasAnyAuthority('PRODUCT')` + ADMIN → 프론트 `ProductRoute`와 일치.
+  - `AdminProductCategoryApiController` ADMIN/MANAGER → 프론트 `ManagerRoute`와 일치.
+- QA 시 권한별 시나리오 확인 권장: (1) PRODUCT 권한만 보유 사용자가 `/products` 접근 가능 + `/admin/*` 차단, (2) MANAGER 권한 사용자가 `/admin/categories`만 접근 가능 + 다른 admin 메뉴 비표시, (3) 일반 로그인 사용자는 Products/Category 메뉴 모두 비표시 및 직접 URL 접근 시 `/home` 리다이렉트.

@@ -6,6 +6,7 @@ import com.djccnt15.northwind.db.entity.UserRoleEntity;
 import com.djccnt15.northwind.db.repository.AppUserRoleRepo;
 import com.djccnt15.northwind.db.repository.UserRoleRepo;
 import com.djccnt15.northwind.global.exception.exceptions.ApiException;
+import com.djccnt15.northwind.global.message.MessageUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 import static com.djccnt15.northwind.global.code.StatusCode.SERVER_ERROR;
+import static com.djccnt15.northwind.domain.role.validation.UserRoleErrorConst.CONTACT_ADMINISTRATOR_ERR_MSG;
 
 @Slf4j
 @Service
@@ -21,10 +23,11 @@ public class UserRoleService {
     
     private final UserRoleRepo userRoleRepo;
     private final AppUserRoleRepo appUserRoleRepo;
-    
+    private final MessageUtil messageUtil;
+
     public UserRoleEntity getUserRole(String name) {
         return userRoleRepo.findFirstByName(name)
-            .orElseThrow(() -> new ApiException(SERVER_ERROR, "Please contact administrator"));
+            .orElseThrow(() -> new ApiException(SERVER_ERROR, messageUtil.getMessage(CONTACT_ADMINISTRATOR_ERR_MSG)));
     }
     
     public AppUserEntity assignRoleToUser(AppUserEntity userEntity, UserRoleEntity roleEntity) {

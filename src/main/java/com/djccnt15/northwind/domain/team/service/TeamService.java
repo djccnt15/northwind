@@ -6,6 +6,7 @@ import com.djccnt15.northwind.db.repository.TeamRepo;
 import com.djccnt15.northwind.domain.team.converter.TeamConverter;
 import com.djccnt15.northwind.domain.team.model.TeamCreateReq;
 import com.djccnt15.northwind.global.exception.exceptions.ApiException;
+import com.djccnt15.northwind.global.message.MessageUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -16,6 +17,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 import static com.djccnt15.northwind.global.code.StatusCode.BAD_REQUEST;
+import static com.djccnt15.northwind.domain.team.validation.TeamErrorConst.NAME_DUPLICATE_ERR_MSG;
+import static com.djccnt15.northwind.domain.team.validation.TeamErrorConst.NOT_FOUND_ERR_MSG;
 
 @Slf4j
 @Service
@@ -24,16 +27,17 @@ public class TeamService {
     
     private final TeamRepo repository;
     private final TeamConverter converter;
-    
+    private final MessageUtil messageUtil;
+
     public void validateTeam(TeamCreateReq request) {
         if (repository.existsByName(request.getName())) {
-            throw new ApiException(BAD_REQUEST, "Team name already exists");
+            throw new ApiException(BAD_REQUEST, messageUtil.getMessage(NAME_DUPLICATE_ERR_MSG));
         }
     }
-    
+
     public void validateTeam(Long id, TeamCreateReq request) {
         if (repository.existsByNameAndIdNot(request.getName(), id)) {
-            throw new ApiException(BAD_REQUEST, "Team name already exists");
+            throw new ApiException(BAD_REQUEST, messageUtil.getMessage(NAME_DUPLICATE_ERR_MSG));
         }
     }
     
@@ -52,12 +56,12 @@ public class TeamService {
     
     public TeamEntity getTeam(Long id) {
         return repository.findById(id)
-            .orElseThrow(() -> new ApiException(BAD_REQUEST, "Team not found"));
+            .orElseThrow(() -> new ApiException(BAD_REQUEST, messageUtil.getMessage(NOT_FOUND_ERR_MSG)));
     }
-    
+
     public TeamEntity getTeam(String name) {
         return repository.findFirstByName(name)
-            .orElseThrow(() -> new ApiException(BAD_REQUEST, "Team not found"));
+            .orElseThrow(() -> new ApiException(BAD_REQUEST, messageUtil.getMessage(NOT_FOUND_ERR_MSG)));
     }
     
      public void updateTeam(TeamEntity team, TeamCreateReq request) {

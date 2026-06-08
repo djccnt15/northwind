@@ -7,6 +7,7 @@ import com.djccnt15.northwind.domain.user.converter.UserConverter;
 import com.djccnt15.northwind.domain.user.model.SignupReq;
 import com.djccnt15.northwind.global.config.security.model.UserSession;
 import com.djccnt15.northwind.global.exception.exceptions.ApiException;
+import com.djccnt15.northwind.global.message.MessageUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,8 +21,7 @@ import java.util.List;
 
 import static com.djccnt15.northwind.global.code.StatusCode.BAD_REQUEST;
 import static com.djccnt15.northwind.global.code.StatusCode.NOT_FOUND;
-import static com.djccnt15.northwind.domain.user.validation.AppUserModelConst.EMAIL_DUPLICATE_ERR_MSG;
-import static com.djccnt15.northwind.domain.user.validation.AppUserModelConst.USERNAME_DUPLICATE_ERR_MSG;
+import static com.djccnt15.northwind.domain.user.validation.AppUserErrorConst.*;
 
 @Slf4j
 @Service
@@ -31,43 +31,44 @@ public class UserService {
     private final UserConverter converter;
     private final AppUserRepo repository;
     private final PasswordEncoder encoder;
+    private final MessageUtil messageUtil;
     
     @Value("${app.defaultPw:1234}")
     private String defaultPw;
     
     public void validateUserId(UserSession userSession, Long userId) {
         if (!userSession.getId().equals(userId)) {
-            throw new ApiException(BAD_REQUEST, "You are not authorized to perform this action");
+            throw new ApiException(BAD_REQUEST, messageUtil.getMessage(UNAUTHORIZED_ACTION_ERR_MSG));
         }
     }
-    
+
     public void validatePasswordsMatch(String password, String confirmPassword) {
         if (!password.equals(confirmPassword)) {
-            throw new ApiException(BAD_REQUEST, "Password and confirm password do not match");
+            throw new ApiException(BAD_REQUEST, messageUtil.getMessage(PASSWORD_MISMATCH_ERR_MSG));
         }
     }
     
     public void validateEmailNotExists(String email) {
         if (repository.existsByEmail(email)) {
-            throw new ApiException(BAD_REQUEST, EMAIL_DUPLICATE_ERR_MSG);
+            throw new ApiException(BAD_REQUEST, messageUtil.getMessage(EMAIL_DUPLICATE_ERR_MSG));
         }
     }
-    
+
     public void validateEmailNotExists(String email, Long userId) {
         if (repository.existsByEmailAndIdNot(email, userId)) {
-            throw new ApiException(BAD_REQUEST, EMAIL_DUPLICATE_ERR_MSG);
+            throw new ApiException(BAD_REQUEST, messageUtil.getMessage(EMAIL_DUPLICATE_ERR_MSG));
         }
     }
-    
+
     public void validateUsernameNotExists(String username) {
         if (repository.existsByUsername(username)) {
-            throw new ApiException(BAD_REQUEST, USERNAME_DUPLICATE_ERR_MSG);
+            throw new ApiException(BAD_REQUEST, messageUtil.getMessage(USERNAME_DUPLICATE_ERR_MSG));
         }
     }
-    
+
     public void validateUsernameNotExists(String username, Long userId) {
         if (repository.existsByUsernameAndIdNot(username, userId)) {
-            throw new ApiException(BAD_REQUEST, USERNAME_DUPLICATE_ERR_MSG);
+            throw new ApiException(BAD_REQUEST, messageUtil.getMessage(USERNAME_DUPLICATE_ERR_MSG));
         }
     }
     
@@ -79,12 +80,12 @@ public class UserService {
     
     public AppUserEntity getUser(Long userId) {
         return repository.findById(userId)
-            .orElseThrow(() -> new ApiException(NOT_FOUND, "User not found"));
+            .orElseThrow(() -> new ApiException(NOT_FOUND, messageUtil.getMessage(NOT_FOUND_ERR_MSG)));
     }
-    
+
     public AppUserEntity getFullUser(Long userId) {
         return repository.findFullFirstById(userId)
-            .orElseThrow(() -> new ApiException(NOT_FOUND, "User not found"));
+            .orElseThrow(() -> new ApiException(NOT_FOUND, messageUtil.getMessage(NOT_FOUND_ERR_MSG)));
     }
     
     public AppUserEntity updateProfile(AppUserEntity entity, SignupReq request) {

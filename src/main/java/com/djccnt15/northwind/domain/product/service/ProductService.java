@@ -6,6 +6,7 @@ import com.djccnt15.northwind.db.repository.ProductRepo;
 import com.djccnt15.northwind.domain.product.converter.ProductConverter;
 import com.djccnt15.northwind.domain.product.model.ProductCreateReq;
 import com.djccnt15.northwind.global.exception.exceptions.ApiException;
+import com.djccnt15.northwind.global.message.MessageUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import static com.djccnt15.northwind.global.code.StatusCode.BAD_REQUEST;
 import static com.djccnt15.northwind.global.code.StatusCode.NOT_FOUND;
+import static com.djccnt15.northwind.domain.product.validation.ProductErrorConst.*;
 
 @Slf4j
 @Service
@@ -22,27 +24,28 @@ public class ProductService {
 
     private final ProductRepo repository;
     private final ProductConverter converter;
+    private final MessageUtil messageUtil;
 
     public ProductEntity getProduct(Long id) {
         return repository.findWithCategoryById(id)
-            .orElseThrow(() -> new ApiException(NOT_FOUND, "Product not found"));
+            .orElseThrow(() -> new ApiException(NOT_FOUND, messageUtil.getMessage(NOT_FOUND_ERR_MSG)));
     }
 
     public void validateProduct(ProductCreateReq request) {
         if (repository.existsByCode(request.getCode())) {
-            throw new ApiException(BAD_REQUEST, "Product code already exists");
+            throw new ApiException(BAD_REQUEST, messageUtil.getMessage(CODE_DUPLICATE_ERR_MSG));
         }
         if (repository.existsByName(request.getName())) {
-            throw new ApiException(BAD_REQUEST, "Product name already exists");
+            throw new ApiException(BAD_REQUEST, messageUtil.getMessage(NAME_DUPLICATE_ERR_MSG));
         }
     }
 
     public void validateProduct(Long id, ProductCreateReq request) {
         if (repository.existsByCodeAndIdNot(request.getCode(), id)) {
-            throw new ApiException(BAD_REQUEST, "Product code already exists");
+            throw new ApiException(BAD_REQUEST, messageUtil.getMessage(CODE_DUPLICATE_ERR_MSG));
         }
         if (repository.existsByNameAndIdNot(request.getName(), id)) {
-            throw new ApiException(BAD_REQUEST, "Product name already exists");
+            throw new ApiException(BAD_REQUEST, messageUtil.getMessage(NAME_DUPLICATE_ERR_MSG));
         }
     }
 

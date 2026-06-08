@@ -5,6 +5,7 @@ import com.djccnt15.northwind.db.repository.TitleRepo;
 import com.djccnt15.northwind.domain.title.converter.TitleConverter;
 import com.djccnt15.northwind.domain.title.model.TitleCreateReq;
 import com.djccnt15.northwind.global.exception.exceptions.ApiException;
+import com.djccnt15.northwind.global.message.MessageUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -16,6 +17,8 @@ import java.util.List;
 
 import static com.djccnt15.northwind.global.code.StatusCode.BAD_REQUEST;
 import static com.djccnt15.northwind.global.code.StatusCode.NOT_FOUND;
+import static com.djccnt15.northwind.domain.title.validation.TitleErrorConst.DUPLICATE_ERR_MSG;
+import static com.djccnt15.northwind.domain.title.validation.TitleErrorConst.NOT_FOUND_ERR_MSG;
 
 @Slf4j
 @Service
@@ -24,26 +27,27 @@ public class TitleService {
     
     private final TitleRepo repository;
     private final TitleConverter converter;
-    
+    private final MessageUtil messageUtil;
+
     public TitleEntity getTitle(Long id) {
         return repository.findById(id)
-            .orElseThrow(() -> new ApiException(NOT_FOUND, "Title not found"));
+            .orElseThrow(() -> new ApiException(NOT_FOUND, messageUtil.getMessage(NOT_FOUND_ERR_MSG)));
     }
-    
+
     public TitleEntity getTitle(String title) {
         return repository.findFirstByTitle(title)
-            .orElseThrow(() -> new ApiException(NOT_FOUND, "Title not found"));
+            .orElseThrow(() -> new ApiException(NOT_FOUND, messageUtil.getMessage(NOT_FOUND_ERR_MSG)));
     }
-    
+
     public void validateTitle(TitleCreateReq request) {
         if (repository.existsByTitle(request.getTitle())) {
-            throw new ApiException(BAD_REQUEST, "Title already exists");
+            throw new ApiException(BAD_REQUEST, messageUtil.getMessage(DUPLICATE_ERR_MSG));
         }
     }
-    
+
     public void validateTitle(Long id, TitleCreateReq request) {
         if (repository.existsByTitleAndIdNot(request.getTitle(), id)) {
-            throw new ApiException(BAD_REQUEST, "Title already exists");
+            throw new ApiException(BAD_REQUEST, messageUtil.getMessage(DUPLICATE_ERR_MSG));
         }
     }
     

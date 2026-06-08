@@ -9,6 +9,7 @@ import com.djccnt15.northwind.domain.company.model.ContactRes;
 import com.djccnt15.northwind.domain.company.model.OrderSummaryRes;
 import com.djccnt15.northwind.domain.company.model.PurchaseOrderSummaryRes;
 import com.djccnt15.northwind.domain.tax.model.TaxStatusRes;
+import com.djccnt15.northwind.global.message.MessageUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -42,6 +43,7 @@ class CompanyApiControllerTest {
     @Autowired private MockMvc mockMvc;
     @Autowired private ObjectMapper objectMapper;
     @MockitoBean private CompanyBusiness business;
+    @MockitoBean private MessageUtil messageUtil;
 
     private CompanyCreateReq sampleCompanyRequest() {
         return new CompanyCreateReq(

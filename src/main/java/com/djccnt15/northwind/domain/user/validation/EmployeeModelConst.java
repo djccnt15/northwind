@@ -12,4 +12,10 @@ public class EmployeeModelConst {
     public static final int PRIMARY_PHONE_MAX_LENGTH = 25;
     public static final int SECONDARY_PHONE_MAX_LENGTH = 25;
     public static final int TITLE_OF_COURTESY_MAX_LENGTH = 25;
+
+    public static final String FIRST_NAME_NOT_BLANK_MSG = "{validation.employee.firstName.notBlank}";
+    public static final String LAST_NAME_NOT_BLANK_MSG = "{validation.employee.lastName.notBlank}";
+    public static final String JOB_TITLE_NOT_BLANK_MSG = "{validation.employee.jobTitle.notBlank}";
+    public static final String PRIMARY_PHONE_NOT_BLANK_MSG = "{validation.employee.primaryPhone.notBlank}";
+    public static final String TITLE_OF_COURTESY_NOT_BLANK_MSG = "{validation.employee.titleOfCourtesy.notBlank}";
 }

@@ -1,10 +1,12 @@
 package com.djccnt15.northwind.domain.home.controller;
 
+import com.djccnt15.northwind.global.message.MessageUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static com.djccnt15.northwind.constants.ApiTestConst.API_BODY_PATH;
@@ -18,7 +20,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class HealthApiControllerTest {
     
     @Autowired private MockMvc mockMvc;
-    
+    @MockitoBean private MessageUtil messageUtil;
+
     @Test
     @WithMockUser
     void health() throws Exception {

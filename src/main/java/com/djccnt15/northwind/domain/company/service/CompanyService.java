@@ -7,6 +7,7 @@ import com.djccnt15.northwind.db.repository.CompanyRepo;
 import com.djccnt15.northwind.domain.company.converter.CompanyConverter;
 import com.djccnt15.northwind.domain.company.model.CompanyCreateReq;
 import com.djccnt15.northwind.global.exception.exceptions.ApiException;
+import com.djccnt15.northwind.global.message.MessageUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -15,6 +16,8 @@ import org.springframework.stereotype.Service;
 
 import static com.djccnt15.northwind.global.code.StatusCode.BAD_REQUEST;
 import static com.djccnt15.northwind.global.code.StatusCode.NOT_FOUND;
+import static com.djccnt15.northwind.domain.company.validation.CompanyErrorConst.NAME_DUPLICATE_ERR_MSG;
+import static com.djccnt15.northwind.domain.company.validation.CompanyErrorConst.NOT_FOUND_ERR_MSG;
 
 @Slf4j
 @Service
@@ -23,6 +26,7 @@ public class CompanyService {
 
     private final CompanyRepo repository;
     private final CompanyConverter converter;
+    private final MessageUtil messageUtil;
 
     public Page<CompanyEntity> getCompanies(String kw, Long typeId, Pageable pageable) {
         return repository.findByFilter(kw, typeId, pageable);
@@ -30,18 +34,18 @@ public class CompanyService {
 
     public CompanyEntity getCompany(Long id) {
         return repository.findWithRelationById(id)
-            .orElseThrow(() -> new ApiException(NOT_FOUND, "Company not found"));
+            .orElseThrow(() -> new ApiException(NOT_FOUND, messageUtil.getMessage(NOT_FOUND_ERR_MSG)));
     }
 
     public void validateCompany(CompanyCreateReq request) {
         if (repository.existsByName(request.getName())) {
-            throw new ApiException(BAD_REQUEST, "Company name already exists");
+            throw new ApiException(BAD_REQUEST, messageUtil.getMessage(NAME_DUPLICATE_ERR_MSG));
         }
     }
 
     public void validateCompany(Long id, CompanyCreateReq request) {
         if (repository.existsByNameAndIdNot(request.getName(), id)) {
-            throw new ApiException(BAD_REQUEST, "Company name already exists");
+            throw new ApiException(BAD_REQUEST, messageUtil.getMessage(NAME_DUPLICATE_ERR_MSG));
         }
     }
 

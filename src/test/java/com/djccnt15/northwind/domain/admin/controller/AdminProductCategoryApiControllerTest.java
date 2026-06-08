@@ -2,6 +2,7 @@ package com.djccnt15.northwind.domain.admin.controller;
 
 import com.djccnt15.northwind.domain.admin.business.AdminProductCategoryBusiness;
 import com.djccnt15.northwind.domain.product.model.ProductCategoryRes;
+import com.djccnt15.northwind.global.message.MessageUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,7 @@ class AdminProductCategoryApiControllerTest {
 
     @Autowired private MockMvc mockMvc;
     @MockitoBean private AdminProductCategoryBusiness business;
+    @MockitoBean private MessageUtil messageUtil;
 
     @Test
     void unauthorized() throws Exception {

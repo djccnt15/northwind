@@ -1,43 +1,23 @@
 # 요구사항
 
 ## 기능 설명
-백엔드 권한 체계 변경(commit 73b9be66)에 맞게 프론트엔드 라우트 가드와 내비게이션 바를 업데이트한다.
+백엔드 DTO 검증(validation) 및 에러 응답 메시지에 i18n(국제화)을 적용한다.
 
-## 범위: 프론트엔드 전용
+1. **i18n 적용**: `messages`/`errors` 메시지 번들(영어/한국어)을 `MessageSource`에 연동하고, 검증 메시지·예외 응답 메시지를 `MessageUtil`을 통해 현재 로케일에 맞게 응답하도록 변경한다.
+2. **에러 메시지 키 상수화**: `messageUtil.getMessage("error.user.passwordMismatch")`처럼 호출부에 직접 하드코딩된 메시지 키 문자열을 모두 `*ErrorConst` 유틸리티 클래스의 `final String` 상수로 추출한다.
+
+## 범위: 백엔드 전용
 
 ## 참고 도메인 (유사한 기존 구현)
-- `frontend/src/app/provider/redirect-route.tsx` — 기존 라우트 가드 (수정 대상)
-- `frontend/src/app/router.tsx` — 라우터 구성 (수정 대상)
-- `frontend/src/widgets/navbar-left.tsx` — 내비게이션 바 (수정 대상)
+- `domain/team/validation/TeamModelConst.java` — `*ModelConst` 상수 클래스 패턴 (`@UtilityClass`, `static import`)
+- `global/exception/exceptions/ApiException.java`, `global/exception/advice/*` — 예외 처리 핸들러 구조
 
 ## 특이사항
-
-### 백엔드 변경 내용 (commit 73b9be66)
-- `ProductApiController`: `@PreAuthorize("hasAnyAuthority('PRODUCT')")` 추가
-- `AdminProductCategoryApiController`: `ADMIN` → `ADMIN, MANAGER` 로 확장
-- 신규 역할 상수: `COMPANY`, `ORDER`, `PURCHASE`, `PRODUCT`, `STOCK`
-
-### StoryBoard 권한 기준
-| 화면 | 경로 | 필요 권한 |
-|------|------|----------|
-| S-60 상품 목록 | `/products` | ADMIN, PRODUCT |
-| S-61 상품 상세 | `/products/:id` | ADMIN, PRODUCT |
-| S-62 카테고리 관리 | `/admin/categories` | ADMIN, MANAGER |
-
-### 프론트엔드 변경 목록
-1. `redirect-route.tsx`
-   - `ProductRoute` 추가: `ADMIN` 또는 `PRODUCT` 권한 없으면 `/home` 리다이렉트
-   - `ManagerRoute` 추가: `ADMIN` 또는 `MANAGER` 권한 없으면 `/home` 리다이렉트
-
-2. `router.tsx`
-   - `/products`, `/products/new`, `/products/:id` → `ProtectedRoute` → `ProductRoute` 그룹으로 이동
-   - `/admin/categories` → `AdminRoute` 그룹 → 별도 `ManagerRoute` 그룹으로 분리
-
-3. `navbar-left.tsx`
-   - Products 링크: `ADMIN` 또는 `PRODUCT` 권한 있는 사용자만 표시
-   - Admin - Category 링크: `ADMIN` 또는 `MANAGER` 권한 있는 사용자만 표시
-   - Admin - User / Title / Team / OpenAPI: 기존 ADMIN only 유지
+- i18n용 베이스 리소스 파일(`messages*.properties`, `errors*.properties`)은 commit `d57696e`("feat: create base message files for `i18n`")에서 이미 생성되어 있음 — 이번 작업은 해당 리소스를 실제로 연동하는 단계
+- `MessageSource` + `LocaleContextHolder.getLocale()`을 감싼 `MessageUtil` 컴포넌트를 신규 작성해야 함
+- 기존 `*ModelConst`(Bean Validation 어노테이션 `message` 속성용 `{key}` placeholder)와 신규 `*ErrorConst`(메시지 키 평문 문자열, `messageUtil.getMessage()` 인자)는 역할이 다르므로 별도 클래스로 분리
 
 ## Worktree
-- 브랜치: feature/frontend-permission-routes
-- 경로: C:/projects/northwind/.worktree/feature/frontend-permission-routes
+- 브랜치: feature/backend-i18n-validation-error
+- 경로: C:/projects/northwind/.worktree/feature/backend-i18n-validation-error
+</content>

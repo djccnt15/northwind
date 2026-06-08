@@ -3,6 +3,7 @@ package com.djccnt15.northwind.global.config.security;
 import com.djccnt15.northwind.db.repository.AppUserRepo;
 import com.djccnt15.northwind.global.config.security.model.UserSession;
 import com.djccnt15.northwind.global.exception.exceptions.ApiException;
+import com.djccnt15.northwind.global.message.MessageUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,6 +21,7 @@ import java.time.LocalDateTime;
 import static com.djccnt15.northwind.global.code.StatusCode.*;
 import static com.djccnt15.northwind.global.constants.RoleConst.SUPERADMIN;
 import static com.djccnt15.northwind.global.util.UserUtil.getRoleName;
+import static com.djccnt15.northwind.domain.auth.validation.AuthErrorConst.*;
 
 @Slf4j
 @Service
@@ -27,6 +29,7 @@ import static com.djccnt15.northwind.global.util.UserUtil.getRoleName;
 public class AuthService implements UserDetailsService {
     
     private final AppUserRepo repository;
+    private final MessageUtil messageUtil;
 
     @Value("${app.loginFailureLimit:6}")
     private int loginFailureLimit;
@@ -69,12 +72,12 @@ public class AuthService implements UserDetailsService {
     
     public String getErrorMessage(AuthenticationException exception) {
         return switch (exception) {
-            case BadCredentialsException ignored -> "Invalid username or password";
-            case DisabledException ignored -> "Account is disabled";
-            case LockedException ignored -> "Account is locked";
-            case AccountExpiredException ignored -> "Account has expired";
-            case CredentialsExpiredException ignored -> "Credentials have expired";
-            case null, default -> "Authentication failed, Please contact to admin";
+            case BadCredentialsException ignored -> messageUtil.getMessage(BAD_CREDENTIALS_ERR_MSG);
+            case DisabledException ignored -> messageUtil.getMessage(ACCOUNT_DISABLED_ERR_MSG);
+            case LockedException ignored -> messageUtil.getMessage(ACCOUNT_LOCKED_ERR_MSG);
+            case AccountExpiredException ignored -> messageUtil.getMessage(ACCOUNT_EXPIRED_ERR_MSG);
+            case CredentialsExpiredException ignored -> messageUtil.getMessage(CREDENTIALS_EXPIRED_ERR_MSG);
+            case null, default -> messageUtil.getMessage(CONTACT_ADMINISTRATOR_ERR_MSG);
         };
     }
     
