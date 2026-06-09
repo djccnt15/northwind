@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.annotation.Commit;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
@@ -21,7 +20,6 @@ import static com.djccnt15.northwind.global.constants.RoleConst.*;
 
 @DevTest
 @SpringBootTest
-@ActiveProfiles("dev")  // use application-dev.properties for testing
 @Commit // commit the transaction to persist the data == @Rollback(false)
 public class UserCreateTest {
     

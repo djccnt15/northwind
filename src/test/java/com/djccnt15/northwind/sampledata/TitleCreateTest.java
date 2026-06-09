@@ -7,14 +7,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Commit;
-import org.springframework.test.context.ActiveProfiles;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @DevTest
 @SpringBootTest
-@ActiveProfiles("dev")  // use application-dev.properties for testing
 @Commit
 public class TitleCreateTest {
     
