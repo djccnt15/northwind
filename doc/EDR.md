@@ -89,6 +89,11 @@ user_role {
     bigint last_modified_by
 }
 
+supported_lang {
+    bigint id PK
+    varchar lang UK
+}
+
 app_user {
     bigint id PK
     varchar username UK
@@ -100,6 +105,7 @@ app_user {
     int login_failed_count
     datetime64 last_login_at
     bigint team_id FK
+    bigint preferred_lang_id FK
     datetime64 created_at
     datetime64 updated_at
     bigint created_by
@@ -296,6 +302,7 @@ order_detail {
 }
 
 %% Relationships
+supported_lang ||--o{ app_user : "preferred by"
 team ||--o{ app_user : "has members"
 app_user ||--o{ app_user_role : "assigned"
 user_role ||--o{ app_user_role : "assigned"

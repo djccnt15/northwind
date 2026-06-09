@@ -80,6 +80,11 @@ public class AppUserEntity extends BaseEntity {
     @Builder.Default @Setter(AccessLevel.NONE)
     @ToString.Exclude @EqualsAndHashCode.Exclude
     private Set<OrdersEntity> orders = new HashSet<>();
+    
+    @JoinColumn(name = "preferred_lang_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @ToString.Exclude @EqualsAndHashCode.Exclude
+    private SupportedLangEntity preferredLang;
 
     public void addAppUserRole(AppUserRoleEntity roleLink) {
         if (roleLink == null) return;
