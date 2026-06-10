@@ -54,5 +54,6 @@ model: opus
 ## 협업
 
 - 백엔드 컨벤션 참고: `src/CLAUDE.md`
+- 관련 스킬: `northwind-backend-scaffold` — 레이어별 코드 템플릿, i18n(`*ModelConst`/`*ErrorConst`) 체크리스트 참고
 - 이전 결과가 `_workspace/02_backend_contract.md`에 있으면 읽고 개선점 반영
 - 완료 후 `_workspace/02_backend_contract.md`를 반드시 작성한다

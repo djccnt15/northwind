@@ -16,7 +16,7 @@ model: opus
 4. **API 호출 패턴**: `.then().catch().finally()` 체이닝 사용. 인증 API는 `privateApi`, 공개 API는 `api`.
 5. **TypeScript strict**: `noUnusedLocals`, `noUnusedParameters` 준수. 타입 전용 import는 `import type`.
 6. **React Compiler 활성화됨**: `useMemo`, `useCallback`, `React.memo` 수동 작성 불필요.
-7. **빌드 검증 필수**: 구현을 마치면 `cd frontend; npm run build`를 실행해 타입 체크와 번들링이 모두 통과하는지 확인한다. **`npx tsc --noEmit`만 단독 실행하지 않는다** — 루트 `tsconfig.json`은 `"files": []`인 솔루션 스타일 설정이라 아무 파일도 검사하지 않고 거짓으로 "오류 없음"을 출력한다(`npm run build`가 실행하는 `tsc -b`만이 실제 프로젝트 설정을 사용한다). 빌드가 실패하면 통과할 때까지 수정한다.
+7. **빌드 검증 필수**: 구현을 마치면 `cd frontend; npm run build`로 타입 체크와 번들링을 모두 검증한다 (`npx tsc --noEmit` 단독 실행 금지 — 사유는 `northwind-frontend-admin-crud` 스킬 참고). 빌드가 실패하면 통과할 때까지 수정한다.
 
 ## 입력 프로토콜
 
@@ -56,6 +56,7 @@ model: opus
 ## 협업
 
 - 프론트엔드 컨벤션 참고: `frontend/CLAUDE.md`
+- 관련 스킬: `northwind-frontend-admin-crud` — DataGrid CRUD 페이지 템플릿, FSD/빌드 검증 체크리스트 참고
 - 백엔드 API 계약 참고: `_workspace/02_backend_contract.md`
 - 이전 결과가 `_workspace/03_frontend_summary.md`에 있으면 읽고 개선점 반영
 - 완료 후 `_workspace/03_frontend_summary.md`를 반드시 작성한다

@@ -99,6 +99,8 @@ cd frontend; npm run dev   # http://localhost:5173
 | 2026-06-07 | 프론트엔드 빌드 검증 단계 추가 (`npm run build`) | northwind-frontend, northwind-qa, SKILL.md | TS2367 타입 오류가 검증을 통과해 머지된 사고 재발 방지 |
 | 2026-06-08 | "오케스트레이터 제약" 섹션 추가 — 구현/검증을 서브 에이전트에 위임하도록 명시 | SKILL.md | i18n 작업에서 오케스트레이터가 Phase 2/4를 건너뛰고 직접 구현·테스트까지 수행하고 `_workspace` 산출물 없이 완료 보고한 사례 재발 방지 |
 | 2026-06-10 | Phase 0에서 작업 시작 시 `_workspace/task_{YYMMDD}_{HHMMSS}/` 폴더를 생성해 모든 산출물을 그 안에 저장하도록 변경 | SKILL.md | `_workspace`를 평면 구조로 쓰다 보니 추적이 어려워 사후에 수동으로 `task_*` 폴더로 재정리(a140c237)해야 했던 문제 재발 방지 |
+| 2026-06-10 | 산출물 작성 서브 에이전트 생성 작업 순서 개선 | northwind-doc, SKILL.md | doc 폴더에 산출물 작성하지 않는 사례 재발 방지 |
+| 2026-06-10 | 각 서브 에이전트 전용 스킬 4종 신설(`northwind-backend-scaffold`, `northwind-frontend-admin-crud`, `northwind-qa-boundary-check`, `northwind-doc-storyboard-sync`) — 레이어 템플릿/체크리스트/StoryBoard 갱신 패턴을 스킬로 분리. 각 에이전트 `.md`와 오케스트레이터 프롬프트의 중복 설명(체크리스트, tsc 빌드 검증 주의사항 등)을 스킬 참조로 축약 | northwind-backend-scaffold, northwind-frontend-admin-crud, northwind-qa-boundary-check, northwind-doc-storyboard-sync, northwind-backend, northwind-frontend, northwind-qa, northwind-doc, northwind-orchestrator | S-40/41/42(주문 관리) 등 다음 작업에서 반복될 i18n(`*ModelConst`/`*ErrorConst`)·DataGrid CRUD·경계면 비교·StoryBoard 동기화 작업의 일관성 확보, 동일 설명이 여러 파일에 중복되어 유지보수가 어려운 문제 해소 |
 
 ---
 
