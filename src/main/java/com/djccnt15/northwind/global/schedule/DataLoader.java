@@ -4,7 +4,7 @@ import com.djccnt15.northwind.global.storage.DataCacheStorage;
 import com.djccnt15.northwind.db.repository.AppUserRepo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -24,9 +24,9 @@ public class DataLoader {
      * <p>You can perform any data warmup or initialization logic here</p>
      * <p>For example, you could load some initial data into the database, or perform some setup tasks</p>
      */
-    @EventListener(ContextRefreshedEvent.class)
+    @EventListener(ApplicationReadyEvent.class)
     public void onApplicationEvent() {
-        log.info("Application context refreshed. Performing data warmup...");
+        log.info("Application context loaded. Performing data warmup...");
         var superAdmins = appUserRepo.findIdsByRoleName(SUPERADMIN);
         dataCacheStorage.updateData(superAdmins);
     }
