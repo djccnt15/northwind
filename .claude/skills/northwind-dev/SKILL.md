@@ -31,7 +31,7 @@ description: >
 - 오케스트레이터의 역할은 **요구사항 정리 → worktree 생성 → 서브 에이전트 호출 → 산출물 확인 → 결과 보고**로 한정된다.
 - "간단해 보이는 수정"이라도 오케스트레이터가 `Edit`/`Write`로 `src/main`, `src/test`, `frontend/src` 등 구현 코드를 직접 변경하지 않는다 — 사소해 보이는 변경도 컨벤션 누락(예: `*ErrorConst` 분리, `@MockitoBean` 보강 등)이나 테스트 누락으로 이어질 수 있으므로 전문 서브 에이전트의 점검을 거쳐야 한다.
 - 직접 `.\gradlew.bat test`, `npm run build` 등을 실행해 "검증까지 끝냈다"고 판단하지 않는다 — 검증은 Phase 4의 `northwind-qa` 책임이다.
-- 예외적으로 오케스트레이터가 직접 수행하는 것: `_workspace/*.md` 산출물 작성, git worktree 생성/정리, 요구사항 분석·문서화 같은 오케스트레이션 메타 작업
+- 예외적으로 오케스트레이터가 직접 수행하는 것: `{TASK_DIR}/*.md` 산출물 작성, git worktree 생성/정리, 요구사항 분석·문서화 같은 오케스트레이션 메타 작업
 
 > 이 규칙이 필요했던 이유: i18n 적용 작업(`feature/backend-i18n-validation-error`)에서 오케스트레이터가 Phase 2/4를 건너뛰고 직접 13개 `*ErrorConst` 클래스 생성, 16개 서비스/컨트롤러/핸들러 수정, 테스트 보강까지 전부 수행한 뒤 산출물(`_workspace/*.md`) 없이 완료 보고만 한 사례가 있었음.
 
@@ -39,11 +39,12 @@ description: >
 
 ## Phase 0: 컨텍스트 확인
 
-`_workspace/` 디렉토리 존재 여부를 확인한다.
+`_workspace/` 디렉토리의 `task_*` 폴더 목록을 확인한다 (예: `task_260610_143022`).
 
-- **`_workspace/` 없음** → 초기 실행: Phase 1부터 진행
-- **`_workspace/` 있음 + 사용자가 새 기능 요청** → 새 실행: 기존 `_workspace/`를 `_workspace_prev/`로 이동 후 진행 + 새 worktree 생성
-- **`_workspace/` 있음 + 사용자가 "수정/보완" 요청** → 부분 재실행: `_workspace/00_requirements.md`에서 `WORKTREE_PATH`를 읽어 기존 worktree 재사용, 해당 Phase 에이전트만 재호출
+- **새 기능 요청** → 현재 시각 기준 `_workspace/task_{YYMMDD}_{HHMMSS}/` 폴더를 새로 생성하고 이를 `TASK_DIR`로 지정 (예: `_workspace/task_260610_143022/`), Phase 1부터 진행
+- **"수정/보완" 요청 (직전 작업 연속)** → 폴더명 정렬 기준 가장 최근 `task_*/` 폴더를 `TASK_DIR`로 재사용한다. `{TASK_DIR}/00_requirements.md`에서 `WORKTREE_PATH`를 읽어 기존 worktree 재사용, 해당 Phase 에이전트만 재호출하여 같은 `TASK_DIR`에 산출물을 갱신
+
+이후 모든 Phase에서 언급하는 산출물 경로(`00_requirements.md`, `02_backend_contract.md` 등)는 `{TASK_DIR}/` 기준이다. sub-agent에게 산출물 작성/참조를 지시할 때는 `C:/projects/northwind/{TASK_DIR}/파일명.md` 절대 경로로 전달한다 — worktree의 `[프로젝트 루트]`와는 별도 경로이므로 혼동하지 않는다.
 
 ---
 
@@ -59,7 +60,7 @@ description: >
 | 백엔드 전용 | API 구현만 필요 (프론트 없음) | 2 → 4 |
 | 프론트엔드 전용 | 기존 API 활용, UI만 추가 | 3 → 4 |
 
-요구사항을 `_workspace/00_requirements.md`에 저장한다:
+요구사항을 `{TASK_DIR}/00_requirements.md`에 저장한다:
 ```markdown
 # 요구사항
 ## 기능 설명
@@ -85,7 +86,7 @@ git -C C:/projects/northwind worktree add .worktree/feature/<name> -b feature/<n
 git -C C:/projects/northwind worktree add .worktree/feature/<name> feature/<name>
 ```
 
-- worktree 경로(`C:/projects/northwind/.worktree/feature/<name>`)를 `_workspace/00_requirements.md`의 `## Worktree` 섹션에 기록한다.
+- worktree 경로(`C:/projects/northwind/.worktree/feature/<name>`)를 `{TASK_DIR}/00_requirements.md`의 `## Worktree` 섹션에 기록한다.
 - **이후 모든 sub-agent에게는 이 worktree 경로를 `[프로젝트 루트]`로 전달한다. `C:/projects/northwind`를 직접 전달하지 않는다.**
 
 ---
@@ -106,15 +107,15 @@ Agent(
     1. `src/CLAUDE.md`를 읽어 컨벤션을 확인한다.
     2. 유사한 기존 도메인을 탐색하여 패턴을 파악한다.
     3. 백엔드 기능을 완전히 구현한다 (Entity → Repository → Converter → Service → [Business] → Controller → Validation → 테스트).
-    4. 완료 후 `_workspace/02_backend_contract.md`를 작성한다.
+    4. 완료 후 `C:/projects/northwind/{TASK_DIR}/02_backend_contract.md`를 작성한다.
 
     [프로젝트 루트]
-    {_workspace/00_requirements.md의 Worktree 경로}
+    {TASK_DIR}/00_requirements.md에 기록된 Worktree 경로
   """
 )
 ```
 
-에이전트 완료 후 `_workspace/02_backend_contract.md`가 생성됐는지 확인한다. 없으면 에이전트를 재호출한다.
+에이전트 완료 후 `{TASK_DIR}/02_backend_contract.md`가 생성됐는지 확인한다. 없으면 에이전트를 재호출한다.
 
 ---
 
@@ -131,16 +132,16 @@ Agent(
     {Phase 1에서 정리한 요구사항}
 
     [백엔드 API 계약]
-    _workspace/02_backend_contract.md 파일을 읽어 사용한다.
+    `C:/projects/northwind/{TASK_DIR}/02_backend_contract.md` 파일을 읽어 사용한다.
 
     [작업 지시]
     1. `frontend/CLAUDE.md`를 읽어 컨벤션을 확인한다.
     2. 유사한 기존 페이지를 탐색하여 패턴을 파악한다.
     3. FSD 레이어 규칙을 준수하여 프론트엔드 기능을 완전히 구현한다.
-    4. 구현 완료 후 `cd frontend; npm run build`로 빌드를 검증하고, 통과한 뒤에만 `_workspace/03_frontend_summary.md`를 작성한다 (`npx tsc --noEmit` 단독 실행은 솔루션 스타일 tsconfig 때문에 아무 파일도 검사하지 않으므로 사용 금지).
+    4. 구현 완료 후 `cd frontend; npm run build`로 빌드를 검증하고, 통과한 뒤에만 `C:/projects/northwind/{TASK_DIR}/03_frontend_summary.md`를 작성한다 (`npx tsc --noEmit` 단독 실행은 솔루션 스타일 tsconfig 때문에 아무 파일도 검사하지 않으므로 사용 금지).
 
     [프로젝트 루트]
-    {_workspace/00_requirements.md의 Worktree 경로}
+    {TASK_DIR}/00_requirements.md에 기록된 Worktree 경로
   """
 )
 ```
@@ -157,17 +158,17 @@ Agent(
   model: "opus",
   prompt: """
     [검토 대상]
-    - 백엔드: _workspace/02_backend_contract.md 참고
-    - 프론트엔드: _workspace/03_frontend_summary.md 참고 (있는 경우)
+    - 백엔드: `C:/projects/northwind/{TASK_DIR}/02_backend_contract.md` 참고
+    - 프론트엔드: `C:/projects/northwind/{TASK_DIR}/03_frontend_summary.md` 참고 (있는 경우)
 
     [작업 지시]
     1. `src/CLAUDE.md`, `frontend/CLAUDE.md`를 읽어 컨벤션을 확인한다.
     2. 구현된 코드를 검토하고 위반 사항을 수정한다.
     3. 백엔드 테스트(`.\gradlew.bat test`)와 프론트엔드 빌드(`cd frontend; npm run build`)를 모두 실행하여 통과 여부를 확인한다 (`npx tsc --noEmit` 단독 실행은 솔루션 스타일 tsconfig로 인해 거짓 양성을 내므로 사용 금지).
-    4. `_workspace/04_qa_report.md`를 작성한다.
+    4. `C:/projects/northwind/{TASK_DIR}/04_qa_report.md`를 작성한다.
 
     [프로젝트 루트]
-    {_workspace/00_requirements.md의 Worktree 경로}
+    {TASK_DIR}/00_requirements.md에 기록된 Worktree 경로
   """
 )
 ```
@@ -212,7 +213,7 @@ QA 리포트를 기반으로 사용자에게 다음을 보고한다:
 ### 부분 재실행 흐름
 ```
 사용자: "방금 만든 order API에서 검색 기능을 추가해줘"
-→ Phase 0: _workspace/ 있음 + 부분 수정 요청 → northwind-backend만 재호출
+→ Phase 0: 가장 최근 _workspace/task_*/ 폴더를 TASK_DIR로 재사용 + 부분 수정 요청 → northwind-backend만 재호출
 → Phase 4: QA 재검토
 ```
 
