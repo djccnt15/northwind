@@ -209,6 +209,18 @@ List<UserEmployeeProjection> findFullByIdIn(@Param("ids") List<Long> ids);
 
 **LIKE 검색 패턴**: Business/Service에서 `"%%%s%%".formatted(keyword.trim())`로 패턴을 생성해서 전달한다.
 
+**Projection**: JOIN 결과 매핑용 인터페이스는 `db/projection/<Name>Projection.java`에 독립 파일로 정의한다. Repository 인터페이스 내부에 nested interface로 정의하지 않는다.
+
+**메서드 시그니처 줄바꿈**: 파라미터가 여러 개여서 한 줄에 들어가지 않으면 각 파라미터를 줄바꿈하고 닫는 괄호도 별도 줄에 작성한다.
+
+```java
+Page<SomeEntity> findByFilter(
+    @Param("kw") String kw,
+    @Param("typeId") Long typeId,
+    Pageable pageable
+);
+```
+
 ---
 
 ## DTO 패턴
@@ -279,6 +291,7 @@ public class TeamConverter {
 - 메서드명: `toResponse()` (Entity → Res), `toEntity()` (Req → Entity)
 - null 안전 처리: `Optional.ofNullable()` 사용
 - 관계 엔티티 설정(연관관계 편의 메서드)은 Service에서 담당
+- 단순 getter 위임은 람다 대신 메서드 참조 사용: `.map(e -> e.getName())` 대신 `.map(SomeEntity::getName)`
 
 ---
 
