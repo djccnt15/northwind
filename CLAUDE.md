@@ -91,6 +91,8 @@ cd frontend; npm run dev   # http://localhost:5173
 
 **트리거:** 기능 구현, 도메인 추가, API 개발, 페이지 구현 등 Northwind 개발 작업 요청 시 `northwind-dev` 스킬을 사용하라. 단순 코드 설명이나 개념 질문은 직접 응답 가능.
 
+**사전 설계 분기 (ad-hoc):** 요청이 기존 코드에서 따라갈 유사 패턴이 없는 "큰 구조 변경"(예: 새로운 공유 모듈/인프라 도입, ERD 스키마 변경, 여러 도메인에 걸친 cross-cutting 변경)에 해당하면, `northwind-dev` 호출 전에 `northwind-architect` 에이전트로 설계 방향을 사용자와 합의한 뒤 `northwind-dev`를 호출한다. 기존 패턴을 따르는 일반적인 CRUD/페이지 추가 등은 곧바로 `northwind-dev`를 사용한다.
+
 **변경 이력:**
 
 | 날짜 | 변경 내용 | 대상 | 사유 |
@@ -101,6 +103,7 @@ cd frontend; npm run dev   # http://localhost:5173
 | 2026-06-10 | Phase 0에서 작업 시작 시 `_workspace/task_{YYMMDD}_{HHMMSS}/` 폴더를 생성해 모든 산출물을 그 안에 저장하도록 변경 | SKILL.md | `_workspace`를 평면 구조로 쓰다 보니 추적이 어려워 사후에 수동으로 `task_*` 폴더로 재정리(a140c237)해야 했던 문제 재발 방지 |
 | 2026-06-10 | 산출물 작성 서브 에이전트 생성 작업 순서 개선 | northwind-doc, SKILL.md | doc 폴더에 산출물 작성하지 않는 사례 재발 방지 |
 | 2026-06-10 | 각 서브 에이전트 전용 스킬 4종 신설(`northwind-backend-scaffold`, `northwind-frontend-admin-crud`, `northwind-qa-boundary-check`, `northwind-doc-storyboard-sync`) — 레이어 템플릿/체크리스트/StoryBoard 갱신 패턴을 스킬로 분리. 각 에이전트 `.md`와 오케스트레이터 프롬프트의 중복 설명(체크리스트, tsc 빌드 검증 주의사항 등)을 스킬 참조로 축약 | northwind-backend-scaffold, northwind-frontend-admin-crud, northwind-qa-boundary-check, northwind-doc-storyboard-sync, northwind-backend, northwind-frontend, northwind-qa, northwind-doc, northwind-orchestrator | S-40/41/42(주문 관리) 등 다음 작업에서 반복될 i18n(`*ModelConst`/`*ErrorConst`)·DataGrid CRUD·경계면 비교·StoryBoard 동기화 작업의 일관성 확보, 동일 설명이 여러 파일에 중복되어 유지보수가 어려운 문제 해소 |
+| 2026-06-12 | "사전 설계 분기 (ad-hoc)" 섹션 추가 — 기존 패턴이 없는 큰 구조 변경 요청은 `northwind-dev` 호출 전 `northwind-architect` 에이전트로 설계 합의를 거치도록 명시 | CLAUDE.md | 파이프라인에 상시 architecture agent를 추가하는 대신, Phase 1(계획 수립)을 오케스트레이터가 대화 맥락을 유지한 채 직접 수행하는 기존 구조를 깨지 않고 큰 구조 변경 시에만 ad-hoc으로 설계 검토를 끼워넣기 위함 |
 
 ---
 
