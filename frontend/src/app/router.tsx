@@ -8,6 +8,7 @@ import {
   CompanyRoute,
   ManagerRoute,
   NotFoundRoute,
+  OrderRoute,
   ProductRoute,
   ProtectedRoute,
 } from "./provider/redirect-route";
@@ -22,6 +23,9 @@ import Products from "../pages/products";
 import ProductDetail from "../pages/product-detail";
 import Companies from "../pages/companies";
 import CompanyDetail from "../pages/company-detail";
+import Orders from "../pages/orders";
+import OrderNew from "../pages/order-new";
+import OrderDetail from "../pages/order-detail";
 
 export const AppRouter = createBrowserRouter([
   {
@@ -55,6 +59,19 @@ export const AppRouter = createBrowserRouter([
     children: [
       { path: "/companies", element: <Companies /> },
       { path: "/companies/:id", element: <CompanyDetail /> },
+    ],
+  },
+  {
+    path: "/",
+    element: (
+      <OrderRoute>
+        <Layout />
+      </OrderRoute>
+    ),
+    children: [
+      { path: "/orders", element: <Orders /> },
+      { path: "/orders/new", element: <OrderNew /> },
+      { path: "/orders/:id", element: <OrderDetail /> },
     ],
   },
   {

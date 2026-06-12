@@ -30,3 +30,42 @@ VALUES ('Beverages', 'BEV', 'Soft drinks and teas', 1, 1);
 INSERT INTO product (code, name, standard_unit_cost, unit_price, reorder_level, target_level,
     quantity_per_unit, minimum_reorder_quantity, discontinued, product_category, created_by, last_modified_by)
 VALUES ('P001', 'Chai', 10.00, 18.00, 10, 40, 10, 20, false, 1, 1, 1);
+
+-- tax status
+INSERT INTO tax_status (status, created_by, last_modified_by)
+VALUES ('Taxable', 1, 1), ('Tax Exempt', 1, 1);
+
+-- company type
+INSERT INTO company_type (company_type, created_by, last_modified_by)
+VALUES ('Customer', 1, 1), ('Supplier', 1, 1);
+
+-- companies (1: customer, 2: shipper/supplier)
+INSERT INTO company (name, company_type_id, tax_status_id, created_by, last_modified_by)
+VALUES
+    ('Acme Corp', 1, 1, 1, 1),
+    ('Fast Shipping Inc', 2, 1, 1, 1);
+
+-- order status master (id order = sort order: PENDING..CANCELLED)
+INSERT INTO order_status (code, name, sort_order, created_by, last_modified_by)
+VALUES
+    ('PENDING', '접수', 'ASC', 1, 1),
+    ('PAID', '결제완료', 'ASC', 1, 1),
+    ('SHIPPED', '출고', 'ASC', 1, 1),
+    ('DELIVERED', '배송완료', 'ASC', 1, 1),
+    ('CANCELLED', '취소', 'ASC', 1, 1);
+
+-- order detail status master (id order: 대기, 출고, 취소)
+INSERT INTO order_detail_status (name, sort_order, created_by, last_modified_by)
+VALUES
+    ('대기', 'ASC', 1, 1),
+    ('출고', 'ASC', 1, 1),
+    ('취소', 'ASC', 1, 1);
+
+-- sample order with one item (order id 1, detail id 1)
+INSERT INTO orders (order_date, shipping_fee, customer_id, shipper_id, tax_status_id, status_id, app_user_id,
+    created_by, last_modified_by)
+VALUES ('2026-06-01', 100, 1, 2, 1, 1, 1, 1, 1);
+
+INSERT INTO order_detail (quantity, unit_price, standard_unit_cost, discount, product_id, order_id,
+    order_detail_status_id, created_by, last_modified_by)
+VALUES (2, 18.00, 10.00, 0, 1, 1, 1, 1, 1);
