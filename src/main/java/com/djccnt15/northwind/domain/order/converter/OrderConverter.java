@@ -45,8 +45,7 @@ public class OrderConverter {
     public OrderRes toResponse(OrdersEntity entity) {
         var details = entity.getOrderDetails().stream()
             .sorted(Comparator.comparing(d -> Optional.ofNullable(d.getId()).orElse(0L)))
-            .map(orderDetailConverter::toResponse)
-            .toList();
+            .map(orderDetailConverter::toResponse).toList();
         return OrderRes.builder()
             .id(entity.getId())
             .orderDate(entity.getOrderDate())

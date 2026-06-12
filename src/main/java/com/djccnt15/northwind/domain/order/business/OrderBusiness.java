@@ -130,41 +130,35 @@ public class OrderBusiness {
 
     public List<OrderStatusRes> getOrderStatuses() {
         return orderStatusService.getOrderStatuses().stream()
-            .map(orderStatusConverter::toResponse)
-            .toList();
+            .map(orderStatusConverter::toResponse).toList();
     }
 
     public List<OrderDetailStatusRes> getOrderDetailStatuses() {
         return orderDetailStatusService.getOrderDetailStatuses().stream()
-            .map(orderDetailStatusConverter::toResponse)
-            .toList();
+            .map(orderDetailStatusConverter::toResponse).toList();
     }
 
     public List<CompanyTypeRes> getCompanyTypes() {
         return companyTypeService.getCompanyTypes().stream()
-            .map(companyTypeConverter::toResponse)
-            .toList();
+            .map(companyTypeConverter::toResponse).toList();
     }
 
     public List<CompanyOptionRes> getCompanyOptions(Long typeId, String keyword) {
         var kw = "%%%s%%".formatted(keyword.trim());
         var pageable = PageRequest.of(0, LOOKUP_PAGE_SIZE, Sort.by("name"));
         return companyService.getCompanies(kw, typeId, pageable).getContent().stream()
-            .map(companyOptionConverter::toResponse)
-            .toList();
+            .map(companyOptionConverter::toResponse).toList();
     }
 
     public List<ProductOptionRes> getProductOptions(String keyword) {
         var kw = "%%%s%%".formatted(keyword.trim());
         var pageable = PageRequest.of(0, LOOKUP_PAGE_SIZE, Sort.by("name"));
         return productService.getProducts(kw, null, false, pageable).getContent().stream()
-            .map(productOptionConverter::toResponse)
-            .toList();
+            .map(productOptionConverter::toResponse).toList();
     }
 
     public List<TaxStatusRes> getTaxStatuses() {
         return taxStatusService.getTaxStatuses().stream()
-            .map(taxStatusConverter::toResponse)
-            .toList();
+            .map(taxStatusConverter::toResponse).toList();
     }
 }

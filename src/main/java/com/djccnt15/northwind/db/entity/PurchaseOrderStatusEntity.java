@@ -10,7 +10,7 @@ import lombok.experimental.SuperBuilder;
 import java.util.HashSet;
 import java.util.Set;
 
-import static com.djccnt15.northwind.domain.puchase.validation.PurchaseOrderModelConst.NAME_MAX_LENGTH;
+import static com.djccnt15.northwind.domain.purchase.validation.PurchaseOrderModelConst.NAME_MAX_LENGTH;
 
 @Getter
 @Setter

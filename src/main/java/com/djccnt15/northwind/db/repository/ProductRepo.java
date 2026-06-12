@@ -24,10 +24,12 @@ public interface ProductRepo extends JpaRepository<ProductEntity, Long> {
         AND (:categoryId IS NULL OR c.id = :categoryId)
         AND (:discontinued IS NULL OR p.discontinued = :discontinued)
         """)
-    Page<ProductEntity> findByFilter(@Param("kw") String kw,
+    Page<ProductEntity> findByFilter(
+        @Param("kw") String kw,
         @Param("categoryId") Long categoryId,
         @Param("discontinued") Boolean discontinued,
-        Pageable pageable);
+        Pageable pageable
+    );
 
     @EntityGraph(attributePaths = {"productCategory"})
     Optional<ProductEntity> findWithCategoryById(Long id);

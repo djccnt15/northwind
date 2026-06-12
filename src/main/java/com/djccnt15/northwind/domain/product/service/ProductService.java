@@ -59,7 +59,11 @@ public class ProductService {
         return repository.findByFilter(kw, categoryId, discontinued, pageable);
     }
 
-    public ProductEntity updateProduct(ProductEntity entity, ProductCreateReq request, ProductCategoryEntity category) {
+    public ProductEntity updateProduct(
+        ProductEntity entity,
+        ProductCreateReq request,
+        ProductCategoryEntity category
+    ) {
         entity.setCode(request.getCode());
         entity.setName(request.getName());
         entity.setDescription(request.getDescription());

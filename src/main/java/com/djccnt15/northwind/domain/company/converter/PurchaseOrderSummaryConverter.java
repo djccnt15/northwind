@@ -1,6 +1,7 @@
 package com.djccnt15.northwind.domain.company.converter;
 
 import com.djccnt15.northwind.db.entity.PurchaseOrderEntity;
+import com.djccnt15.northwind.db.entity.PurchaseOrderStatusEntity;
 import com.djccnt15.northwind.domain.company.model.PurchaseOrderSummaryRes;
 import com.djccnt15.northwind.global.annotation.Converter;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +20,7 @@ public class PurchaseOrderSummaryConverter {
             .receivedDate(entity.getReceivedDate())
             .paymentAmount(entity.getPaymentAmount())
             .status(Optional.ofNullable(entity.getStatus())
-                .map(s -> s.getName())
+                .map(PurchaseOrderStatusEntity::getName)
                 .orElse(null))
             .build();
     }

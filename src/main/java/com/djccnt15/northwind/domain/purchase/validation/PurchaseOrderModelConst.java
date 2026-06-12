@@ -1,4 +1,4 @@
-package com.djccnt15.northwind.domain.puchase.validation;
+package com.djccnt15.northwind.domain.purchase.validation;
 
 import lombok.experimental.UtilityClass;
 

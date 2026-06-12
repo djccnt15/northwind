@@ -3,6 +3,7 @@ package com.djccnt15.northwind.domain.order.service;
 import com.djccnt15.northwind.db.entity.AppUserEntity;
 import com.djccnt15.northwind.db.entity.OrderStatusEntity;
 import com.djccnt15.northwind.db.entity.OrdersEntity;
+import com.djccnt15.northwind.db.projection.OrderTotalProjection;
 import com.djccnt15.northwind.db.repository.AppUserRepo;
 import com.djccnt15.northwind.db.repository.OrdersRepo;
 import com.djccnt15.northwind.global.exception.exceptions.ApiException;
@@ -59,8 +60,8 @@ public class OrderService {
         }
         return repository.findTotalAmountByIdIn(orderIds).stream()
             .collect(Collectors.toMap(
-                OrdersRepo.OrderTotalProjection::getOrderId,
-                OrdersRepo.OrderTotalProjection::getTotalAmount
+                OrderTotalProjection::getOrderId,
+                OrderTotalProjection::getTotalAmount
             ));
     }
 

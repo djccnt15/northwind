@@ -22,9 +22,11 @@ public interface CompanyRepo extends JpaRepository<CompanyEntity, Long> {
         WHERE c.name LIKE :kw
         AND (:typeId IS NULL OR t.id = :typeId)
         """)
-    Page<CompanyEntity> findByFilter(@Param("kw") String kw,
+    Page<CompanyEntity> findByFilter(
+        @Param("kw") String kw,
         @Param("typeId") Long typeId,
-        Pageable pageable);
+        Pageable pageable
+    );
 
     @EntityGraph(attributePaths = {"companyType", "taxStatus"})
     Optional<CompanyEntity> findWithRelationById(Long id);

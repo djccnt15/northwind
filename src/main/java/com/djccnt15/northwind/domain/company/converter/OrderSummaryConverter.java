@@ -1,5 +1,6 @@
 package com.djccnt15.northwind.domain.company.converter;
 
+import com.djccnt15.northwind.db.entity.OrderStatusEntity;
 import com.djccnt15.northwind.db.entity.OrdersEntity;
 import com.djccnt15.northwind.domain.company.model.OrderSummaryRes;
 import com.djccnt15.northwind.global.annotation.Converter;
@@ -20,7 +21,7 @@ public class OrderSummaryConverter {
             .shippingFee(entity.getShippingFee())
             .taxRate(entity.getTaxRate())
             .status(Optional.ofNullable(entity.getOrderStatus())
-                .map(s -> s.getName())
+                .map(OrderStatusEntity::getName)
                 .orElse(null))
             .build();
     }

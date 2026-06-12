@@ -21,8 +21,7 @@ public class LangCreateTest {
     void createLang() {
         var langList = List.of("en", "ko");
         var langEntityList = langList.stream()
-            .map(SupportedLangEntity::new)
-            .toList();
+            .map(SupportedLangEntity::new).toList();
         
         langRepo.saveAll(langEntityList);
     }

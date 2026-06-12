@@ -35,7 +35,10 @@ public interface AppUserRepo extends JpaRepository<AppUserEntity, Long> {
             , u.lastLoginAt = :now
         WHERE u.id = :id
         """)
-    void handleLoginSuccess(@Param("id") Long id, @Param("now") LocalDateTime lastLoginAt);
+    void handleLoginSuccess(
+        @Param("id") Long id,
+        @Param("now") LocalDateTime lastLoginAt
+    );
     
     boolean existsByUsername(String username);
     

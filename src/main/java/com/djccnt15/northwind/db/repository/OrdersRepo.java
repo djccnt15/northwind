@@ -1,6 +1,7 @@
 package com.djccnt15.northwind.db.repository;
 
 import com.djccnt15.northwind.db.entity.OrdersEntity;
+import com.djccnt15.northwind.db.projection.OrderTotalProjection;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
@@ -8,7 +9,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -42,7 +42,8 @@ public interface OrdersRepo extends JpaRepository<OrdersEntity, Long> {
         @Param("statusId") Long statusId,
         @Param("dateFrom") LocalDate dateFrom,
         @Param("dateTo") LocalDate dateTo,
-        Pageable pageable);
+        Pageable pageable
+    );
 
     @EntityGraph(attributePaths = {
         "customer", "shipper", "taxStatus", "orderStatus", "appUser",
@@ -65,9 +66,4 @@ public interface OrdersRepo extends JpaRepository<OrdersEntity, Long> {
         GROUP BY o.id, o.shippingFee
         """)
     List<OrderTotalProjection> findTotalAmountByIdIn(@Param("ids") List<Long> ids);
-
-    interface OrderTotalProjection {
-        Long getOrderId();
-        BigDecimal getTotalAmount();
-    }
 }

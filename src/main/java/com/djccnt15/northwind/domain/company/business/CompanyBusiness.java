@@ -50,14 +50,12 @@ public class CompanyBusiness {
 
     public List<CompanyTypeRes> getCompanyTypes() {
         return companyTypeService.getCompanyTypes().stream()
-            .map(companyTypeConverter::toResponse)
-            .toList();
+            .map(companyTypeConverter::toResponse).toList();
     }
 
     public List<TaxStatusRes> getTaxStatuses() {
         return taxStatusService.getTaxStatuses().stream()
-            .map(taxStatusConverter::toResponse)
-            .toList();
+            .map(taxStatusConverter::toResponse).toList();
     }
 
     public Page<CompanyRes> getCompanies(int page, int size, Long type, String keyword) {
@@ -98,8 +96,7 @@ public class CompanyBusiness {
     public List<ContactRes> getContacts(Long companyId) {
         companyService.getCompany(companyId);
         return contactService.getContacts(companyId).stream()
-            .map(contactConverter::toResponse)
-            .toList();
+            .map(contactConverter::toResponse).toList();
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -127,14 +124,12 @@ public class CompanyBusiness {
     public List<OrderSummaryRes> getOrders(Long companyId) {
         companyService.getCompany(companyId);
         return companyOrderService.getOrdersByCustomer(companyId).stream()
-            .map(orderSummaryConverter::toResponse)
-            .toList();
+            .map(orderSummaryConverter::toResponse).toList();
     }
 
     public List<PurchaseOrderSummaryRes> getPurchaseOrders(Long companyId) {
         companyService.getCompany(companyId);
         return companyPurchaseOrderService.getPurchaseOrdersByVendor(companyId).stream()
-            .map(purchaseOrderSummaryConverter::toResponse)
-            .toList();
+            .map(purchaseOrderSummaryConverter::toResponse).toList();
     }
 }

@@ -16,7 +16,9 @@ public class OrderDetailStatusConverter {
         return OrderDetailStatusRes.builder()
             .id(entity.getId())
             .name(entity.getName())
-            .sortOrder(Optional.ofNullable(entity.getSortOrder()).map(Enum::name).orElse(null))
+            .sortOrder(Optional.ofNullable(entity.getSortOrder())
+                .map(Enum::name)
+                .orElse(null))
             .build();
     }
 
