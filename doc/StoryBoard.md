@@ -24,9 +24,9 @@
 | S-40 | 주문 목록 | `/orders` | ADMIN, ORDER | ✅ |
 | S-41 | 주문 상세 | `/orders/:id` | ADMIN, ORDER | ✅ |
 | S-42 | 주문 생성 | `/orders/new` | ADMIN, ORDER | ✅ |
-| S-50 | 발주 목록 | `/purchase-orders` | ADMIN, PURCHASE | 🔲 |
-| S-51 | 발주 상세 | `/purchase-orders/:id` | ADMIN, PURCHASE | 🔲 |
-| S-52 | 발주 생성 | `/purchase-orders/new` | ADMIN, PURCHASE | 🔲 |
+| S-50 | 발주 목록 | `/purchase-orders` | ADMIN, PURCHASE | ✅ |
+| S-51 | 발주 상세 | `/purchase-orders/:id` | ADMIN, PURCHASE | ✅ |
+| S-52 | 발주 생성 | `/purchase-orders/new` | ADMIN, PURCHASE | ✅ |
 | S-60 | 상품 목록 | `/products` | ADMIN, PRODUCT | ✅ |
 | S-61 | 상품 상세 | `/products/:id` | ADMIN, PRODUCT | ✅ |
 | S-62 | 카테고리 관리 | `/admin/categories` | ADMIN, MANAGER | ✅ |
@@ -468,7 +468,7 @@ S-21과 동일한 DataGrid CRUD 패턴 적용.
 
 ---
 
-### S-50 발주 목록 🔲
+### S-50 발주 목록 ✅
 
 **목적**: 구매 발주 현황 조회 (Procure-to-Pay)
 
@@ -494,7 +494,7 @@ S-21과 동일한 DataGrid CRUD 패턴 적용.
 
 ---
 
-### S-51 발주 상세 🔲
+### S-51 발주 상세 ✅
 
 **목적**: 단일 발주의 승인 워크플로우·수령·대금 관리
 
@@ -520,7 +520,7 @@ S-21과 동일한 DataGrid CRUD 패턴 적용.
 
 ---
 
-### S-52 발주 생성 🔲
+### S-52 발주 생성 ✅
 
 S-42 주문 생성과 동일한 폼 패턴.
 - 공급사 선택 (Vendor만 필터)
@@ -690,10 +690,9 @@ S-21/S-22와 동일한 DataGrid CRUD 패턴 적용.
 
 ## 6. 미구현 화면 개발 우선순위 (제안)
 
-> S-30/31/32(거래처), S-40/41/42(주문), S-60/61/62(상품/카테고리)는 구현 완료되어 제외됨.
+> S-30/31/32(거래처), S-40/41/42(주문), S-50/51/52(발주), S-60/61/62(상품/카테고리)는 구현 완료되어 제외됨.
 
 | 우선순위 | 화면 | 이유 |
 |---------|------|------|
 | 1 | S-10 홈 대시보드 (확장) | 진입점, MRU·알림 연결 고리 |
-| 2 | S-50/51/52 발주 관리 | 핵심 구매 흐름 |
-| 3 | S-63 재고 실사 | 재고 정확도 지표 달성 |
+| 2 | S-63 재고 실사 | 재고 정확도 지표 달성 |

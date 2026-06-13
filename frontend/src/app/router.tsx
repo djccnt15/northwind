@@ -11,6 +11,7 @@ import {
   OrderRoute,
   ProductRoute,
   ProtectedRoute,
+  PurchaseRoute,
 } from "./provider/redirect-route";
 import Signup from "../pages/signup";
 import AdminUser from "../pages/admin-user";
@@ -26,6 +27,9 @@ import CompanyDetail from "../pages/company-detail";
 import Orders from "../pages/orders";
 import OrderNew from "../pages/order-new";
 import OrderDetail from "../pages/order-detail";
+import PurchaseOrders from "../pages/purchase-orders";
+import PurchaseOrderNew from "../pages/purchase-order-new";
+import PurchaseOrderDetail from "../pages/purchase-order-detail";
 
 export const AppRouter = createBrowserRouter([
   {
@@ -72,6 +76,19 @@ export const AppRouter = createBrowserRouter([
       { path: "/orders", element: <Orders /> },
       { path: "/orders/new", element: <OrderNew /> },
       { path: "/orders/:id", element: <OrderDetail /> },
+    ],
+  },
+  {
+    path: "/",
+    element: (
+      <PurchaseRoute>
+        <Layout />
+      </PurchaseRoute>
+    ),
+    children: [
+      { path: "/purchase-orders", element: <PurchaseOrders /> },
+      { path: "/purchase-orders/new", element: <PurchaseOrderNew /> },
+      { path: "/purchase-orders/:id", element: <PurchaseOrderDetail /> },
     ],
   },
   {

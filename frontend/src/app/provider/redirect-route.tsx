@@ -53,6 +53,22 @@ export function OrderRoute({ children }: ChildNodeIfs) {
   return <>{children}</>;
 }
 
+export function PurchaseRoute({ children }: ChildNodeIfs) {
+  const { user } = useAuth();
+
+  if (
+    !user ||
+    !(
+      user.authorities.includes("ADMIN") ||
+      user.authorities.includes("PURCHASE")
+    )
+  ) {
+    return <Navigate to="/home" replace />;
+  }
+
+  return <>{children}</>;
+}
+
 export function CompanyRoute({ children }: ChildNodeIfs) {
   const { user } = useAuth();
 
