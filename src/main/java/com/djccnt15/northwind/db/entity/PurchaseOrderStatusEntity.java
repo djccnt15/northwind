@@ -10,7 +10,8 @@ import lombok.experimental.SuperBuilder;
 import java.util.HashSet;
 import java.util.Set;
 
-import static com.djccnt15.northwind.domain.purchase.validation.PurchaseOrderModelConst.NAME_MAX_LENGTH;
+import static com.djccnt15.northwind.domain.purchase.validation.PurchaseOrderStatusModelConst.CODE_MAX_LENGTH;
+import static com.djccnt15.northwind.domain.purchase.validation.PurchaseOrderStatusModelConst.NAME_MAX_LENGTH;
 
 @Getter
 @Setter
@@ -22,15 +23,19 @@ import static com.djccnt15.northwind.domain.purchase.validation.PurchaseOrderMod
 @AllArgsConstructor
 @SuperBuilder
 public class PurchaseOrderStatusEntity extends BaseEntity {
-    
+
+    @NotNull
+    @Column(length = CODE_MAX_LENGTH, nullable = false, unique = true)
+    private String code;
+
     @NotNull
     @Column(length = NAME_MAX_LENGTH, nullable = false, unique = true)
     private String name;
-    
+
     @Column
     @Enumerated(EnumType.STRING)
     private SortOrderEnum sortOrder;
-    
+
     @OneToMany(mappedBy = "status")
     @Builder.Default @Setter(AccessLevel.NONE)
     @ToString.Exclude @EqualsAndHashCode.Exclude

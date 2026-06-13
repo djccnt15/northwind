@@ -45,6 +45,7 @@ product_category {
 
 purchase_order_status {
     bigint id PK
+    varchar code UK
     varchar name UK
     enum sort_order
     datetime64 created_at
@@ -274,6 +275,18 @@ purchase_orders {
     datetime64 updated_at
 }
 
+purchase_order_detail {
+    bigint id PK
+    int quantity
+    decimal unit_price
+    bigint product_id FK
+    bigint purchase_order_id FK
+    datetime64 created_at
+    bigint created_by
+    bigint last_modified_by
+    datetime64 updated_at
+}
+
 stock_take {
     bigint id PK
     bigint expected_quantity
@@ -326,6 +339,8 @@ employee ||--o{ purchase_orders : "approves"
 purchase_order_status ||--o{ purchase_orders : "tracks status"
 employee ||--o{ purchase_orders : "submits"
 company ||--o{ purchase_orders : "receives from"
+purchase_orders ||--o{ purchase_order_detail : "contains"
+product ||--o{ purchase_order_detail : "ordered"
 product ||--o{ stock_take : "counted in"
 orders ||--o{ order_detail : "contains"
 order_detail_status ||--o{ order_detail : "tracks status"
