@@ -12,6 +12,7 @@ import {
   ProductRoute,
   ProtectedRoute,
   PurchaseRoute,
+  StockRoute,
 } from "./provider/redirect-route";
 import Signup from "../pages/signup";
 import AdminUser from "../pages/admin-user";
@@ -30,6 +31,7 @@ import OrderDetail from "../pages/order-detail";
 import PurchaseOrders from "../pages/purchase-orders";
 import PurchaseOrderNew from "../pages/purchase-order-new";
 import PurchaseOrderDetail from "../pages/purchase-order-detail";
+import StockTake from "../pages/stock-take";
 
 export const AppRouter = createBrowserRouter([
   {
@@ -103,6 +105,15 @@ export const AppRouter = createBrowserRouter([
       { path: "/products/new", element: <ProductDetail /> },
       { path: "/products/:id", element: <ProductDetail /> },
     ],
+  },
+  {
+    path: "/",
+    element: (
+      <StockRoute>
+        <Layout />
+      </StockRoute>
+    ),
+    children: [{ path: "/stock-take", element: <StockTake /> }],
   },
   {
     path: "/admin",

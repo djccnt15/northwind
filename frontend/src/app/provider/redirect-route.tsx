@@ -85,6 +85,19 @@ export function CompanyRoute({ children }: ChildNodeIfs) {
   return <>{children}</>;
 }
 
+export function StockRoute({ children }: ChildNodeIfs) {
+  const { user } = useAuth();
+
+  if (
+    !user ||
+    !(user.authorities.includes("ADMIN") || user.authorities.includes("STOCK"))
+  ) {
+    return <Navigate to="/home" replace />;
+  }
+
+  return <>{children}</>;
+}
+
 export function ManagerRoute({ children }: ChildNodeIfs) {
   const { user } = useAuth();
 

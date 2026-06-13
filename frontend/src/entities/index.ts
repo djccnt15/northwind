@@ -32,4 +32,5 @@ export type {
   PurchaseOrderListItemIfs,
   PurchaseOrderIfs,
 } from "./purchase-order";
+export type { StockTakeRowIfs } from "./stock-take";
 export type { ApiIfs, PageIfs, SessionIfs, ChildNodeIfs } from "./app";
