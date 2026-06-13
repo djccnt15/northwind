@@ -163,6 +163,7 @@ if (!user.authorities.includes("ADMIN")) return <Navigate to="/home" />;
 | `AdminRoute` | `ADMIN` 권한 없음 | `/home`으로 리다이렉트 |
 | `ProductRoute` | `ADMIN`, `PRODUCT` 권한 모두 없음 | `/home`으로 리다이렉트 |
 | `OrderRoute` | `ADMIN`, `ORDER` 권한 모두 없음 | `/home`으로 리다이렉트 |
+| `StockRoute` | `ADMIN`, `STOCK` 권한 모두 없음 | `/home`으로 리다이렉트 |
 | `ManagerRoute` | `ADMIN`, `MANAGER` 권한 모두 없음 | `/home`으로 리다이렉트 |
 | `AuthRedirectRoute` | 이미 로그인 | `/home`으로 리다이렉트 |
 

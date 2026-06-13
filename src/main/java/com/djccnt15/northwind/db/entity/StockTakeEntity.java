@@ -18,7 +18,11 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @SuperBuilder
 public class StockTakeEntity extends BaseEntity {
-    
+
+    @Version
+    @Column(name = "version")
+    private Long version;
+
     @Column(name = "stock_take_date")
     private LocalDate stockTakeDate;
     

@@ -293,6 +293,7 @@ stock_take {
     bigint quantity_on_hand
     date stock_take_date
     bigint product_id FK
+    bigint version
     datetime64 created_at
     bigint created_by
     bigint last_modified_by
