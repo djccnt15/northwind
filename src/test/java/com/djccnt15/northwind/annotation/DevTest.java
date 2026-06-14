@@ -8,9 +8,13 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * <p>only run this test when "dev" profile is active</p>
+ * `loadContext = true` is required to load the application context and evaluate the expression against it
+ */
 @Target({ElementType.TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
-@EnabledIf(expression = "#{environment['spring.profiles.active'] == 'dev'}")  // only run this test when "dev" profile is active
+@EnabledIf(expression = "#{environment['spring.profiles.active'] == 'dev'}", loadContext = true)
 @ActiveProfiles("dev")
 public @interface DevTest {
     
