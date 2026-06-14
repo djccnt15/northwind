@@ -44,6 +44,7 @@ public class UserBusiness {
         return userConverter.toResponse(userEntity);
     }
     
+    @Transactional(rollbackFor = Exception.class)
     public UserInfoRes updateProfile(
         UserSession userSession,
         Long userId,
@@ -60,6 +61,7 @@ public class UserBusiness {
         return userConverter.toResponse(entity);
     }
     
+    @Transactional(rollbackFor = Exception.class)
     public UserInfoRes updatePassword(
         UserSession userSession,
         Long userId,

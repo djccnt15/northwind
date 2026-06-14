@@ -56,8 +56,7 @@ public class StockTakeBusiness {
     @Transactional(rollbackFor = Exception.class)
     public List<StockTakeRowRes> saveStockTakes(StockTakeSaveReq request) {
         return request.getItems().stream()
-            .map(item -> saveItem(request, item))
-            .toList();
+            .map(item -> saveItem(request, item)).toList();
     }
 
     private StockTakeRowRes saveItem(StockTakeSaveReq request, StockTakeItemReq item) {

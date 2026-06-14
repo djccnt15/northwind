@@ -75,6 +75,7 @@ public class AdminUserBusiness {
         return response;
     }
     
+    @Transactional(rollbackFor = Exception.class)
     public UserInfoRes resetPassword(Long userId) {
         var entity = userService.getUser(userId);
         userService.resetPassword(entity);
