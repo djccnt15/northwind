@@ -245,6 +245,18 @@
 - 읽기 전용: 계정 만료일, 소속 팀, 직함, 입사일 (변경은 관리자 요청)
 - 권한 목록 태그로 표시
 
+**선호 언어 결정 정책 (로그인 전/후)**:
+- **비로그인 상태** (S-01/S-02/S-03 등): 프론트엔드는 브라우저 언어(`navigator.language`)를 화면 UI 언어로 사용하고, API 요청은 브라우저가 자동 전송하는 `Accept-Language` 헤더를 그대로 사용한다. 백엔드는 기본 `AcceptHeaderLocaleResolver`로 이 헤더 기준 응답 언어를 결정한다 (현행 유지, 변경 없음)
+- **로그인 이후**: `preferred_lang_id`가 화면 UI 언어와 백엔드 응답 언어를 모두 결정하는 단일 기준이 되며, `Accept-Language` 헤더보다 우선한다
+  - 로그인 / `check-session` 응답(`SessionInfoRes`)에 `preferredLang`(언어 코드) 필드 추가 → 프론트엔드는 이 값으로 i18n 언어를 전환
+  - 백엔드는 인증된 사용자의 `preferred_lang_id`를 `Accept-Language`보다 우선 적용하는 커스텀 `LocaleResolver`(또는 인터셉터)를 `global/config`에 추가해야 함 — 전역 응답 처리에 영향을 주는 cross-cutting 변경이므로 구현 착수 전 설계 검토(`northwind-architect`) 대상
+
+**선호 언어 변경 (프로필 화면)**:
+- `Language` 드롭다운 옵션: `GET /api/v1/lang` (신규)로 조회한 `supported_lang` 전체 목록(`id`, `lang` 코드). 현재 선택값은 `userInfo.preferredLang`
+- `[Change]` 클릭 → `PATCH /api/v1/user/{userId}/lang` (신규, `{ preferredLangId }`) → 성공 시 `UserInfoRes.preferredLang` 갱신 + 프론트엔드 i18n 언어 즉시 전환
+- 영향받는 응답 모델: `SessionInfoRes`, `UserInfoRes`에 `preferredLang`(언어 코드) 필드 추가 필요
+- 회원가입(S-03) 시 저장된 `preferred_lang_id`는 위 "로그인 이후" 정책에 따라 최초 로그인 시점부터 화면·응답 언어 결정에 사용됨
+
 ---
 
 ### S-20 사용자 관리 ✅ (ADMIN)
@@ -695,3 +707,13 @@ S-21/S-22와 동일한 DataGrid CRUD 패턴 적용.
 | 우선순위 | 화면 | 이유 |
 |---------|------|------|
 | 1 | S-10 홈 대시보드 (확장) | 진입점, MRU·알림 연결 고리 |
+
+---
+
+## 7. 기존 화면 내 미구현 기능
+
+> 화면(S-XX) 자체는 ✅이지만, 화면 내 일부 기능이 아직 구현되지 않은 항목.
+
+| 화면 | 미구현 기능 | 비고 |
+|------|------------|------|
+| S-11 내 프로필 | 선호 언어 변경 (`preferred_lang_id` 기반 화면/응답 언어 결정) | `GET /api/v1/lang`, `PATCH /api/v1/user/{userId}/lang` 신규 API + 인증 사용자용 커스텀 `LocaleResolver` 설계 필요 (`northwind-architect` 검토 대상, 상세는 S-11 "선호 언어 결정 정책/변경" 참고) |
