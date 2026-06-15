@@ -9,6 +9,7 @@ spring:
       test: test,sql,local
       dev: dev,sql,local
       prod: prod
+  jpa.open-in-view: false  # disable OSIV(open session for lazy loading), default is true
   lifecycle.timeout-per-shutdown-phase: 30s  # wait up to 30s for graceful shutdown, default is 30s
   messages:
     basename: messages,errors  # setting for spring boot message source
