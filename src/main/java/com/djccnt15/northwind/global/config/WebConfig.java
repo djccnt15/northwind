@@ -1,7 +1,9 @@
 package com.djccnt15.northwind.global.config;
 
 import com.djccnt15.northwind.global.interceptor.LogInterceptor;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -10,7 +12,12 @@ import static java.lang.Integer.MIN_VALUE;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
-    
+
+    @Bean
+    public LocaleResolver localeResolver() {
+        return new UserLocaleResolver();
+    }
+
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry

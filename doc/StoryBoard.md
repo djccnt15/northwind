@@ -266,8 +266,8 @@
 **선호 언어 결정 정책 (로그인 전/후)**:
 - **비로그인 상태** (S-01/S-02/S-03 등): 프론트엔드는 브라우저 언어(`navigator.language`)를 화면 UI 언어로 사용하고, API 요청은 브라우저가 자동 전송하는 `Accept-Language` 헤더를 그대로 사용한다. 백엔드는 기본 `AcceptHeaderLocaleResolver`로 이 헤더 기준 응답 언어를 결정한다 (현행 유지, 변경 없음)
 - **로그인 이후**: `preferred_lang_id`가 화면 UI 언어와 백엔드 응답 언어를 모두 결정하는 단일 기준이 되며, `Accept-Language` 헤더보다 우선한다
-  - 로그인 / `check-session` 응답(`SessionInfoRes`)에 `preferredLang`(언어 코드) 필드 추가 → 프론트엔드는 이 값으로 i18n 언어를 전환
-  - 백엔드는 인증된 사용자의 `preferred_lang_id`를 `Accept-Language`보다 우선 적용하는 커스텀 `LocaleResolver`(또는 인터셉터)를 `global/config`에 추가해야 함 — 전역 응답 처리에 영향을 주는 cross-cutting 변경이므로 구현 착수 전 설계 검토(`northwind-architect`) 대상
+  - 로그인 / `check-session` 응답(`SessionInfoRes`)에 `preferredLang`(언어 코드) 필드 추가됨(구현 완료) → 프론트엔드는 이 값으로 i18n 언어를 전환
+  - 백엔드는 인증된 사용자의 `preferred_lang_id`를 `Accept-Language`보다 우선 적용하는 커스텀 `UserLocaleResolver`를 `global/config`에 추가함(구현 완료, `WebConfig`의 `@Bean localeResolver()`로 등록). 비인증/미설정 시 기본 `AcceptHeaderLocaleResolver`로 폴백
 
 **선호 언어 변경 (프로필 화면)**:
 - `Language` 드롭다운 옵션: `GET /api/v1/lang` (신규)로 조회한 `supported_lang` 전체 목록(`id`, `lang` 코드). 현재 선택값은 `userInfo.preferredLang`
@@ -734,6 +734,6 @@ S-21/S-22와 동일한 DataGrid CRUD 패턴 적용.
 
 | 화면 | 미구현 기능 | 비고 |
 |------|------------|------|
-| S-11 내 프로필 | 선호 언어 변경 (`preferred_lang_id` 기반 화면/응답 언어 결정) | `GET /api/v1/lang`, `PATCH /api/v1/user/{userId}/lang` 신규 API + 인증 사용자용 커스텀 `LocaleResolver` 설계 필요 (`northwind-architect` 검토 대상, 상세는 S-11 "선호 언어 결정 정책/변경" 참고) |
+| S-11 내 프로필 (프론트엔드) | 선호 언어 변경 UI (드롭다운 + `[Change]` 연동) | 백엔드 API(`GET /api/v1/lang`, `PATCH /api/v1/user/{userId}/lang`) 및 인증 사용자용 커스텀 `UserLocaleResolver`는 구현 완료(feature/backend-i18n). 프론트엔드 드롭다운/i18n 전환 연동은 미구현 |
 | S-02 로그인 | 소셜 로그인 버튼 (Google / GitHub / Kakao / Naver) | `spring-boot-starter-oauth2-client` 의존성 추가 + `AuthConfig` oauth2Login 설정 + `OAuth2UserService` 구현 필요. Kakao/Naver는 커스텀 provider 설정 필요 |
 | S-11 내 프로필 | 소셜 계정 연동 관리 (연동 추가 / 해제) | `user_oauth_provider` 신규 테이블 + `DELETE /api/v1/user/{userId}/oauth/{provider}` API. 이메일 기반 기존 계정과의 자동 연동 여부는 설계 결정 필요 |

@@ -20,4 +20,5 @@ public class AppUserModelConst {
     public static final String EMAIL_LENGTH_ERR_MSG = "{validation.appUser.email.size}";
     public static final String IS_ENABLED_NULL_ERR_MSG = "{validation.appUser.isEnabled.notNull}";
     public static final String CONFIRM_PASSWORD_BLANK_ERR_MSG = "{validation.appUser.confirmPassword.notBlank}";
+    public static final String LANG_ID_NULL_ERR_MSG = "{validation.appUser.preferredLangId.notNull}";
 }

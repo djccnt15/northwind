@@ -31,7 +31,9 @@ public class UserSession implements UserDetails {
     private int loginFailureLimit;
     
     private boolean isSuperAdmin;
-    
+
+    private String preferredLang;
+
     @Override  // DisabledException. 계정 비활성화(관리자가 계정 정지 등)
     public boolean isEnabled() {
         return isEnabled || isSuperAdmin;

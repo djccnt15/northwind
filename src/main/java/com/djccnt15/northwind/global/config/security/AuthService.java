@@ -1,5 +1,6 @@
 package com.djccnt15.northwind.global.config.security;
 
+import com.djccnt15.northwind.db.entity.SupportedLangEntity;
 import com.djccnt15.northwind.db.repository.AppUserRepo;
 import com.djccnt15.northwind.global.config.security.model.UserSession;
 import com.djccnt15.northwind.global.exception.exceptions.ApiException;
@@ -17,7 +18,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
+import static com.djccnt15.northwind.domain.lang.service.LangService.DEFAULT_LANG;
 import static com.djccnt15.northwind.global.code.StatusCode.*;
 import static com.djccnt15.northwind.global.constants.RoleConst.SUPERADMIN;
 import static com.djccnt15.northwind.global.util.UserUtil.getRoleName;
@@ -45,7 +48,11 @@ public class AuthService implements UserDetailsService {
 
         var isSuperAdmin = entity.getAppUserRole().stream()
             .anyMatch(it -> it.getUserRole().getName().equals(SUPERADMIN));
-        
+
+        var preferredLang = Optional.ofNullable(entity.getPreferredLang())
+            .map(SupportedLangEntity::getLang)
+            .orElse(DEFAULT_LANG);
+
         return UserSession.builder()
             .id(entity.getId())
             .username(entity.getUsername())
@@ -57,6 +64,7 @@ public class AuthService implements UserDetailsService {
             .loginFailedCount(entity.getLoginFailedCount())
             .loginFailureLimit(loginFailureLimit)
             .isSuperAdmin(isSuperAdmin)
+            .preferredLang(preferredLang)
             .build();
     }
     

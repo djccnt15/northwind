@@ -16,7 +16,7 @@ import java.util.Optional;
 
 public interface AppUserRepo extends JpaRepository<AppUserEntity, Long> {
     
-    @EntityGraph(attributePaths = {"appUserRole", "appUserRole.userRole"})
+    @EntityGraph(attributePaths = {"appUserRole", "appUserRole.userRole", "preferredLang"})
     Optional<AppUserEntity> findWithRoleFirstByUsername(String username);
     
     @Modifying
@@ -73,6 +73,6 @@ public interface AppUserRepo extends JpaRepository<AppUserEntity, Long> {
         """)
     List<Long> findIdsByRoleName(String name);
     
-    @EntityGraph(attributePaths = {"appUserRole", "appUserRole.userRole", "team"})
+    @EntityGraph(attributePaths = {"appUserRole", "appUserRole.userRole", "team", "preferredLang"})
     Optional<AppUserEntity> findFullFirstById(Long userId);
 }

@@ -1,6 +1,7 @@
 package com.djccnt15.northwind.domain.user.service;
 
 import com.djccnt15.northwind.db.entity.AppUserEntity;
+import com.djccnt15.northwind.db.entity.SupportedLangEntity;
 import com.djccnt15.northwind.db.projection.UserEmployeeProjection;
 import com.djccnt15.northwind.db.repository.AppUserRepo;
 import com.djccnt15.northwind.domain.user.converter.UserConverter;
@@ -103,6 +104,12 @@ public class UserService {
         return entity;
     }
     
+    public AppUserEntity updateLang(AppUserEntity entity, SupportedLangEntity lang) {
+        entity.setPreferredLang(lang);
+        repository.save(entity);
+        return entity;
+    }
+
     public Page<AppUserEntity> getUsers(String keyword, Pageable pageable) {
         return repository.findByUsernameLikeOrEmailLike(keyword, keyword, pageable);
     }

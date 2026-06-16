@@ -1,6 +1,7 @@
 package com.djccnt15.northwind.domain.user.converter;
 
 import com.djccnt15.northwind.db.entity.AppUserEntity;
+import com.djccnt15.northwind.db.entity.SupportedLangEntity;
 import com.djccnt15.northwind.db.entity.TeamEntity;
 import com.djccnt15.northwind.domain.user.model.SessionInfoRes;
 import com.djccnt15.northwind.domain.user.model.SignupReq;
@@ -30,6 +31,7 @@ public class UserConverter {
             .username(userSession.getUsername())
             .authorities(userSession.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority).toList())
+            .preferredLang(userSession.getPreferredLang())
             .build();
     }
     
@@ -41,7 +43,11 @@ public class UserConverter {
         var teamName = Optional.ofNullable(entity.getTeam())
             .map(TeamEntity::getName)
             .orElse(null);
-        
+
+        var preferredLang = Optional.ofNullable(entity.getPreferredLang())
+            .map(SupportedLangEntity::getLang)
+            .orElse(null);
+
         return UserInfoRes.builder()
             .id(entity.getId())
             .username(entity.getUsername())
@@ -53,6 +59,7 @@ public class UserConverter {
             .loginFailedCount(entity.getLoginFailedCount())
             .lastLoginAt(entity.getLastLoginAt())
             .team(teamName)
+            .preferredLang(preferredLang)
             .build();
     }
     

@@ -1,10 +1,12 @@
 package com.djccnt15.northwind.domain.user.business;
 
 import com.djccnt15.northwind.domain.address.converter.AddressConverter;
+import com.djccnt15.northwind.domain.lang.service.LangService;
 import com.djccnt15.northwind.domain.user.converter.EmployeeConverter;
 import com.djccnt15.northwind.domain.user.converter.UserConverter;
 import com.djccnt15.northwind.domain.user.model.EmployeeReq;
 import com.djccnt15.northwind.domain.user.model.SignupReq;
+import com.djccnt15.northwind.domain.user.model.UpdateLangReq;
 import com.djccnt15.northwind.domain.user.model.UserInfoRes;
 import com.djccnt15.northwind.domain.user.service.EmployeeService;
 import com.djccnt15.northwind.domain.user.service.UserRoleService;
@@ -28,6 +30,7 @@ public class UserBusiness {
     private final EmployeeConverter employeeConverter;
     private final EmployeeService employeeService;
     private final AddressConverter addressConverter;
+    private final LangService langService;
     
     public void checkEmailExists(String email) {
         userService.validateEmailNotExists(email);
@@ -41,6 +44,8 @@ public class UserBusiness {
         var userEntity = userService.createUser(request);
         var userRoleEntity = userRoleService.getUserRole(USER);
         userRoleService.assignRoleToUser(userEntity, userRoleEntity);
+        var langEntity = langService.getLangOrDefault(request.getPreferredLangCode());
+        userService.updateLang(userEntity, langEntity);
         return userConverter.toResponse(userEntity);
     }
     
@@ -77,6 +82,22 @@ public class UserBusiness {
         return userConverter.toResponse(entity);
     }
     
+    @Transactional(rollbackFor = Exception.class)
+    public UserInfoRes updateLang(
+        UserSession userSession,
+        Long userId,
+        UpdateLangReq request
+    ) {
+        userService.validateUserId(userSession, userId);
+
+        var langEntity = langService.getLang(request.getPreferredLangId());
+        var entity = userService.getUser(userSession.getId());
+        userService.updateLang(entity, langEntity);
+
+        userSession.setPreferredLang(langEntity.getLang());
+        return userConverter.toResponse(entity);
+    }
+
     public UserInfoRes getUserInfo(UserSession userSession, Long userId) {
         userService.validateUserId(userSession, userId);
         var userEntity = userService.getFullUser(userSession.getId());
