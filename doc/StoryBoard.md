@@ -118,6 +118,10 @@
 │                                  │
 │  ☐ Remember Me   ☐ Remember ID  │
 ├──────────────────────────────────┤
+│       ── or sign in with ──      │
+│  [G Google] [  GitHub]           │
+│  [K Kakao ] [N  Naver]           │  🔲 소셜 로그인 버튼
+├──────────────────────────────────┤
 │  Don't have an account?          │
 │  Create one →                    │
 └──────────────────────────────────┘
@@ -129,6 +133,9 @@
 - `Remember ID`: 아이디 localStorage 저장
 - 로그인 실패 시 에러 메시지 표시
 - 로그인 성공 → 이전 페이지 또는 `/home`으로 이동
+- 🔲 소셜 로그인 버튼(Google / GitHub / Kakao / Naver) 클릭 → 각 provider 인증 페이지로 리다이렉트 → 완료 후 `/home`으로 복귀
+  - 최초 소셜 로그인 시 계정 자동 생성
+  - 이후 소셜 로그인은 기존 계정으로 바로 인증
 
 ---
 
@@ -220,8 +227,15 @@
 │  [ID          ] [E-mail               ] [Update] │  [ADMIN]     │
 ├──────────────────────────────────────────────────┤  [USER]      │
 │  [Password    ] [Confirm Password     ] [Change] │  ...         │
+│  (소셜 전용 계정은 비밀번호 변경 비활성화)          │              │
 ├──────────────────────────────────────────────────┤              │
 │  Language   [Korean ▼]               [Change]   │              │
+├──────────────────────────────────────────────────┤              │
+│  소셜 계정 연동                         🔲         │              │
+│  [G Google ] ✓ 연동됨       [연동 해제]           │              │
+│  [  GitHub ] ✗ 미연동       [연동하기 →]          │              │
+│  [K Kakao  ] ✗ 미연동       [연동하기 →]          │              │
+│  [N Naver  ] ✗ 미연동       [연동하기 →]          │              │
 ├──────────────────────────────────────────────────┤              │
 │  Live Until [____________] (읽기 전용, 툴팁 안내) │              │
 │  Team       [____________] (읽기 전용)            │              │
@@ -239,8 +253,12 @@
 
 **기능**:
 - 계정 정보(ID, 이메일) 수정
-- 비밀번호 변경
+- 비밀번호 변경 (소셜 전용 계정은 비활성화)
 - 선호 언어 변경 (`supported_lang` 목록에서 선택, 변경 즉시 백엔드 응답 언어에 반영)
+- 🔲 소셜 계정 연동 관리
+  - 현재 연동된 provider 표시 및 해제 (`DELETE /api/v1/user/{userId}/oauth/{provider}`)
+  - 미연동 provider 연동 추가 (`/oauth2/authorization/{provider}` → OAuth 흐름 → 프로필 복귀)
+  - 마지막 남은 연동 계정은 비밀번호가 없는 경우 해제 불가 (계정 접근 수단 보호)
 - 사원 개인정보(이름, 연락처, 주소 등) 수정
 - 읽기 전용: 계정 만료일, 소속 팀, 직함, 입사일 (변경은 관리자 요청)
 - 권한 목록 태그로 표시
@@ -717,3 +735,5 @@ S-21/S-22와 동일한 DataGrid CRUD 패턴 적용.
 | 화면 | 미구현 기능 | 비고 |
 |------|------------|------|
 | S-11 내 프로필 | 선호 언어 변경 (`preferred_lang_id` 기반 화면/응답 언어 결정) | `GET /api/v1/lang`, `PATCH /api/v1/user/{userId}/lang` 신규 API + 인증 사용자용 커스텀 `LocaleResolver` 설계 필요 (`northwind-architect` 검토 대상, 상세는 S-11 "선호 언어 결정 정책/변경" 참고) |
+| S-02 로그인 | 소셜 로그인 버튼 (Google / GitHub / Kakao / Naver) | `spring-boot-starter-oauth2-client` 의존성 추가 + `AuthConfig` oauth2Login 설정 + `OAuth2UserService` 구현 필요. Kakao/Naver는 커스텀 provider 설정 필요 |
+| S-11 내 프로필 | 소셜 계정 연동 관리 (연동 추가 / 해제) | `user_oauth_provider` 신규 테이블 + `DELETE /api/v1/user/{userId}/oauth/{provider}` API. 이메일 기반 기존 계정과의 자동 연동 여부는 설계 결정 필요 |

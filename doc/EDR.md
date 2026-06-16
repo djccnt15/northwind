@@ -100,7 +100,7 @@ app_user {
     varchar username UK
     varchar email UK
     bit is_verified
-    varchar password
+    varchar password "nullable: 소셜 전용 계정은 null"
     datetime64 live_until
     datetime64 password_changed_at
     int login_failed_count
@@ -111,6 +111,18 @@ app_user {
     datetime64 updated_at
     bigint created_by
     bigint last_modified_by
+}
+
+user_oauth_provider {
+    bigint id PK
+    bigint app_user_id FK
+    enum provider "GOOGLE, GITHUB, KAKAO, NAVER"
+    varchar provider_user_id "provider 발급 고유 ID"
+    varchar provider_email
+    datetime64 created_at
+    bigint created_by
+    bigint last_modified_by
+    datetime64 updated_at
 }
 
 app_user_role {
@@ -317,6 +329,7 @@ order_detail {
 
 %% Relationships
 supported_lang ||--o{ app_user : "preferred by"
+app_user ||--o{ user_oauth_provider : "linked to"
 team ||--o{ app_user : "has members"
 app_user ||--o{ app_user_role : "assigned"
 user_role ||--o{ app_user_role : "assigned"
