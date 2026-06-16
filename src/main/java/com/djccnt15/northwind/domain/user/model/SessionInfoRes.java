@@ -14,4 +14,6 @@ public class SessionInfoRes {
     private String username;
     
     private List<String> authorities;
+
+    private String preferredLang;
 }

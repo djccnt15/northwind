@@ -3,6 +3,7 @@ package com.djccnt15.northwind.domain.user.controller;
 import com.djccnt15.northwind.domain.user.business.UserBusiness;
 import com.djccnt15.northwind.domain.user.model.EmployeeReq;
 import com.djccnt15.northwind.domain.user.model.SignupReq;
+import com.djccnt15.northwind.domain.user.model.UpdateLangReq;
 import com.djccnt15.northwind.domain.user.model.UserInfoRes;
 import com.djccnt15.northwind.global.api.Api;
 import com.djccnt15.northwind.global.config.security.model.UserSession;
@@ -54,6 +55,16 @@ public class UserApiController {
         return ResponseEntity.ok(Api.OK(response));
     }
     
+    @PatchMapping("{userId}/lang")
+    public ResponseEntity<Api<UserInfoRes>> updateLang(
+        @AuthenticationPrincipal UserSession userSession,
+        @PathVariable Long userId,
+        @Validated(UpdateLangReq.UpdateLang.class) @RequestBody UpdateLangReq request
+    ) {
+        var response = business.updateLang(userSession, userId, request);
+        return ResponseEntity.ok(Api.OK(response));
+    }
+
     @PatchMapping("{userId}/info")
     public ResponseEntity<Api<UserInfoRes>> updateInfo(
         @AuthenticationPrincipal UserSession userSession,

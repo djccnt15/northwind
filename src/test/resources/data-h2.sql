@@ -1,3 +1,7 @@
+INSERT INTO supported_lang (lang)
+VALUES ('en'), ('ko')
+;
+
 INSERT INTO user_role (name)
 VALUES
     ('SUPERADMIN'), ('ADMIN'), ('MANAGER'), ('USER'),
