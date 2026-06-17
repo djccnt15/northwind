@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import { commLinkSkyBlue } from "../shared/ui";
 
@@ -87,21 +88,22 @@ const FooterLink = styled(ExternalLink)`
 `;
 
 export default function Welcome() {
+  const { t } = useTranslation();
   return (
     <Wrapper>
-      <H1>Welcome to Northwind!</H1>
+      <H1>{t("page.welcome.title")}</H1>
       <ContentArea>
         <DescriptionArea>
           <P>
-            Northwind is a sample ERP application built with{" "}
+            {t("page.welcome.desc1Pre")}
             <ExternalLink
               href="https://react.dev/"
               target="_blank"
               rel="noopener noreferrer"
             >
               React
-            </ExternalLink>{" "}
-            and{" "}
+            </ExternalLink>
+            {t("page.welcome.desc1And")}
             <ExternalLink
               href="https://spring.io/"
               target="_blank"
@@ -109,19 +111,18 @@ export default function Welcome() {
             >
               Spring
             </ExternalLink>
-            .
+            {t("page.welcome.desc1End")}
           </P>
           <P>
-            It is a great starting point for learning how to build a full-stack
-            application with{" "}
+            {t("page.welcome.desc2Pre")}
             <ExternalLink
               href="https://www.typescriptlang.org/"
               target="_blank"
               rel="noopener noreferrer"
             >
               TypeScript
-            </ExternalLink>{" "}
-            and{" "}
+            </ExternalLink>
+            {t("page.welcome.desc2And")}
             <ExternalLink
               href="https://www.java.com/en/"
               target="_blank"
@@ -129,22 +130,27 @@ export default function Welcome() {
             >
               Java
             </ExternalLink>
-            .
+            {t("page.welcome.desc2End")}
           </P>
           <P>
-            Please <InternalLink to="/login">login</InternalLink> or{" "}
-            <InternalLink to="/signup">sign up</InternalLink> to continue.
+            {t("page.welcome.desc3Pre")}
+            <InternalLink to="/login">
+              {t("page.welcome.loginLink")}
+            </InternalLink>
+            {t("page.welcome.desc3Or")}
+            <InternalLink to="/signup">
+              {t("page.welcome.signUpLink")}
+            </InternalLink>
+            {t("page.welcome.desc3End")}
           </P>
         </DescriptionArea>
         <SloganArea>
-          <SloganRow>Standing on the</SloganRow>
-          <SloganRow>Shoulders of Giants</SloganRow>
+          <SloganRow>{t("page.welcome.sloganLine1")}</SloganRow>
+          <SloganRow>{t("page.welcome.sloganLine2")}</SloganRow>
         </SloganArea>
       </ContentArea>
       <Footer>
-        <FooterFromLeft>
-          &copy; 2024 Northwind. All rights reserved.
-        </FooterFromLeft>
+        <FooterFromLeft>{t("page.welcome.footer")}</FooterFromLeft>
         <FooterFromRight>
           <FooterLink
             href="https://djccnt15.github.io/"

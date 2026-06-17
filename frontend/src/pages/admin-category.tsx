@@ -16,6 +16,8 @@ import {
 import { randomId } from "@mui/x-data-grid-generator";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
+import { useTranslation } from "react-i18next";
+import type { TFunction } from "i18next";
 import type { ApiIfs, PageIfs } from "../entities/app";
 import type { ProductCategoryIfs } from "../entities";
 import {
@@ -29,14 +31,14 @@ import { PageWrapper, Title } from "../shared/ui";
 
 const Wrapper = styled(PageWrapper)``;
 
-const columns: GridColDef[] = [
-  { field: "code", headerName: "Code", width: 150, editable: true },
-  { field: "name", headerName: "Category Name", width: 200, editable: true },
-  { field: "description", headerName: "Description", flex: 1, editable: true },
+const createColumns = (t: TFunction): GridColDef[] => [
+  { field: "code", headerName: t("page.adminCategory.col.code"), width: 150, editable: true },
+  { field: "name", headerName: t("page.adminCategory.col.name"), width: 200, editable: true },
+  { field: "description", headerName: t("page.adminCategory.col.description"), flex: 1, editable: true },
   {
     field: "actions",
     type: "actions",
-    headerName: "Actions",
+    headerName: t("page.adminCategory.col.actions"),
     width: 100,
     cellClassName: "actions",
     renderCell: (params) => <ActionsCell {...params} />,
@@ -46,6 +48,7 @@ const columns: GridColDef[] = [
 const createCategory = async (
   updatedCategory: ProductCategoryIfs,
   originalCategory: ProductCategoryIfs,
+  t: TFunction,
 ): Promise<ProductCategoryIfs> => {
   return await privateApi
     .post("/v1/admin/categories", {
@@ -59,9 +62,9 @@ const createCategory = async (
     })
     .catch((err) => {
       const data: ApiIfs<null> = err.response?.data;
-      const message = data?.result?.description || "Unknown error";
+      const message = data?.result?.description || t("page.adminCategory.unknownError");
       console.error("Failed to create category:", message);
-      alert(`Failed to create category: ${message}`);
+      alert(t("page.adminCategory.createFailed", { message }));
       return originalCategory;
     });
 };
@@ -69,6 +72,7 @@ const createCategory = async (
 const updateCategory = async (
   updatedCategory: ProductCategoryIfs,
   originalCategory: ProductCategoryIfs,
+  t: TFunction,
 ): Promise<ProductCategoryIfs> => {
   return await privateApi
     .put(`/v1/admin/categories/${updatedCategory.id}`, {
@@ -82,9 +86,9 @@ const updateCategory = async (
     })
     .catch((err) => {
       const data: ApiIfs<null> = err.response?.data;
-      const message = data?.result?.description || "Unknown error";
+      const message = data?.result?.description || t("page.adminCategory.unknownError");
       console.error("Failed to update category:", message);
-      alert(`Failed to update category: ${message}`);
+      alert(t("page.adminCategory.updateFailed", { message }));
       return originalCategory;
     });
 };
@@ -92,15 +96,16 @@ const updateCategory = async (
 const onEdit = async (
   updatedRow: ProductCategoryIfs,
   originalRow: ProductCategoryIfs,
+  t: TFunction,
 ): Promise<ProductCategoryIfs> => {
   const { isNew, ...categoryData } = updatedRow;
   if (isNew) {
-    return await createCategory(categoryData, originalRow);
+    return await createCategory(categoryData, originalRow, t);
   }
-  return await updateCategory(updatedRow, originalRow);
+  return await updateCategory(updatedRow, originalRow, t);
 };
 
-const onDelete = async (id: number): Promise<void> => {
+const onDelete = async (id: number, t: TFunction): Promise<void> => {
   await privateApi
     .delete(`/v1/admin/categories/${id}`)
     .then(() => {
@@ -108,14 +113,15 @@ const onDelete = async (id: number): Promise<void> => {
     })
     .catch((err) => {
       const data: ApiIfs<null> = err.response?.data;
-      const message = data?.result?.description || "Unknown error";
+      const message = data?.result?.description || t("page.adminCategory.unknownError");
       console.error("Failed to delete category:", message);
-      alert(`Failed to delete category: ${message}`);
+      alert(t("page.adminCategory.deleteFailed", { message }));
     });
 };
 
 function EditToolbar(props: GridSlotProps["toolbar"]) {
   const { setRows, setRowModesModel } = props;
+  const { t } = useTranslation();
 
   const handleClick = () => {
     const id = randomId();
@@ -134,7 +140,7 @@ function EditToolbar(props: GridSlotProps["toolbar"]) {
       <Typography sx={{ fontWeight: "medium", flex: 1, mx: 0.5 }}>
         {props.toolbarName}
       </Typography>
-      <Tooltip title="Add record">
+      <Tooltip title={t("page.adminCategory.addRecord")}>
         <ToolbarButton onClick={handleClick}>
           <AddIcon fontSize="small" />
         </ToolbarButton>
@@ -144,6 +150,8 @@ function EditToolbar(props: GridSlotProps["toolbar"]) {
 }
 
 export default function AdminCategory() {
+  const { t } = useTranslation();
+  const columns = createColumns(t);
   const [rows, setRows] = useState<ProductCategoryIfs[]>([]);
   const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
   const [rowCount, setRowCount] = useState(0);
@@ -164,12 +172,12 @@ export default function AdminCategory() {
       })
       .catch((error) => {
         console.error("Error fetching categories:", error);
-        alert("Failed to fetch categories. Please try again.");
+        alert(t("page.adminCategory.fetchFailed"));
       })
       .finally(() => {
         setLoading(false);
       });
-  }, []);
+  }, [t]);
 
   useEffect(() => {
     queueMicrotask(() => {
@@ -202,7 +210,7 @@ export default function AdminCategory() {
       },
       handleDeleteClick: (id: GridRowId) => {
         setRows((prevRows) => prevRows.filter((row) => row.id !== id));
-        void onDelete(Number(id)).then(() =>
+        void onDelete(Number(id), t).then(() =>
           fetchCategories(paginationModel.page, paginationModel.pageSize),
         );
       },
@@ -223,14 +231,14 @@ export default function AdminCategory() {
         });
       },
     }),
-    [fetchCategories, paginationModel.page, paginationModel.pageSize],
+    [fetchCategories, paginationModel.page, paginationModel.pageSize, t],
   );
 
   const processRowUpdate = async (
     updatedRow: ProductCategoryIfs,
     originalRow: ProductCategoryIfs,
   ): Promise<ProductCategoryIfs> => {
-    const savedRow = await onEdit(updatedRow, originalRow);
+    const savedRow = await onEdit(updatedRow, originalRow, t);
     const normalizedRow = { ...savedRow, isNew: false };
 
     setRows((prevRows) =>
@@ -250,7 +258,7 @@ export default function AdminCategory() {
 
   return (
     <Wrapper>
-      <Title>Admin - Category Management</Title>
+      <Title>{t("page.adminCategory.title")}</Title>
       <Box
         sx={{
           height: "100%",
@@ -284,7 +292,7 @@ export default function AdminCategory() {
             slots={{ toolbar: EditToolbar as GridSlots["toolbar"] }}
             slotProps={{
               toolbar: {
-                toolbarName: "Category Management",
+                toolbarName: t("page.adminCategory.toolbarName"),
                 setRows,
                 setRowModesModel,
               },

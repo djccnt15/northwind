@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import type { ApiIfs } from "../../entities/app";
 import type { CompanyIfs, CompanyTypeIfs, TaxStatusIfs } from "../../entities";
@@ -56,6 +57,7 @@ export default function CompanyCreateModal({
   onClose,
   onCreated,
 }: CompanyCreateModalProps) {
+  const { t } = useTranslation();
   const [form, setForm] = useState<CompanyFormState>(emptyForm);
   const [loading, setLoading] = useState(false);
 
@@ -75,11 +77,11 @@ export default function CompanyCreateModal({
 
   const handleSaveClick = () => {
     if (!form.name.trim()) {
-      alert("Company name is required.");
+      alert(t("company.createModal.alerts.nameRequired"));
       return;
     }
     if (selectedCompanyTypeId === "" || selectedTaxStatusId === "") {
-      alert("Please select company type and tax status.");
+      alert(t("company.createModal.alerts.typeStatusRequired"));
       return;
     }
     const body = convertEmptyStringToNull({
@@ -107,11 +109,11 @@ export default function CompanyCreateModal({
         const data: ApiIfs<null> = err.response?.data;
         if (data?.result?.code === 1400) {
           const lines = Object.values(data?.body || {});
-          alert(`Invalid input:\n${lines.join("\n")}`);
+          alert(t("company.createModal.alerts.invalidInput", { message: lines.join("\n") }));
           return;
         }
-        const message = data?.result?.description || "Unknown error";
-        alert(`Failed to create company: ${message}`);
+        const message = data?.result?.description ?? "";
+        alert(t("company.createModal.alerts.createFailed", { message }));
       })
       .finally(() => setLoading(false));
   };
@@ -119,14 +121,14 @@ export default function CompanyCreateModal({
   return (
     <ModalOverlay onClick={onClose}>
       <Modal onClick={(e) => e.stopPropagation()}>
-        <ModalTitle>New Company</ModalTitle>
+        <ModalTitle>{t("company.createModal.title")}</ModalTitle>
         <FieldWrapper>
-          <Label>Name *</Label>
+          <Label>{t("company.createModal.nameLabel")}</Label>
           <Input value={form.name} onChange={updateField("name")} />
         </FieldWrapper>
         <FormRow>
           <FieldWrapper>
-            <Label>Company Type *</Label>
+            <Label>{t("company.createModal.companyType")}</Label>
             <Select
               value={selectedCompanyTypeId}
               onChange={(e) =>
@@ -137,7 +139,7 @@ export default function CompanyCreateModal({
                 }))
               }
             >
-              <option value="">Select type</option>
+              <option value="">{t("company.createModal.selectType")}</option>
               {companyTypes.map((type) => (
                 <option key={type.id} value={type.id}>
                   {type.companyType}
@@ -146,7 +148,7 @@ export default function CompanyCreateModal({
             </Select>
           </FieldWrapper>
           <FieldWrapper>
-            <Label>Tax Status *</Label>
+            <Label>{t("company.createModal.taxStatus")}</Label>
             <Select
               value={selectedTaxStatusId}
               onChange={(e) =>
@@ -157,7 +159,7 @@ export default function CompanyCreateModal({
                 }))
               }
             >
-              <option value="">Select status</option>
+              <option value="">{t("company.createModal.selectStatus")}</option>
               {taxStatuses.map((status) => (
                 <option key={status.id} value={status.id}>
                   {status.status}
@@ -168,51 +170,51 @@ export default function CompanyCreateModal({
         </FormRow>
         <FormRow>
           <FieldWrapper>
-            <Label>Business Phone</Label>
+            <Label>{t("company.createModal.phone")}</Label>
             <Input
               value={form.businessPhone}
               onChange={updateField("businessPhone")}
             />
           </FieldWrapper>
           <FieldWrapper>
-            <Label>Website</Label>
+            <Label>{t("company.createModal.website")}</Label>
             <Input value={form.website} onChange={updateField("website")} />
           </FieldWrapper>
         </FormRow>
         <FieldWrapper>
-          <Label>Address</Label>
+          <Label>{t("company.createModal.address")}</Label>
           <Input value={form.address} onChange={updateField("address")} />
         </FieldWrapper>
         <FormRow>
           <FieldWrapper>
-            <Label>City</Label>
+            <Label>{t("company.createModal.city")}</Label>
             <Input value={form.city} onChange={updateField("city")} />
           </FieldWrapper>
           <FieldWrapper>
-            <Label>Region</Label>
+            <Label>{t("company.createModal.region")}</Label>
             <Input value={form.region} onChange={updateField("region")} />
           </FieldWrapper>
         </FormRow>
         <FormRow>
           <FieldWrapper>
-            <Label>Zip Code</Label>
+            <Label>{t("company.createModal.zipCode")}</Label>
             <Input value={form.zipCode} onChange={updateField("zipCode")} />
           </FieldWrapper>
           <FieldWrapper>
-            <Label>Country</Label>
+            <Label>{t("company.createModal.country")}</Label>
             <Input value={form.country} onChange={updateField("country")} />
           </FieldWrapper>
         </FormRow>
         <FieldWrapper>
-          <Label>Notes</Label>
+          <Label>{t("company.createModal.notes")}</Label>
           <TextArea value={form.notes} onChange={updateField("notes")} />
         </FieldWrapper>
         <BtnRow>
           <PrimaryBtn type="button" onClick={handleSaveClick} disabled={loading}>
-            Create
+            {t("company.createModal.save")}
           </PrimaryBtn>
           <SecondaryBtn type="button" onClick={onClose} disabled={loading}>
-            Cancel
+            {t("company.createModal.cancel")}
           </SecondaryBtn>
         </BtnRow>
       </Modal>

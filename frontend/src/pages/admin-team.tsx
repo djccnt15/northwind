@@ -1,4 +1,6 @@
 import styled from "styled-components";
+import { useTranslation } from "react-i18next";
+import type { TFunction } from "i18next";
 import { PageWrapper, Title } from "../shared/ui";
 import {
   DataGrid,
@@ -29,12 +31,12 @@ import {
 
 const Wrapper = styled(PageWrapper)``;
 
-const columns: GridColDef[] = [
-  { field: "name", headerName: "Team Name", flex: 1, editable: true },
+const createColumns = (t: TFunction): GridColDef[] => [
+  { field: "name", headerName: t("page.adminTeam.col.teamName"), flex: 1, editable: true },
   {
     field: "actions",
     type: "actions",
-    headerName: "Actions",
+    headerName: t("page.adminTeam.col.actions"),
     width: 100,
     cellClassName: "actions",
     renderCell: (params) => <ActionsCell {...params} />,
@@ -44,6 +46,7 @@ const columns: GridColDef[] = [
 const createTeam = async (
   updatedTeam: TeamIfs,
   originalTeam: TeamIfs,
+  t: TFunction,
 ): Promise<TeamIfs> => {
   return await privateApi
     .post("/v1/admin/teams", { name: updatedTeam.name })
@@ -53,9 +56,9 @@ const createTeam = async (
     })
     .catch((err) => {
       const data: ApiIfs<null> = err.response?.data;
-      const message = data?.result?.description || "Unknown error";
+      const message = data?.result?.description || t("page.adminTeam.unknownError");
       console.error("Failed to create team:", message);
-      alert(`Failed to create team: ${message}`);
+      alert(t("page.adminTeam.createFailed", { message }));
       return originalTeam;
     });
 };
@@ -63,6 +66,7 @@ const createTeam = async (
 const updateTeam = async (
   updatedTeam: TeamIfs,
   originalTeam: TeamIfs,
+  t: TFunction,
 ): Promise<TeamIfs> => {
   return await privateApi
     .put(`/v1/admin/teams/${updatedTeam.id}`, {
@@ -74,9 +78,9 @@ const updateTeam = async (
     })
     .catch((err) => {
       const data: ApiIfs<null> = err.response?.data;
-      const message = data?.result?.description || "Unknown error";
+      const message = data?.result?.description || t("page.adminTeam.unknownError");
       console.error("Failed to update team:", message);
-      alert(`Failed to update team: ${message}`);
+      alert(t("page.adminTeam.updateFailed", { message }));
       return originalTeam;
     });
 };
@@ -84,15 +88,16 @@ const updateTeam = async (
 const onEdit = async (
   updatedRow: TeamIfs,
   originalRow: TeamIfs,
+  t: TFunction,
 ): Promise<TeamIfs> => {
   const { isNew, ...teamData } = updatedRow;
   if (isNew) {
-    return await createTeam(teamData, originalRow);
+    return await createTeam(teamData, originalRow, t);
   }
-  return await updateTeam(updatedRow, originalRow);
+  return await updateTeam(updatedRow, originalRow, t);
 };
 
-const onDelete = async (id: number): Promise<void> => {
+const onDelete = async (id: number, t: TFunction): Promise<void> => {
   await privateApi
     .delete(`/v1/admin/teams/${id}`)
     .then(() => {
@@ -100,14 +105,15 @@ const onDelete = async (id: number): Promise<void> => {
     })
     .catch((err) => {
       const data: ApiIfs<null> = err.response?.data;
-      const message = data?.result?.description || "Unknown error";
+      const message = data?.result?.description || t("page.adminTeam.unknownError");
       console.error("Failed to delete team:", message);
-      alert(`Failed to delete team: ${message}`);
+      alert(t("page.adminTeam.deleteFailed", { message }));
     });
 };
 
 function EditToolbar(props: GridSlotProps["toolbar"]) {
   const { setRows, setRowModesModel } = props;
+  const { t } = useTranslation();
 
   const handleClick = () => {
     const id = randomId();
@@ -123,7 +129,7 @@ function EditToolbar(props: GridSlotProps["toolbar"]) {
       <Typography sx={{ fontWeight: "medium", flex: 1, mx: 0.5 }}>
         {props.toolbarName}
       </Typography>
-      <Tooltip title="Add record">
+      <Tooltip title={t("page.adminTeam.addRecord")}>
         <ToolbarButton onClick={handleClick}>
           <AddIcon fontSize="small" />
         </ToolbarButton>
@@ -133,6 +139,8 @@ function EditToolbar(props: GridSlotProps["toolbar"]) {
 }
 
 export default function AdminTeam() {
+  const { t } = useTranslation();
+  const columns = createColumns(t);
   const [rows, setRows] = useState<TeamIfs[]>([]);
   const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
   const [rowCount, setRowCount] = useState(0);
@@ -153,12 +161,12 @@ export default function AdminTeam() {
       })
       .catch((error) => {
         console.error("Error fetching teams:", error);
-        alert("Failed to fetch teams. Please try again.");
+        alert(t("page.adminTeam.fetchFailed"));
       })
       .finally(() => {
         setLoading(false);
       });
-  }, []);
+  }, [t]);
 
   useEffect(() => {
     queueMicrotask(() => {
@@ -191,7 +199,7 @@ export default function AdminTeam() {
       },
       handleDeleteClick: (id: GridRowId) => {
         setRows((prevRows) => prevRows.filter((row) => row.id !== id));
-        void onDelete(Number(id)).then(() =>
+        void onDelete(Number(id), t).then(() =>
           fetchTeams(paginationModel.page, paginationModel.pageSize),
         );
       },
@@ -212,14 +220,14 @@ export default function AdminTeam() {
         });
       },
     }),
-    [fetchTeams, paginationModel.page, paginationModel.pageSize],
+    [fetchTeams, paginationModel.page, paginationModel.pageSize, t],
   );
 
   const processRowUpdate = async (
     updatedRow: TeamIfs,
     originalRow: TeamIfs,
   ): Promise<TeamIfs> => {
-    const savedRow = await onEdit(updatedRow, originalRow);
+    const savedRow = await onEdit(updatedRow, originalRow, t);
     const normalizedRow = { ...savedRow, isNew: false };
 
     setRows((prevRows) =>
@@ -239,7 +247,7 @@ export default function AdminTeam() {
 
   return (
     <Wrapper>
-      <Title>Admin - Team Management</Title>
+      <Title>{t("page.adminTeam.title")}</Title>
       <Box
         sx={{
           height: "100%",
@@ -273,7 +281,7 @@ export default function AdminTeam() {
             slots={{ toolbar: EditToolbar as GridSlots["toolbar"] }}
             slotProps={{
               toolbar: {
-                toolbarName: "Team Management",
+                toolbarName: t("page.adminTeam.toolbarName"),
                 setRows,
                 setRowModesModel,
               },

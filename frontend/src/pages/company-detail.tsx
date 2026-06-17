@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import type { ApiIfs } from "../entities/app";
 import type {
@@ -77,6 +78,7 @@ const isSupplierType = (label?: string) =>
 export default function CompanyDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const [company, setCompany] = useState<CompanyIfs | null>(null);
   const [form, setForm] = useState<CompanyFormState>(emptyForm);
@@ -101,7 +103,7 @@ export default function CompanyDetail() {
       })
       .catch((err) => {
         console.error("Failed to fetch company:", err);
-        alert("Failed to fetch company. Please try again.");
+        alert(t("page.companyDetail.alerts.fetchFailed"));
       })
       .finally(() => setLoading(false));
   };
@@ -169,11 +171,11 @@ export default function CompanyDetail() {
   const handleSaveClick = () => {
     if (!company) return;
     if (!form.name.trim()) {
-      alert("Company name is required.");
+      alert(t("page.companyDetail.alerts.nameRequired"));
       return;
     }
     if (form.companyTypeId === "" || form.taxStatusId === "") {
-      alert("Please select company type and tax status.");
+      alert(t("page.companyDetail.alerts.typeStatusRequired"));
       return;
     }
     const body = convertEmptyStringToNull({
@@ -198,35 +200,35 @@ export default function CompanyDetail() {
         setCompany(data?.body ?? null);
         if (data?.body) setForm(companyToForm(data.body));
         setIsEditing(false);
-        alert("Company updated successfully.");
+        alert(t("page.companyDetail.alerts.updateSuccess"));
       })
       .catch((err) => {
         const data: ApiIfs<null> = err.response?.data;
         if (data?.result?.code === 1400) {
           const lines = Object.values(data?.body || {});
-          alert(`Invalid input:\n${lines.join("\n")}`);
+          alert(t("page.companyDetail.alerts.invalidInput", { message: lines.join("\n") }));
           return;
         }
-        const message = data?.result?.description || "Unknown error";
-        alert(`Failed to update company: ${message}`);
+        const message = data?.result?.description ?? "";
+        alert(t("page.companyDetail.alerts.updateFailed", { message }));
       })
       .finally(() => setLoading(false));
   };
 
   const handleDeleteClick = () => {
     if (!company) return;
-    if (!window.confirm(`Delete company "${company.name}"?`)) return;
+    if (!window.confirm(t("page.companyDetail.alerts.deleteConfirm", { name: company.name }))) return;
     setLoading(true);
     privateApi
       .delete(`/v1/companies/${company.id}`)
       .then(() => {
-        alert("Company deleted successfully.");
+        alert(t("page.companyDetail.alerts.deleteSuccess"));
         navigate("/companies");
       })
       .catch((err) => {
         const data: ApiIfs<null> = err.response?.data;
-        const message = data?.result?.description || "Unknown error";
-        alert(`Failed to delete company: ${message}`);
+        const message = data?.result?.description ?? "";
+        alert(t("page.companyDetail.alerts.deleteFailed", { message }));
         setLoading(false);
       });
   };
@@ -234,10 +236,16 @@ export default function CompanyDetail() {
   if (!company) {
     return (
       <Wrapper>
-        <Title>Company Detail</Title>
+        <Title>{t("page.companyDetail.title")}</Title>
         <Content>
-          <BackBtn onClick={() => navigate("/companies")}>← Back to list</BackBtn>
-          <ReadValue>{loading ? "Loading..." : "Company not found."}</ReadValue>
+          <BackBtn onClick={() => navigate("/companies")}>
+            {t("page.companyDetail.back")}
+          </BackBtn>
+          <ReadValue>
+            {loading
+              ? t("page.companyDetail.loading")
+              : t("page.companyDetail.notFound")}
+          </ReadValue>
         </Content>
       </Wrapper>
     );
@@ -250,22 +258,28 @@ export default function CompanyDetail() {
 
   return (
     <Wrapper>
-      <Title>Company Detail</Title>
+      <Title>{t("page.companyDetail.title")}</Title>
       <Content>
         <Header>
-          <BackBtn onClick={() => navigate("/companies")}>← Back to list</BackBtn>
+          <BackBtn onClick={() => navigate("/companies")}>
+            {t("page.companyDetail.back")}
+          </BackBtn>
           <HeaderTitle>{company.name}</HeaderTitle>
           {typeLabel && <BadgeBlue>{typeLabel}</BadgeBlue>}
           {company.taxStatus?.status && (
-            <BadgeGray>Tax: {company.taxStatus.status}</BadgeGray>
+            <BadgeGray>
+              {t("page.companyDetail.taxBadge", {
+                status: company.taxStatus.status,
+              })}
+            </BadgeGray>
           )}
         </Header>
 
         <Grid>
           <Card>
-            <CardTitle>Basic Information</CardTitle>
+            <CardTitle>{t("page.companyDetail.basicInfo")}</CardTitle>
             <FieldRow>
-              <Label>Company Name</Label>
+              <Label>{t("page.companyDetail.companyName")}</Label>
               {isEditing ? (
                 <Input value={form.name} onChange={updateField("name")} />
               ) : (
@@ -273,7 +287,7 @@ export default function CompanyDetail() {
               )}
             </FieldRow>
             <FieldRow>
-              <Label>Company Type</Label>
+              <Label>{t("page.companyDetail.companyType")}</Label>
               {isEditing ? (
                 <Select
                   value={form.companyTypeId}
@@ -285,7 +299,7 @@ export default function CompanyDetail() {
                     }))
                   }
                 >
-                  <option value="">Select type</option>
+                  <option value="">{t("page.companyDetail.selectType")}</option>
                   {companyTypes.map((type) => (
                     <option key={type.id} value={type.id}>
                       {type.companyType}
@@ -297,7 +311,7 @@ export default function CompanyDetail() {
               )}
             </FieldRow>
             <FieldRow>
-              <Label>Tax Status</Label>
+              <Label>{t("page.companyDetail.taxStatus")}</Label>
               {isEditing ? (
                 <Select
                   value={form.taxStatusId}
@@ -309,7 +323,9 @@ export default function CompanyDetail() {
                     }))
                   }
                 >
-                  <option value="">Select tax status</option>
+                  <option value="">
+                    {t("page.companyDetail.selectTaxStatus")}
+                  </option>
                   {taxStatuses.map((status) => (
                     <option key={status.id} value={status.id}>
                       {status.status}
@@ -321,7 +337,7 @@ export default function CompanyDetail() {
               )}
             </FieldRow>
             <FieldRow>
-              <Label>Phone</Label>
+              <Label>{t("page.companyDetail.phone")}</Label>
               {isEditing ? (
                 <Input
                   value={form.businessPhone}
@@ -332,7 +348,7 @@ export default function CompanyDetail() {
               )}
             </FieldRow>
             <FieldRow>
-              <Label>Website</Label>
+              <Label>{t("page.companyDetail.website")}</Label>
               {isEditing ? (
                 <Input value={form.website} onChange={updateField("website")} />
               ) : (
@@ -352,7 +368,7 @@ export default function CompanyDetail() {
               )}
             </FieldRow>
             <FieldRow>
-              <Label>Address</Label>
+              <Label>{t("page.companyDetail.address")}</Label>
               {isEditing ? (
                 <Input value={form.address} onChange={updateField("address")} />
               ) : (
@@ -361,7 +377,7 @@ export default function CompanyDetail() {
             </FieldRow>
             <FieldGroup>
               <FieldRow>
-                <Label>City</Label>
+                <Label>{t("page.companyDetail.city")}</Label>
                 {isEditing ? (
                   <Input value={form.city} onChange={updateField("city")} />
                 ) : (
@@ -369,7 +385,7 @@ export default function CompanyDetail() {
                 )}
               </FieldRow>
               <FieldRow>
-                <Label>Region</Label>
+                <Label>{t("page.companyDetail.region")}</Label>
                 {isEditing ? (
                   <Input value={form.region} onChange={updateField("region")} />
                 ) : (
@@ -379,7 +395,7 @@ export default function CompanyDetail() {
             </FieldGroup>
             <FieldGroup>
               <FieldRow>
-                <Label>Zip Code</Label>
+                <Label>{t("page.companyDetail.zipCode")}</Label>
                 {isEditing ? (
                   <Input
                     value={form.zipCode}
@@ -390,7 +406,7 @@ export default function CompanyDetail() {
                 )}
               </FieldRow>
               <FieldRow>
-                <Label>Country</Label>
+                <Label>{t("page.companyDetail.country")}</Label>
                 {isEditing ? (
                   <Input
                     value={form.country}
@@ -402,7 +418,7 @@ export default function CompanyDetail() {
               </FieldRow>
             </FieldGroup>
             <FieldRow>
-              <Label>Notes</Label>
+              <Label>{t("page.companyDetail.notes")}</Label>
               {isEditing ? (
                 <TextArea value={form.notes} onChange={updateField("notes")} />
               ) : (
@@ -418,27 +434,27 @@ export default function CompanyDetail() {
                     onClick={handleSaveClick}
                     disabled={loading}
                   >
-                    Save
+                    {t("page.companyDetail.save")}
                   </PrimaryBtn>
                   <SecondaryBtn
                     type="button"
                     onClick={handleCancelClick}
                     disabled={loading}
                   >
-                    Cancel
+                    {t("page.companyDetail.cancel")}
                   </SecondaryBtn>
                 </>
               ) : (
                 <>
                   <PrimaryBtn type="button" onClick={handleEditClick}>
-                    Edit
+                    {t("page.companyDetail.edit")}
                   </PrimaryBtn>
                   <DangerBtn
                     type="button"
                     onClick={handleDeleteClick}
                     disabled={loading}
                   >
-                    Delete
+                    {t("page.companyDetail.delete")}
                   </DangerBtn>
                 </>
               )}
@@ -452,20 +468,20 @@ export default function CompanyDetail() {
 
         {showOrders && (
           <Card>
-            <CardTitle>Order History</CardTitle>
+            <CardTitle>{t("page.companyDetail.orderHistory")}</CardTitle>
             {orders.length === 0 ? (
               <ReadValue style={{ color: "#888" }}>
-                No order history.
+                {t("page.companyDetail.noOrderHistory")}
               </ReadValue>
             ) : (
               <HistoryTable>
                 <thead>
                   <tr>
-                    <th>Order No.</th>
-                    <th>Order Date</th>
-                    <th>Shipped Date</th>
-                    <th>Paid Date</th>
-                    <th>Status</th>
+                    <th>{t("page.companyDetail.orderCol.no")}</th>
+                    <th>{t("page.companyDetail.orderCol.orderDate")}</th>
+                    <th>{t("page.companyDetail.orderCol.shippedDate")}</th>
+                    <th>{t("page.companyDetail.orderCol.paidDate")}</th>
+                    <th>{t("page.companyDetail.orderCol.status")}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -486,20 +502,20 @@ export default function CompanyDetail() {
 
         {showPurchaseOrders && (
           <Card>
-            <CardTitle>Purchase Order History</CardTitle>
+            <CardTitle>{t("page.companyDetail.purchaseOrderHistory")}</CardTitle>
             {purchaseOrders.length === 0 ? (
               <ReadValue style={{ color: "#888" }}>
-                No purchase order history.
+                {t("page.companyDetail.noPurchaseOrderHistory")}
               </ReadValue>
             ) : (
               <HistoryTable>
                 <thead>
                   <tr>
-                    <th>PO No.</th>
-                    <th>Submitted Date</th>
-                    <th>Approved Date</th>
-                    <th>Received Date</th>
-                    <th>Status</th>
+                    <th>{t("page.companyDetail.poCol.no")}</th>
+                    <th>{t("page.companyDetail.poCol.submittedDate")}</th>
+                    <th>{t("page.companyDetail.poCol.approvedDate")}</th>
+                    <th>{t("page.companyDetail.poCol.receivedDate")}</th>
+                    <th>{t("page.companyDetail.poCol.status")}</th>
                   </tr>
                 </thead>
                 <tbody>

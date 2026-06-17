@@ -1,4 +1,6 @@
 import styled from "styled-components";
+import { useTranslation } from "react-i18next";
+import type { TFunction } from "i18next";
 import type { UserIfs } from "../entities";
 import { privateApi } from "../shared/api";
 import {
@@ -117,9 +119,12 @@ const FormLabel = styled.label``;
 
 const FormInput = styled.input``;
 
-const onResetPassword = (params: GridRenderCellParams<UserIfs>) => {
+const onResetPassword = (
+  params: GridRenderCellParams<UserIfs>,
+  t: TFunction,
+) => {
   const { id, username } = params.row;
-  const ok = confirm(`Reset password for user ${username}?`);
+  const ok = confirm(t("page.adminUser.resetConfirm", { username }));
   if (!ok) return;
 
   privateApi
@@ -138,18 +143,19 @@ const onResetPassword = (params: GridRenderCellParams<UserIfs>) => {
         ]);
       }
 
-      alert(`Reset password for user ID: ${updatedUsername}`);
+      alert(t("page.adminUser.resetSuccess", { username: updatedUsername }));
     })
     .catch((err) => {
       const data: ApiIfs<null> = err.response?.data;
-      const message = data?.result?.description || "Unknown error";
+      const message = data?.result?.description || t("page.adminUser.unknownError");
       console.error("Failed to reset password:", message);
-      alert(`Failed to reset password: ${message}`);
+      alert(t("page.adminUser.resetFailed", { message }));
     })
     .finally(() => {});
 };
 
 const createColumns = (
+  t: TFunction,
   onReset: (params: GridRenderCellParams<UserIfs>) => void,
   onRoleClick: (params: GridRenderCellParams<UserIfs>) => void,
   teamList: string[] = [],
@@ -158,14 +164,14 @@ const createColumns = (
   {
     ...defaultColOptions,
     field: "id",
-    headerName: "DB ID",
+    headerName: t("page.adminUser.cols.dbId"),
     flex: 0.2,
     editable: false,
   },
   {
     ...defaultColOptions,
     field: "enabled",
-    headerName: "Enabled",
+    headerName: t("page.adminUser.cols.enabled"),
     flex: 0.2,
     editable: true,
     type: "boolean",
@@ -173,21 +179,21 @@ const createColumns = (
   {
     ...defaultColOptions,
     field: "username",
-    headerName: "ID",
+    headerName: t("page.adminUser.cols.username"),
     flex: 0.5,
     editable: true,
   },
   {
     ...defaultColOptions,
     field: "email",
-    headerName: "Email",
+    headerName: t("page.adminUser.cols.email"),
     flex: 1,
     editable: true,
   },
   {
     ...defaultColOptions,
     field: "title",
-    headerName: "Title",
+    headerName: t("page.adminUser.cols.title"),
     type: "singleSelect",
     flex: 0.5,
     editable: true,
@@ -207,7 +213,7 @@ const createColumns = (
   {
     ...defaultColOptions,
     field: "team",
-    headerName: "Team",
+    headerName: t("page.adminUser.cols.team"),
     type: "singleSelect",
     flex: 0.5,
     editable: true,
@@ -216,24 +222,26 @@ const createColumns = (
   {
     ...defaultColOptions,
     field: "roles",
-    headerName: "Manage Roles",
+    headerName: t("page.adminUser.cols.manageRoles"),
     flex: 0.2,
     headerAlign: "center",
     align: "center",
     renderCell: (params: GridRenderCellParams<UserIfs>) => (
-      <CellBlueButton onClick={() => onRoleClick(params)}>Roles</CellBlueButton>
+      <CellBlueButton onClick={() => onRoleClick(params)}>
+        {t("page.adminUser.rolesBtn")}
+      </CellBlueButton>
     ),
   },
   {
     ...defaultColOptions,
     field: "authorities",
-    headerName: "Role",
+    headerName: t("page.adminUser.cols.role"),
     flex: 1,
   },
   {
     ...defaultColOptions,
     field: "liveUntil",
-    headerName: "Live Until",
+    headerName: t("page.adminUser.cols.liveUntil"),
     editable: true,
     flex: 1,
     type: "dateTime",
@@ -242,7 +250,7 @@ const createColumns = (
   {
     ...defaultColOptions,
     field: "passwordChangedAt",
-    headerName: "Password Changed At",
+    headerName: t("page.adminUser.cols.passwordChangedAt"),
     flex: 1,
     type: "dateTime",
     valueGetter: (value) => value && new Date(value),
@@ -250,7 +258,7 @@ const createColumns = (
   {
     ...defaultColOptions,
     field: "lastLoginAt",
-    headerName: "Last Login At",
+    headerName: t("page.adminUser.cols.lastLoginAt"),
     flex: 1,
     type: "dateTime",
     valueGetter: (value) => value && new Date(value),
@@ -258,19 +266,21 @@ const createColumns = (
   {
     ...defaultColOptions,
     field: "loginFailedCount",
-    headerName: "Login Failed Count",
+    headerName: t("page.adminUser.cols.loginFailedCount"),
     flex: 0.2,
     type: "number",
   },
   {
     ...defaultColOptions,
     field: "reset",
-    headerName: "Reset Password",
+    headerName: t("page.adminUser.cols.resetPassword"),
     flex: 0.2,
     headerAlign: "center",
     align: "center",
     renderCell: (params: GridRenderCellParams<UserIfs>) => (
-      <CellBlueButton onClick={() => onReset(params)}>Reset</CellBlueButton>
+      <CellBlueButton onClick={() => onReset(params)}>
+        {t("page.adminUser.resetBtn")}
+      </CellBlueButton>
     ),
   },
 ];
@@ -287,6 +297,7 @@ const initialState = {
 const onEdit = async (
   updatedRow: UserIfs,
   originalRow: UserIfs,
+  t: TFunction,
 ): Promise<UserIfs> => {
   return await privateApi
     .patch(`/v1/admin/users/${originalRow.id}/profile`, {
@@ -305,22 +316,23 @@ const onEdit = async (
     })
     .catch((err) => {
       const data: ApiIfs<null> = err.response?.data;
-      const message = data?.result?.description || "Unknown error";
+      const message = data?.result?.description || t("page.adminUser.unknownError");
       console.error("Failed to update user:", message);
-      alert(`Failed to update user: ${message}`);
+      alert(t("page.adminUser.updateFailed", { message }));
       return originalRow;
     });
 };
 
-const processRowUpdate = async (
-  updatedRow: UserIfs,
-  originalRow: UserIfs,
-): Promise<UserIfs> => {
-  return await onEdit(updatedRow, originalRow);
-};
-
 export default function AdminUser() {
+  const { t } = useTranslation();
   const apiRef = useGridApiRef();
+
+  const processRowUpdate = async (
+    updatedRow: UserIfs,
+    originalRow: UserIfs,
+  ): Promise<UserIfs> => {
+    return await onEdit(updatedRow, originalRow, t);
+  };
   const [roles, setRoles] = useState<string[]>([]);
   const [teamList, setTeamList] = useState<string[]>([]);
   const [titleList, setTitleList] = useState<string[]>([]);
@@ -358,7 +370,7 @@ export default function AdminUser() {
     e.preventDefault();
 
     if (selectedUserId === null) {
-      alert("No user selected");
+      alert(t("page.adminUser.noUserSelected"));
       return;
     }
 
@@ -376,14 +388,14 @@ export default function AdminUser() {
           },
         ]);
 
-        alert("Roles updated successfully");
+        alert(t("page.adminUser.rolesUpdated"));
         closeModal();
       })
       .catch((err) => {
         console.error("Failed to update roles:", err);
         const data: ApiIfs<null> = err.response?.data;
-        const message = data?.result?.description || "Unknown error";
-        alert(`Failed to update roles: ${message}`);
+        const message = data?.result?.description || t("page.adminUser.unknownError");
+        alert(t("page.adminUser.rolesFailed", { message }));
       });
   };
 
@@ -426,7 +438,8 @@ export default function AdminUser() {
   }, []);
 
   const columns = createColumns(
-    (params) => onResetPassword(params),
+    t,
+    (params) => onResetPassword(params, t),
     (params) => {
       setSelectedUserId(params.row.id);
       setSelectedRoles(params.row.authorities ?? []);
@@ -468,7 +481,7 @@ export default function AdminUser() {
 
   return (
     <Wrapper>
-      <Title>Admin - User Management</Title>
+      <Title>{t("page.adminUser.title")}</Title>
       <DataGrid
         apiRef={apiRef}
         columns={columns}
@@ -483,7 +496,7 @@ export default function AdminUser() {
         slots={{ toolbar: QuickToolbar }}
         slotProps={{
           toolbar: {
-            toolbarName: "User Management",
+            toolbarName: t("page.adminUser.toolbarName"),
             debounceMs: 1000,
             expanded: true,
           },
@@ -493,11 +506,13 @@ export default function AdminUser() {
         <ModalOverlay onClick={onModalOverlayClick}>
           <RoleModal>
             <ModalTitleArea>
-              <ModalTitle>Role Management</ModalTitle>
+              <ModalTitle>{t("page.adminUser.roleManagement")}</ModalTitle>
               <ModalBtnArea>
-                <CellBlueButton form="role-form">Save</CellBlueButton>
+                <CellBlueButton form="role-form">
+                  {t("page.adminUser.save")}
+                </CellBlueButton>
                 <CellRedButton type="button" onClick={closeModal}>
-                  Cancel
+                  {t("page.adminUser.cancel")}
                 </CellRedButton>
               </ModalBtnArea>
             </ModalTitleArea>
@@ -516,7 +531,7 @@ export default function AdminUser() {
                   </FormField>
                 ))
               ) : (
-                <FormLabel>No roles available</FormLabel>
+                <FormLabel>{t("page.adminUser.noRoles")}</FormLabel>
               )}
             </RoleForm>
           </RoleModal>

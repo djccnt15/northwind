@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import type { ApiIfs } from "../entities/app";
 import type {
@@ -50,6 +51,7 @@ const lineSubtotal = (unitPrice: number, quantity: number) =>
 
 export default function PurchaseOrderNew() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const [vendors, setVendors] = useState<VendorOptionIfs[]>([]);
   const [products, setProducts] = useState<ProductCostOptionIfs[]>([]);
@@ -69,7 +71,9 @@ export default function PurchaseOrderNew() {
       .then((res) => {
         const data: ApiIfs<CompanyTypeIfs[]> = res.data;
         const types = data?.body ?? [];
-        const supplierType = types.find((t) => isSupplierType(t.companyType));
+        const supplierType = types.find((type) =>
+          isSupplierType(type.companyType),
+        );
 
         privateApi
           .get("/v1/purchase-orders/companies", {
@@ -139,17 +143,17 @@ export default function PurchaseOrderNew() {
 
   const handleSubmit = () => {
     if (vendorId === "") {
-      alert("Please select a vendor.");
+      alert(t("page.purchaseOrderNew.alerts.pleaseSelectVendor"));
       return;
     }
     const validItems = items.filter((item) => item.productId !== "");
     if (validItems.length === 0) {
-      alert("Please add at least one purchase order item.");
+      alert(t("page.purchaseOrderNew.alerts.pleaseAddItem"));
       return;
     }
     for (const item of validItems) {
       if (!item.quantity || Number(item.quantity) < 1) {
-        alert("Each item quantity must be at least 1.");
+        alert(t("page.purchaseOrderNew.alerts.minQty"));
         return;
       }
     }
@@ -171,7 +175,7 @@ export default function PurchaseOrderNew() {
       .post("/v1/purchase-orders", body)
       .then((res) => {
         const data: ApiIfs<PurchaseOrderIfs> = res.data;
-        alert("Purchase order created successfully.");
+        alert(t("page.purchaseOrderNew.alerts.createSuccess"));
         if (data?.body) {
           navigate(`/purchase-orders/${data.body.id}`);
         } else {
@@ -182,30 +186,30 @@ export default function PurchaseOrderNew() {
         const data: ApiIfs<null> = err.response?.data;
         if (data?.result?.code === 1400) {
           const lines = Object.values(data?.body || {});
-          alert(`Invalid input:\n${lines.join("\n")}`);
+          alert(t("page.purchaseOrderNew.alerts.invalidInput", { message: lines.join("\n") }));
           return;
         }
-        const message = data?.result?.description || "Unknown error";
-        alert(`Failed to create purchase order: ${message}`);
+        const message = data?.result?.description ?? "";
+        alert(t("page.purchaseOrderNew.alerts.createFailed", { message }));
       })
       .finally(() => setLoading(false));
   };
 
   return (
     <Wrapper>
-      <Title>New Purchase Order</Title>
+      <Title>{t("page.purchaseOrderNew.title")}</Title>
       <Content>
         <Header>
           <BackBtn onClick={() => navigate("/purchase-orders")}>
-            ← Back to list
+            {t("page.purchaseOrderNew.back")}
           </BackBtn>
         </Header>
 
         <Card>
-          <CardTitle>Purchase Order Information</CardTitle>
+          <CardTitle>{t("page.purchaseOrderNew.poInfo")}</CardTitle>
           <Grid>
             <FieldRow>
-              <Label>Vendor *</Label>
+              <Label>{t("page.purchaseOrderNew.vendor")}</Label>
               <Select
                 value={vendorId}
                 onChange={(e) =>
@@ -214,7 +218,7 @@ export default function PurchaseOrderNew() {
                   )
                 }
               >
-                <option value="">Select vendor</option>
+                <option value="">{t("page.purchaseOrderNew.selectVendor")}</option>
                 {vendors.map((v) => (
                   <option key={v.id} value={v.id}>
                     {v.name}
@@ -223,7 +227,7 @@ export default function PurchaseOrderNew() {
               </Select>
             </FieldRow>
             <FieldRow>
-              <Label>Shipping Fee</Label>
+              <Label>{t("page.purchaseOrderNew.shippingFee")}</Label>
               <Input
                 type="number"
                 value={shippingFee}
@@ -231,7 +235,7 @@ export default function PurchaseOrderNew() {
               />
             </FieldRow>
             <FieldRow>
-              <Label>Tax Amount</Label>
+              <Label>{t("page.purchaseOrderNew.taxAmount")}</Label>
               <Input
                 type="number"
                 value={taxAmount}
@@ -240,17 +244,17 @@ export default function PurchaseOrderNew() {
             </FieldRow>
           </Grid>
           <FieldRow>
-            <Label>Notes</Label>
+            <Label>{t("page.purchaseOrderNew.notes")}</Label>
             <TextArea value={note} onChange={(e) => setNote(e.target.value)} />
           </FieldRow>
         </Card>
 
         <Card>
-          <CardTitle>Purchase Order Items</CardTitle>
+          <CardTitle>{t("page.purchaseOrderNew.poItems")}</CardTitle>
           <FieldRow>
-            <Label>Product Search</Label>
+            <Label>{t("page.purchaseOrderNew.productSearch")}</Label>
             <Input
-              placeholder="Search products by name or code"
+              placeholder={t("page.purchaseOrderNew.productSearchPlaceholder")}
               value={productKeyword}
               onChange={(e) => setProductKeyword(e.target.value)}
             />
@@ -258,10 +262,10 @@ export default function PurchaseOrderNew() {
           <ItemTable>
             <thead>
               <tr>
-                <th>Product</th>
-                <th>Unit Cost</th>
-                <th>Qty</th>
-                <th>Subtotal</th>
+                <th>{t("page.purchaseOrderNew.col.product")}</th>
+                <th>{t("page.purchaseOrderNew.col.unitCost")}</th>
+                <th>{t("page.purchaseOrderNew.col.qty")}</th>
+                <th>{t("page.purchaseOrderNew.col.subtotal")}</th>
                 <th />
               </tr>
             </thead>
@@ -280,7 +284,7 @@ export default function PurchaseOrderNew() {
                         )
                       }
                     >
-                      <option value="">Select product</option>
+                      <option value="">{t("page.purchaseOrderNew.selectProduct")}</option>
                       {products.map((p) => (
                         <option key={p.id} value={p.id}>
                           {p.name}
@@ -337,7 +341,7 @@ export default function PurchaseOrderNew() {
             <tfoot>
               <tr>
                 <td colSpan={3} style={{ textAlign: "right" }}>
-                  <strong>Total</strong>
+                  <strong>{t("page.purchaseOrderNew.total")}</strong>
                 </td>
                 <td>
                   <strong>${totalAmount.toFixed(2)}</strong>
@@ -347,20 +351,20 @@ export default function PurchaseOrderNew() {
             </tfoot>
           </ItemTable>
           <AddBtn type="button" onClick={addItem}>
-            + Add Item
+            {t("page.purchaseOrderNew.addItem")}
           </AddBtn>
         </Card>
 
         <ActionBar>
           <PrimaryBtn type="button" onClick={handleSubmit} disabled={loading}>
-            Create Purchase Order
+            {t("page.purchaseOrderNew.createPO")}
           </PrimaryBtn>
           <SecondaryBtn
             type="button"
             onClick={() => navigate("/purchase-orders")}
             disabled={loading}
           >
-            Cancel
+            {t("page.purchaseOrderNew.cancel")}
           </SecondaryBtn>
         </ActionBar>
       </Content>

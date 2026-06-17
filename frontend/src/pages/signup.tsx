@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import { api } from "../shared/api";
 import {
@@ -127,6 +128,7 @@ const ModalContent = styled.div`
 `;
 
 export default function Signup() {
+  const { t } = useTranslation();
   const [errorMsg, setErrorMsg] = useState<string>("");
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -171,7 +173,7 @@ export default function Signup() {
     if (isLoading) return;
 
     if (!email) {
-      alert("Please enter an email.");
+      alert(t("auth.signup.enterEmail"));
       return;
     }
 
@@ -188,8 +190,8 @@ export default function Signup() {
         const data: ApiIfs<null> = err.response?.data;
         const description = data?.result?.description;
         const message = description
-          ? `Failed to check email. ${description}`
-          : "Failed to check email. Please try again.";
+          ? t("auth.signup.failedCheckEmailWithReason", { reason: description })
+          : t("auth.signup.failedCheckEmail");
         alert(message);
       })
       .finally(() => {
@@ -202,12 +204,12 @@ export default function Signup() {
     if (isLoading || isErrorModalOpen) return;
 
     if (username.trim() === "" || email.trim() === "") {
-      alert("Username and Email cannot be empty.");
+      alert(t("auth.signup.emptyUsernameEmail"));
       return;
     }
 
     if (password !== confirmPassword) {
-      alert("Password and confirm password do not match.");
+      alert(t("auth.signup.passwordMismatch"));
       return;
     }
 
@@ -235,8 +237,8 @@ export default function Signup() {
 
         const description = data?.result?.description;
         const message = description
-          ? `Signup failed. ${description}`
-          : "Signup failed. Please contact the admin.";
+          ? t("auth.signup.signupFailedWithReason", { reason: description })
+          : t("auth.signup.signupFailedDefault");
         setErrorMsg(message);
       })
       .finally(() => {
@@ -246,18 +248,18 @@ export default function Signup() {
 
   const isSubmitDisabled = isLoading || !isEmailChecked;
   const submitDisabledMessage = isLoading
-    ? "Signing up..."
+    ? t("auth.signup.submitting")
     : !isEmailChecked
-      ? "Please check your email before signing up."
+      ? t("auth.signup.checkEmailHint")
       : "";
 
   return (
     <Wrapper>
-      <H1>Please Sign Up</H1>
+      <H1>{t("auth.signup.title")}</H1>
       <Form onSubmit={onSubmit}>
         <Input
           type="text"
-          placeholder="ID"
+          placeholder={t("auth.signup.idPlaceholder")}
           value={username}
           onChange={onChangeUsername}
           required
@@ -265,32 +267,32 @@ export default function Signup() {
         <EmailCheckWrapper>
           <Input
             type="email"
-            placeholder="Email"
+            placeholder={t("auth.signup.emailPlaceholder")}
             value={email}
             onChange={onChangeEmail}
             required
           />
           <CheckEmailBtn type="button" onClick={onClickCheckEmail}>
-            Check Email
+            {t("auth.signup.checkEmail")}
           </CheckEmailBtn>
         </EmailCheckWrapper>
         <Input
           type="password"
-          placeholder="Password"
+          placeholder={t("auth.signup.passwordPlaceholder")}
           value={password}
           onChange={onChangePassword}
           required
         />
         <Input
           type="password"
-          placeholder="Confirm Password"
+          placeholder={t("auth.signup.confirmPasswordPlaceholder")}
           value={confirmPassword}
           onChange={onChangeConfirmPassword}
           required
         />
         <SubmitBtnWrapper>
           <SubmitBtn disabled={isSubmitDisabled}>
-            {isLoading ? "Loading..." : "Sign Up"}
+            {isLoading ? t("auth.signup.loading") : t("auth.signup.submit")}
           </SubmitBtn>
           {isSubmitDisabled && (
             <SubmitBtnHoverMsg>{submitDisabledMessage}</SubmitBtnHoverMsg>
@@ -299,12 +301,14 @@ export default function Signup() {
       </Form>
       {errorMsg && <ErrorMsg>{errorMsg}</ErrorMsg>}
       <Switcher>
-        Already have an account? <Link to="/login">Log in &rarr;</Link>
+        {t("auth.signup.alreadyHaveAccount")}{" "}
+        <Link to="/login">{t("auth.signup.logIn")}</Link>
       </Switcher>
       {isSignupSuccess && (
         <ModalOverlay>
           <SuccessModal>
-            Sign Up Success! Go to <Link to="/login">Log in &rarr;</Link>
+            {t("auth.signup.successMessage")}{" "}
+            <Link to="/login">{t("auth.signup.successLink")}</Link>
           </SuccessModal>
         </ModalOverlay>
       )}
@@ -312,7 +316,7 @@ export default function Signup() {
         <ModalOverlay>
           <ErrorModal>
             <ModalTitle>
-              <ModalHeader>Signup Failed</ModalHeader>
+              <ModalHeader>{t("auth.signup.failedModalTitle")}</ModalHeader>
               <ModalCloseBtn onClick={closeErrorModal}>X</ModalCloseBtn>
             </ModalTitle>
             <ModalContent>
