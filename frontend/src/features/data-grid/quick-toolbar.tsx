@@ -25,6 +25,7 @@ import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import CancelIcon from "@mui/icons-material/Cancel";
 import SearchIcon from "@mui/icons-material/Search";
 import { useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 type OwnerState = {
   expanded: boolean;
@@ -70,6 +71,7 @@ export default function QuickToolbar({
   defaultExpanded = false,
   expanded = undefined,
 }: QuickToolbarProps) {
+  const { t } = useTranslation();
   const [exportMenuOpen, setExportMenuOpen] = useState(false);
   const exportMenuTriggerRef = useRef<HTMLButtonElement>(null);
 
@@ -78,7 +80,7 @@ export default function QuickToolbar({
       <Typography sx={{ fontWeight: "medium", flex: 1, mx: 0.5 }}>
         {toolbarName}
       </Typography>
-      <Tooltip title="Columns">
+      <Tooltip title={t("dataGrid.columns")}>
         <ColumnsPanelTrigger render={<ToolbarButton />}>
           <ViewColumnIcon fontSize="small" />
         </ColumnsPanelTrigger>
@@ -89,7 +91,7 @@ export default function QuickToolbar({
         flexItem
         sx={{ mx: 0.5 }}
       />
-      <Tooltip title="Export">
+      <Tooltip title={t("dataGrid.export")}>
         <ToolbarButton
           ref={exportMenuTriggerRef}
           id="export-menu-trigger"
@@ -118,13 +120,13 @@ export default function QuickToolbar({
           render={<MenuItem />}
           onClick={() => setExportMenuOpen(false)}
         >
-          Print
+          {t("dataGrid.print")}
         </ExportPrint>
         <ExportCsv
           render={<MenuItem />}
           onClick={() => setExportMenuOpen(false)}
         >
-          Download as CSV
+          {t("dataGrid.downloadCsv")}
         </ExportCsv>
       </Menu>
       <StyledQuickFilter
@@ -134,7 +136,7 @@ export default function QuickToolbar({
       >
         <QuickFilterTrigger
           render={(triggerProps, state) => (
-            <Tooltip title="Search" enterDelay={0}>
+            <Tooltip title={t("dataGrid.search")} enterDelay={0}>
               <StyledToolbarButton
                 {...triggerProps}
                 ownerState={{ expanded: state.expanded }}
@@ -152,8 +154,8 @@ export default function QuickToolbar({
               {...controlProps}
               ownerState={{ expanded: state.expanded }}
               inputRef={ref}
-              aria-label="Search"
-              placeholder="Search..."
+              aria-label={t("dataGrid.search")}
+              placeholder={t("dataGrid.searchPlaceholder")}
               size="small"
               slotProps={{
                 input: {
@@ -167,7 +169,7 @@ export default function QuickToolbar({
                       <QuickFilterClear
                         edge="end"
                         size="small"
-                        aria-label="Clear search"
+                        aria-label={t("dataGrid.clearSearch")}
                         material={{ sx: { marginRight: -0.75 } }}
                       >
                         <CancelIcon fontSize="small" />

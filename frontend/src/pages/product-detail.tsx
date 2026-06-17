@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import type { ApiIfs } from "../entities/app";
 import type { ProductCategoryIfs, ProductIfs } from "../entities";
@@ -245,6 +246,7 @@ const productToForm = (product: ProductIfs): ProductFormState => ({
 export default function ProductDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const isCreateMode = !id || id === "new";
 
@@ -266,7 +268,7 @@ export default function ProductDetail() {
       })
       .catch((err) => {
         console.error("Failed to fetch product:", err);
-        alert("Failed to fetch product. Please try again.");
+        alert(t("page.productDetail.alerts.fetchFailed"));
       })
       .finally(() => setLoading(false));
   };
@@ -323,7 +325,7 @@ export default function ProductDetail() {
   const handleSaveClick = () => {
     if (!isCreateMode && !product) return;
     if (form.categoryId === "") {
-      alert("Please select a category.");
+      alert(t("page.productDetail.alerts.pleaseSelectCategory"));
       return;
     }
     setLoading(true);
@@ -350,25 +352,27 @@ export default function ProductDetail() {
       .then((res) => {
         const data: ApiIfs<ProductIfs> = res.data;
         if (isCreateMode) {
-          alert("Product created successfully.");
+          alert(t("page.productDetail.alerts.createSuccess"));
           navigate("/products");
           return;
         }
         setProduct(data?.body ?? null);
         if (data?.body) setForm(productToForm(data.body));
         setIsEditing(false);
-        alert("Product updated successfully.");
+        alert(t("page.productDetail.alerts.updateSuccess"));
       })
       .catch((err) => {
         const data: ApiIfs<null> = err.response?.data;
         if (data?.result?.code === 1400) {
           const lines = Object.values(data?.body || {});
-          alert(`Invalid input:\n${lines.join("\n")}`);
+          alert(t("page.productDetail.alerts.invalidInput", { message: lines.join("\n") }));
           return;
         }
-        const message = data?.result?.description || "Unknown error";
+        const message = data?.result?.description ?? "";
         alert(
-          `Failed to ${isCreateMode ? "create" : "update"} product: ${message}`,
+          isCreateMode
+            ? t("page.productDetail.alerts.createFailed", { message })
+            : t("page.productDetail.alerts.updateFailed", { message }),
         );
       })
       .finally(() => setLoading(false));
@@ -376,24 +380,20 @@ export default function ProductDetail() {
 
   const handleDiscontinueClick = () => {
     if (!product) return;
-    if (
-      !window.confirm(
-        "Are you sure you want to discontinue this product? It will be marked as discontinued.",
-      )
-    ) {
+    if (!window.confirm(t("page.productDetail.alerts.discontinueConfirm"))) {
       return;
     }
     setLoading(true);
     privateApi
       .delete(`/v1/products/${product.id}`)
       .then(() => {
-        alert("Product discontinued successfully.");
+        alert(t("page.productDetail.alerts.discontinueSuccess"));
         fetchProduct();
       })
       .catch((err) => {
         const data: ApiIfs<null> = err.response?.data;
-        const message = data?.result?.description || "Unknown error";
-        alert(`Failed to discontinue product: ${message}`);
+        const message = data?.result?.description ?? "";
+        alert(t("page.productDetail.alerts.discontinueFailed", { message }));
       })
       .finally(() => setLoading(false));
   };
@@ -401,10 +401,16 @@ export default function ProductDetail() {
   if (!isCreateMode && !product) {
     return (
       <Wrapper>
-        <Title>Product Detail</Title>
+        <Title>{t("page.productDetail.title")}</Title>
         <Content>
-          <BackBtn onClick={() => navigate("/products")}>← Back</BackBtn>
-          <ReadValue>{loading ? "Loading..." : "Product not found."}</ReadValue>
+          <BackBtn onClick={() => navigate("/products")}>
+            {t("page.productDetail.back")}
+          </BackBtn>
+          <ReadValue>
+            {loading
+              ? t("page.productDetail.loading")
+              : t("page.productDetail.notFound")}
+          </ReadValue>
         </Content>
       </Wrapper>
     );
@@ -412,21 +418,31 @@ export default function ProductDetail() {
 
   return (
     <Wrapper>
-      <Title>{isCreateMode ? "New Product" : "Product Detail"}</Title>
+      <Title>
+        {isCreateMode
+          ? t("page.productDetail.newProductTitle")
+          : t("page.productDetail.title")}
+      </Title>
       <Content>
         <Header>
-          <BackBtn onClick={() => navigate("/products")}>← Back</BackBtn>
+          <BackBtn onClick={() => navigate("/products")}>
+            {t("page.productDetail.back")}
+          </BackBtn>
           <HeaderTitle>
-            {isCreateMode ? "New Product" : product?.name}
+            {isCreateMode
+              ? t("page.productDetail.newProductTitle")
+              : product?.name}
           </HeaderTitle>
-          {product?.discontinued && <Badge>판매중단</Badge>}
+          {product?.discontinued && (
+            <Badge>{t("page.productDetail.discontinuedBadge")}</Badge>
+          )}
         </Header>
 
         <Grid>
           <Card>
-            <CardTitle>Basic Info</CardTitle>
+            <CardTitle>{t("page.productDetail.basicInfo")}</CardTitle>
             <FieldRow>
-              <Label>Code</Label>
+              <Label>{t("page.productDetail.code")}</Label>
               {isEditing ? (
                 <Input value={form.code} onChange={updateField("code")} />
               ) : (
@@ -434,7 +450,7 @@ export default function ProductDetail() {
               )}
             </FieldRow>
             <FieldRow>
-              <Label>Name</Label>
+              <Label>{t("page.productDetail.name")}</Label>
               {isEditing ? (
                 <Input value={form.name} onChange={updateField("name")} />
               ) : (
@@ -442,7 +458,7 @@ export default function ProductDetail() {
               )}
             </FieldRow>
             <FieldRow>
-              <Label>Category</Label>
+              <Label>{t("page.productDetail.category")}</Label>
               {isEditing ? (
                 <Select
                   value={form.categoryId}
@@ -454,7 +470,9 @@ export default function ProductDetail() {
                     }))
                   }
                 >
-                  <option value="">Select category</option>
+                  <option value="">
+                    {t("page.productDetail.selectCategory")}
+                  </option>
                   {categories.map((category) => (
                     <option key={category.id} value={category.id}>
                       {category.name}
@@ -466,7 +484,7 @@ export default function ProductDetail() {
               )}
             </FieldRow>
             <FieldRow>
-              <Label>Standard Unit Cost</Label>
+              <Label>{t("page.productDetail.standardUnitCost")}</Label>
               {isEditing ? (
                 <Input
                   type="number"
@@ -480,7 +498,7 @@ export default function ProductDetail() {
               )}
             </FieldRow>
             <FieldRow>
-              <Label>Unit Price</Label>
+              <Label>{t("page.productDetail.unitPrice")}</Label>
               {isEditing ? (
                 <Input
                   type="number"
@@ -492,7 +510,7 @@ export default function ProductDetail() {
               )}
             </FieldRow>
             <FieldRow>
-              <Label>Description</Label>
+              <Label>{t("page.productDetail.description")}</Label>
               {isEditing ? (
                 <TextArea
                   value={form.description}
@@ -504,7 +522,7 @@ export default function ProductDetail() {
             </FieldRow>
             {isEditing && (
               <FieldRow>
-                <Label>Discontinued</Label>
+                <Label>{t("page.productDetail.discontinuedLabel")}</Label>
                 <Checkbox
                   type="checkbox"
                   checked={form.discontinued}
@@ -520,9 +538,9 @@ export default function ProductDetail() {
           </Card>
 
           <Card>
-            <CardTitle>Stock Info</CardTitle>
+            <CardTitle>{t("page.productDetail.stockInfo")}</CardTitle>
             <FieldRow>
-              <Label>Reorder Level</Label>
+              <Label>{t("page.productDetail.reorderLevel")}</Label>
               {isEditing ? (
                 <Input
                   type="number"
@@ -534,7 +552,7 @@ export default function ProductDetail() {
               )}
             </FieldRow>
             <FieldRow>
-              <Label>Target Level</Label>
+              <Label>{t("page.productDetail.targetLevel")}</Label>
               {isEditing ? (
                 <Input
                   type="number"
@@ -546,7 +564,7 @@ export default function ProductDetail() {
               )}
             </FieldRow>
             <FieldRow>
-              <Label>Minimum Reorder Quantity</Label>
+              <Label>{t("page.productDetail.minimumReorderQty")}</Label>
               {isEditing ? (
                 <Input
                   type="number"
@@ -558,7 +576,7 @@ export default function ProductDetail() {
               )}
             </FieldRow>
             <FieldRow>
-              <Label>Quantity Per Unit</Label>
+              <Label>{t("page.productDetail.quantityPerUnit")}</Label>
               {isEditing ? (
                 <Input
                   type="number"
@@ -580,27 +598,29 @@ export default function ProductDetail() {
                 onClick={handleSaveClick}
                 disabled={loading}
               >
-                {isCreateMode ? "Create" : "Save"}
+                {isCreateMode
+                  ? t("page.productDetail.create")
+                  : t("page.productDetail.save")}
               </PrimaryBtn>
               <SecondaryBtn
                 type="button"
                 onClick={handleCancelClick}
                 disabled={loading}
               >
-                Cancel
+                {t("page.productDetail.cancel")}
               </SecondaryBtn>
             </>
           ) : (
             <>
               <PrimaryBtn type="button" onClick={handleEditClick}>
-                Edit
+                {t("page.productDetail.edit")}
               </PrimaryBtn>
               <DangerBtn
                 type="button"
                 onClick={handleDiscontinueClick}
                 disabled={loading || product?.discontinued}
               >
-                Discontinue
+                {t("page.productDetail.discontinue")}
               </DangerBtn>
             </>
           )}

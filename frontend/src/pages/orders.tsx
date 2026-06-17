@@ -2,6 +2,7 @@ import { Box } from "@mui/material";
 import { DataGrid, type GridColDef } from "@mui/x-data-grid";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import type { ApiIfs, PageIfs } from "../entities/app";
 import type { OrderListItemIfs, OrderStatusIfs } from "../entities";
@@ -102,6 +103,7 @@ const NewBtn = styled.button`
 
 export default function Orders() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const [rows, setRows] = useState<OrderListItemIfs[]>([]);
   const [rowCount, setRowCount] = useState(0);
@@ -119,10 +121,10 @@ export default function Orders() {
   const isFirstFilterRun = useRef(true);
 
   const columns: GridColDef[] = [
-    { field: "id", headerName: "Order No.", width: 100 },
+    { field: "id", headerName: t("page.orders.col.no"), width: 100 },
     {
       field: "customerName",
-      headerName: "Customer",
+      headerName: t("page.orders.col.customer"),
       flex: 1,
       minWidth: 180,
       renderCell: (params) => (
@@ -134,23 +136,23 @@ export default function Orders() {
         </span>
       ),
     },
-    { field: "orderDate", headerName: "Order Date", width: 130 },
+    { field: "orderDate", headerName: t("page.orders.col.orderDate"), width: 130 },
     {
       field: "totalAmount",
-      headerName: "Total",
+      headerName: t("page.orders.col.total"),
       width: 130,
       valueGetter: (value) =>
         value == null ? "" : `$${Number(value).toFixed(2)}`,
     },
     {
       field: "shipperName",
-      headerName: "Shipper",
+      headerName: t("page.orders.col.shipper"),
       width: 160,
       valueGetter: (value) => value ?? "",
     },
     {
       field: "status",
-      headerName: "Status",
+      headerName: t("page.orders.col.status"),
       width: 130,
       valueGetter: (_value, row) => row.status?.name ?? "",
     },
@@ -215,7 +217,7 @@ export default function Orders() {
 
   return (
     <Wrapper>
-      <Title>Order Management</Title>
+      <Title>{t("page.orders.title")}</Title>
       <Box
         sx={{
           height: "100%",
@@ -228,7 +230,7 @@ export default function Orders() {
         <Toolbar>
           <Input
             type="text"
-            placeholder="Search by customer name"
+            placeholder={t("page.orders.searchPlaceholder")}
             value={keyword}
             onChange={(e) => setKeyword(e.target.value)}
           />
@@ -245,7 +247,7 @@ export default function Orders() {
           />
           <Spacer />
           <NewBtn type="button" onClick={() => navigate("/orders/new")}>
-            + New Order
+            {t("page.orders.newOrder")}
           </NewBtn>
         </Toolbar>
         <Toolbar>
@@ -255,7 +257,7 @@ export default function Orders() {
               $active={statusFilter === ""}
               onClick={() => setStatusFilter("")}
             >
-              All
+              {t("page.orders.all")}
             </Tab>
             {orderStatuses.map((status) => (
               <Tab

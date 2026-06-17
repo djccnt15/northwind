@@ -2,6 +2,7 @@ import { Box } from "@mui/material";
 import { DataGrid, type GridColDef } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import type { ApiIfs, PageIfs } from "../entities/app";
 import type { ProductCategoryIfs, ProductIfs } from "../entities";
@@ -119,6 +120,7 @@ const NewProductBtn = styled.button`
 `;
 
 export default function Products() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   const [rows, setRows] = useState<ProductIfs[]>([]);
@@ -133,10 +135,10 @@ export default function Products() {
   const [categories, setCategories] = useState<ProductCategoryIfs[]>([]);
 
   const columns: GridColDef[] = [
-    { field: "code", headerName: "Code", width: 120 },
+    { field: "code", headerName: t("page.products.col.code"), width: 120 },
     {
       field: "name",
-      headerName: "Name",
+      headerName: t("page.products.col.name"),
       flex: 1,
       renderCell: (params) => (
         <span
@@ -149,25 +151,27 @@ export default function Products() {
     },
     {
       field: "categoryName",
-      headerName: "Category",
+      headerName: t("page.products.col.category"),
       width: 150,
       valueGetter: (_value, row) => row.category?.name ?? "",
     },
     {
       field: "unitPrice",
-      headerName: "Unit Price",
+      headerName: t("page.products.col.unitPrice"),
       width: 120,
       valueFormatter: (value) => `$${Number(value).toFixed(2)}`,
     },
     {
       field: "discontinued",
-      headerName: "Status",
+      headerName: t("page.products.col.status"),
       width: 120,
       renderCell: (params) =>
         params.value ? (
-          <span style={{ color: "#ff4d4f" }}>Discontinued</span>
+          <span style={{ color: "#ff4d4f" }}>
+            {t("page.products.discontinued")}
+          </span>
         ) : (
-          <span style={{ color: "#52c41a" }}>Active</span>
+          <span style={{ color: "#52c41a" }}>{t("page.products.active")}</span>
         ),
     },
   ];
@@ -224,7 +228,7 @@ export default function Products() {
 
   return (
     <Wrapper>
-      <Title>Products</Title>
+      <Title>{t("page.products.title")}</Title>
       <Box
         sx={{
           height: "100%",
@@ -236,17 +240,17 @@ export default function Products() {
       >
         <FilterBar>
           <FieldWrapper width="240px">
-            <Label>Keyword</Label>
+            <Label>{t("page.products.keyword")}</Label>
             <Input
               type="text"
-              placeholder="Search by name or code"
+              placeholder={t("page.products.searchPlaceholder")}
               value={keyword}
               onChange={(e) => setKeyword(e.target.value)}
               onKeyDown={onKeywordKeyDown}
             />
           </FieldWrapper>
           <FieldWrapper>
-            <Label>Category</Label>
+            <Label>{t("page.products.category")}</Label>
             <Select
               value={categoryId}
               onChange={(e) =>
@@ -255,7 +259,7 @@ export default function Products() {
                 )
               }
             >
-              <option value="">All</option>
+              <option value="">{t("page.products.all")}</option>
               {categories.map((category) => (
                 <option key={category.id} value={category.id}>
                   {category.name}
@@ -264,7 +268,7 @@ export default function Products() {
             </Select>
           </FieldWrapper>
           <FieldWrapper width="150px">
-            <Label>Status</Label>
+            <Label>{t("page.products.status")}</Label>
             <Select
               value={discontinued === "" ? "" : String(discontinued)}
               onChange={(e) =>
@@ -273,17 +277,17 @@ export default function Products() {
                 )
               }
             >
-              <option value="">All</option>
-              <option value="false">Active</option>
-              <option value="true">Discontinued</option>
+              <option value="">{t("page.products.all")}</option>
+              <option value="false">{t("page.products.active")}</option>
+              <option value="true">{t("page.products.discontinued")}</option>
             </Select>
           </FieldWrapper>
           <SearchBtn type="button" onClick={handleSearch}>
-            Search
+            {t("page.products.search")}
           </SearchBtn>
           <Spacer />
           <NewProductBtn type="button" onClick={() => navigate("/products/new")}>
-            + New Product
+            {t("page.products.newProduct")}
           </NewProductBtn>
         </FilterBar>
         <Box sx={{ flex: 1, minHeight: 0, width: "100%" }}>

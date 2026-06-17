@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import type { ApiIfs } from "../../entities/app";
 import type { ContactIfs } from "../../entities";
@@ -49,6 +50,7 @@ const contactToForm = (contact: ContactIfs): ContactFormState => ({
 });
 
 export default function ContactPanel({ companyId }: ContactPanelProps) {
+  const { t } = useTranslation();
   const [contacts, setContacts] = useState<ContactIfs[]>([]);
   const [loading, setLoading] = useState(false);
   // editingId: existing contact id being edited, "new" for add form, null for none
@@ -97,7 +99,7 @@ export default function ContactPanel({ companyId }: ContactPanelProps) {
 
   const handleSaveClick = () => {
     if (!form.firstName.trim() || !form.lastName.trim()) {
-      alert("First name and last name are required.");
+      alert(t("company.contactPanel.alerts.nameRequired"));
       return;
     }
     const body = convertEmptyStringToNull({
@@ -128,11 +130,11 @@ export default function ContactPanel({ companyId }: ContactPanelProps) {
         const data: ApiIfs<null> = err.response?.data;
         if (data?.result?.code === 1400) {
           const lines = Object.values(data?.body || {});
-          alert(`Invalid input:\n${lines.join("\n")}`);
+          alert(t("company.contactPanel.alerts.invalidInput", { message: lines.join("\n") }));
           return;
         }
-        const message = data?.result?.description || "Unknown error";
-        alert(`Failed to save contact: ${message}`);
+        const message = data?.result?.description ?? "";
+        alert(t("company.contactPanel.alerts.saveFailed", { message }));
         setLoading(false);
       });
   };
@@ -140,7 +142,10 @@ export default function ContactPanel({ companyId }: ContactPanelProps) {
   const handleDeleteClick = (contact: ContactIfs) => {
     if (
       !window.confirm(
-        `Delete contact "${contact.firstName} ${contact.lastName}"?`,
+        t("company.contactPanel.deleteConfirm", {
+          firstName: contact.firstName,
+          lastName: contact.lastName,
+        }),
       )
     ) {
       return;
@@ -151,8 +156,8 @@ export default function ContactPanel({ companyId }: ContactPanelProps) {
       .then(fetchContacts)
       .catch((err) => {
         const data: ApiIfs<null> = err.response?.data;
-        const message = data?.result?.description || "Unknown error";
-        alert(`Failed to delete contact: ${message}`);
+        const message = data?.result?.description ?? "";
+        alert(t("company.contactPanel.alerts.deleteFailed", { message }));
         setLoading(false);
       });
   };
@@ -161,34 +166,34 @@ export default function ContactPanel({ companyId }: ContactPanelProps) {
     <FormBox>
       <FormRow>
         <FieldWrapper>
-          <Label>First Name *</Label>
+          <Label>{t("company.contactPanel.firstName")}</Label>
           <Input value={form.firstName} onChange={updateField("firstName")} />
         </FieldWrapper>
         <FieldWrapper>
-          <Label>Last Name *</Label>
+          <Label>{t("company.contactPanel.lastName")}</Label>
           <Input value={form.lastName} onChange={updateField("lastName")} />
         </FieldWrapper>
       </FormRow>
       <FormRow>
         <FieldWrapper>
-          <Label>Job Title</Label>
+          <Label>{t("company.contactPanel.jobTitle")}</Label>
           <Input value={form.jobTitle} onChange={updateField("jobTitle")} />
         </FieldWrapper>
         <FieldWrapper>
-          <Label>Email</Label>
+          <Label>{t("company.contactPanel.email")}</Label>
           <Input value={form.email} onChange={updateField("email")} />
         </FieldWrapper>
       </FormRow>
       <FormRow>
         <FieldWrapper>
-          <Label>Primary Phone</Label>
+          <Label>{t("company.contactPanel.primaryPhone")}</Label>
           <Input
             value={form.primaryPhone}
             onChange={updateField("primaryPhone")}
           />
         </FieldWrapper>
         <FieldWrapper>
-          <Label>Secondary Phone</Label>
+          <Label>{t("company.contactPanel.secondaryPhone")}</Label>
           <Input
             value={form.secondaryPhone}
             onChange={updateField("secondaryPhone")}
@@ -196,19 +201,19 @@ export default function ContactPanel({ companyId }: ContactPanelProps) {
         </FieldWrapper>
       </FormRow>
       <FieldWrapper>
-        <Label>Notes</Label>
+        <Label>{t("company.contactPanel.notes")}</Label>
         <TextArea value={form.notes} onChange={updateField("notes")} />
       </FieldWrapper>
       <BtnRow>
         <PrimaryBtn type="button" onClick={handleSaveClick} disabled={loading}>
-          Save
+          {t("company.contactPanel.save")}
         </PrimaryBtn>
         <SecondaryBtn
           type="button"
           onClick={handleCancelClick}
           disabled={loading}
         >
-          Cancel
+          {t("company.contactPanel.cancel")}
         </SecondaryBtn>
       </BtnRow>
     </FormBox>
@@ -217,10 +222,10 @@ export default function ContactPanel({ companyId }: ContactPanelProps) {
   return (
     <Panel>
       <PanelHeader>
-        <PanelTitle>Contacts</PanelTitle>
+        <PanelTitle>{t("company.contactPanel.title")}</PanelTitle>
         {editingId === null && (
           <AddBtn type="button" onClick={handleAddClick}>
-            + Add Contact
+            {t("company.contactPanel.addContact")}
           </AddBtn>
         )}
       </PanelHeader>
@@ -228,7 +233,11 @@ export default function ContactPanel({ companyId }: ContactPanelProps) {
       {editingId === "new" && renderForm()}
 
       {contacts.length === 0 && editingId !== "new" ? (
-        <EmptyText>{loading ? "Loading..." : "No contacts yet."}</EmptyText>
+        <EmptyText>
+          {loading
+            ? t("company.contactPanel.loading")
+            : t("company.contactPanel.noContacts")}
+        </EmptyText>
       ) : (
         <ContactList>
           {contacts.map((contact) =>
@@ -257,13 +266,13 @@ export default function ContactPanel({ companyId }: ContactPanelProps) {
                     type="button"
                     onClick={() => handleEditClick(contact)}
                   >
-                    Edit
+                    {t("company.contactPanel.edit")}
                   </EditBtn>
                   <DeleteBtn
                     type="button"
                     onClick={() => handleDeleteClick(contact)}
                   >
-                    Delete
+                    {t("company.contactPanel.delete")}
                   </DeleteBtn>
                 </ContactActions>
               </ContactItem>

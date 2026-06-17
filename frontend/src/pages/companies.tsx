@@ -2,6 +2,7 @@ import { Box } from "@mui/material";
 import { DataGrid, type GridColDef } from "@mui/x-data-grid";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import type { ApiIfs, PageIfs } from "../entities/app";
 import type { CompanyIfs, CompanyTypeIfs, TaxStatusIfs } from "../entities";
@@ -89,6 +90,7 @@ const NewBtn = styled.button`
 
 export default function Companies() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const [rows, setRows] = useState<CompanyIfs[]>([]);
   const [rowCount, setRowCount] = useState(0);
@@ -108,7 +110,7 @@ export default function Companies() {
   const columns: GridColDef[] = [
     {
       field: "name",
-      headerName: "Company",
+      headerName: t("page.companies.col.company"),
       flex: 1,
       minWidth: 180,
       renderCell: (params) => (
@@ -122,25 +124,25 @@ export default function Companies() {
     },
     {
       field: "companyType",
-      headerName: "Type",
+      headerName: t("page.companies.col.type"),
       width: 140,
       valueGetter: (_value, row) => row.companyType?.companyType ?? "",
     },
     {
       field: "businessPhone",
-      headerName: "Phone",
+      headerName: t("page.companies.col.phone"),
       width: 160,
       valueGetter: (value) => value ?? "",
     },
     {
       field: "city",
-      headerName: "City",
+      headerName: t("page.companies.col.city"),
       width: 140,
       valueGetter: (value) => value ?? "",
     },
     {
       field: "taxStatus",
-      headerName: "Tax Status",
+      headerName: t("page.companies.col.taxStatus"),
       width: 140,
       valueGetter: (_value, row) => row.taxStatus?.status ?? "",
     },
@@ -210,7 +212,7 @@ export default function Companies() {
 
   return (
     <Wrapper>
-      <Title>Company Management</Title>
+      <Title>{t("page.companies.title")}</Title>
       <Box
         sx={{
           height: "100%",
@@ -223,7 +225,7 @@ export default function Companies() {
         <Toolbar>
           <Input
             type="text"
-            placeholder="Search by company name"
+            placeholder={t("page.companies.searchPlaceholder")}
             value={keyword}
             onChange={(e) => setKeyword(e.target.value)}
           />
@@ -233,7 +235,7 @@ export default function Companies() {
               $active={typeFilter === ""}
               onClick={() => setTypeFilter("")}
             >
-              All
+              {t("page.companies.all")}
             </Tab>
             {companyTypes.map((type) => (
               <Tab
@@ -248,7 +250,7 @@ export default function Companies() {
           </Tabs>
           <Spacer />
           <NewBtn type="button" onClick={() => setIsModalOpen(true)}>
-            + New Company
+            {t("page.companies.newCompany")}
           </NewBtn>
         </Toolbar>
         <Box sx={{ flex: 1, minHeight: 0, width: "100%" }}>

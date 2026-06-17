@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { useTranslation } from "react-i18next";
 import {
   commBorderRadius,
   commBtnHoverSkyBlue,
@@ -133,6 +134,7 @@ const AuthItem = styled.li`
 `;
 
 export default function Profile() {
+  const { t } = useTranslation();
   const { user, setUser } = useAuth();
 
   const [username, setUsername] = useState<string>("");
@@ -210,11 +212,12 @@ export default function Profile() {
         })
         .catch((err) => {
           console.error("Failed to fetch user info:", err);
-          alert("Failed to fetch user info. Please try again later.");
+          alert(t("page.profile.alerts.fetchFailed"));
         });
     };
 
     fetchUserInfo();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user?.id]);
 
   const onSubmitProfile = (e: React.SubmitEvent<HTMLFormElement>) => {
@@ -222,12 +225,12 @@ export default function Profile() {
     if (!user || isLoading) return;
 
     if (username === userInfo?.username && email === userInfo?.email) {
-      alert("No changes detected.");
+      alert(t("page.profile.alerts.noChanges"));
       return;
     }
 
     if (username.trim() === "" || email.trim() === "") {
-      alert("Username and Email cannot be empty.");
+      alert(t("page.profile.alerts.usernameEmailEmpty"));
       return;
     }
 
@@ -239,14 +242,14 @@ export default function Profile() {
         const data: ApiIfs<UserIfs> = res.data;
         setUserInfo(data.body || null);
         setUser({ ...user, username: data.body?.username || user.username });
-        alert("Profile updated successfully.");
+        alert(t("page.profile.alerts.profileUpdated"));
       })
       .catch((err) => {
         console.error(err);
         const data: ApiIfs<null> = err.response?.data;
         const description = data?.result?.description;
         const message =
-          description || "An error occurred while updating the profile.";
+          description || t("page.profile.alerts.profileUpdateFailed");
         alert(message);
       })
       .finally(() => {
@@ -259,12 +262,12 @@ export default function Profile() {
     if (!user || isPasswordLoading) return;
 
     if (password.trim() === "" || confirmPassword.trim() === "") {
-      alert("Password and Confirm Password cannot be empty.");
+      alert(t("page.profile.alerts.passwordEmpty"));
       return;
     }
 
     if (password !== confirmPassword) {
-      alert("Passwords do not match.");
+      alert(t("page.profile.alerts.passwordMismatch"));
       return;
     }
 
@@ -273,7 +276,7 @@ export default function Profile() {
     privateApi
       .patch(`/v1/user/${user.id}/password`, { password, confirmPassword })
       .then(() => {
-        alert("Password updated successfully.");
+        alert(t("page.profile.alerts.passwordUpdated"));
         setPassword("");
         setConfirmPassword("");
       })
@@ -282,7 +285,7 @@ export default function Profile() {
         const data: ApiIfs<null> = err.response?.data;
         const description = data?.result?.description;
         const message =
-          description || "An error occurred while updating the password.";
+          description || t("page.profile.alerts.passwordUpdateFailed");
         alert(message);
       })
       .finally(() => {
@@ -296,7 +299,7 @@ export default function Profile() {
 
     const employeeInfo = userInfo?.employee;
     if (!employeeInfo) {
-      alert("Employee information is missing.");
+      alert(t("page.profile.alerts.employeeMissing"));
       return;
     }
 
@@ -309,7 +312,7 @@ export default function Profile() {
       .then((res) => {
         const data: ApiIfs<UserIfs> = res.data;
         setUserInfo(data.body || null);
-        alert("Personal information updated successfully.");
+        alert(t("page.profile.alerts.personalUpdated"));
       })
       .catch((err) => {
         console.error(err);
@@ -318,16 +321,13 @@ export default function Profile() {
         if (data?.result?.code === 1400) {
           const lines = Object.values(data?.body || {});
           const message = lines.join("\n");
-          alert(
-            `Invalid input. Please check your information and try again.\n${message}`,
-          );
+          alert(`${t("page.profile.alerts.invalidInput")}\n${message}`);
           return;
         }
 
         const description = data?.result?.description;
         const message =
-          description ||
-          "An error occurred while updating personal information.";
+          description || t("page.profile.alerts.personalUpdateFailed");
         alert(message);
       })
       .finally(() => {
@@ -338,61 +338,61 @@ export default function Profile() {
   return (
     <Wrapper>
       <PageWrapper>
-        <Title>Profile</Title>
+        <Title>{t("page.profile.title")}</Title>
         <ContentWrapper>
           <Form onSubmit={onSubmitProfile}>
             <FlexWrapper>
               <FieldWrapper width="100%">
-                <Label>ID</Label>
+                <Label>{t("page.profile.fields.id")}</Label>
                 <Input
                   type="text"
                   value={username}
-                  placeholder="ID"
+                  placeholder={t("page.profile.placeholders.id")}
                   onChange={onChangeUsername}
                   required
                 />
               </FieldWrapper>
               <FieldWrapper width="100%">
-                <Label>E-mail</Label>
+                <Label>{t("page.profile.fields.email")}</Label>
                 <Input
                   type="email"
                   value={email}
-                  placeholder="email@example.com"
+                  placeholder={t("page.profile.placeholders.email")}
                   onChange={onChangeEmail}
                   required
                 />
               </FieldWrapper>
-              <SubmitBtn>Update</SubmitBtn>
+              <SubmitBtn>{t("page.profile.update")}</SubmitBtn>
             </FlexWrapper>
           </Form>
           <Form onSubmit={onSubmitPassword}>
             <FlexWrapper>
               <FieldWrapper width="100%">
-                <Label>Password</Label>
+                <Label>{t("page.profile.fields.password")}</Label>
                 <Input
                   type="password"
-                  placeholder="Password"
+                  placeholder={t("page.profile.fields.password")}
                   value={password}
                   onChange={onChangePassword}
                   required
                 />
               </FieldWrapper>
               <FieldWrapper width="100%">
-                <Label>Confirm Password</Label>
+                <Label>{t("page.profile.fields.confirmPassword")}</Label>
                 <Input
                   type="password"
-                  placeholder="Confirm Password"
+                  placeholder={t("page.profile.fields.confirmPassword")}
                   value={confirmPassword}
                   onChange={onChangeConfirmPassword}
                   required
                 />
               </FieldWrapper>
-              <SubmitBtn>Change</SubmitBtn>
+              <SubmitBtn>{t("page.profile.change")}</SubmitBtn>
             </FlexWrapper>
           </Form>
           <FlexWrapper>
             <FieldWrapper width="100%">
-              <Label>Live Until</Label>
+              <Label>{t("page.profile.fields.liveUntil")}</Label>
               <TooltipWrapper>
                 <Input
                   type="datetime-local"
@@ -400,16 +400,15 @@ export default function Profile() {
                   disabled
                 />
                 <Tooltip top="calc(100% + 8px)">
-                  Expiration date of your account. You can't use the account
-                  after this date.
+                  {t("page.profile.tooltips.liveUntil")}
                 </Tooltip>
                 <Tooltip top="calc(200%)">
-                  Contact your account manager for more information.
+                  {t("page.profile.tooltips.contactManager")}
                 </Tooltip>
               </TooltipWrapper>
             </FieldWrapper>
             <FieldWrapper width="100%">
-              <Label>Team</Label>
+              <Label>{t("page.profile.fields.team")}</Label>
               <TooltipWrapper>
                 <Input type="text" value={userInfo?.team || ""} disabled />
                 <Tooltip
@@ -417,12 +416,12 @@ export default function Profile() {
                   top="-100%"
                   style={{ transform: "translateX(-50%)", marginTop: "5px" }}
                 >
-                  You can't change team by yourself. Contact to Admin
+                  {t("page.profile.tooltips.team")}
                 </Tooltip>
               </TooltipWrapper>
             </FieldWrapper>
             <FieldWrapper width="100%">
-              <Label>Title</Label>
+              <Label>{t("page.profile.fields.title")}</Label>
               <TooltipWrapper>
                 <Input
                   type="text"
@@ -434,12 +433,12 @@ export default function Profile() {
                   top="-100%"
                   style={{ transform: "translateX(-50%)", marginTop: "5px" }}
                 >
-                  You can't change title by yourself. Contact to Admin
+                  {t("page.profile.tooltips.title")}
                 </Tooltip>
               </TooltipWrapper>
             </FieldWrapper>
             <FieldWrapper width="15%">
-              <Label>Hire Date</Label>
+              <Label>{t("page.profile.fields.hireDate")}</Label>
               <Input
                 type="date"
                 value={userInfo?.employee?.hireDate || ""}
@@ -450,10 +449,10 @@ export default function Profile() {
           <Form onSubmit={onSubmitInfo}>
             <FlexWrapWrapper>
               <FieldWrapper width="10%">
-                <Label>First Name</Label>
+                <Label>{t("page.profile.fields.firstName")}</Label>
                 <Input
                   type="text"
-                  placeholder="John"
+                  placeholder={t("page.profile.placeholders.firstName")}
                   fontSize="12px"
                   height="30px"
                   onChange={onChangeFirstName}
@@ -461,10 +460,10 @@ export default function Profile() {
                 />
               </FieldWrapper>
               <FieldWrapper width="10%">
-                <Label>Last Name</Label>
+                <Label>{t("page.profile.fields.lastName")}</Label>
                 <Input
                   type="text"
-                  placeholder="Doe"
+                  placeholder={t("page.profile.placeholders.lastName")}
                   fontSize="12px"
                   height="30px"
                   onChange={onChangeLastName}
@@ -472,10 +471,10 @@ export default function Profile() {
                 />
               </FieldWrapper>
               <FieldWrapper width="10%">
-                <Label>E-mail</Label>
+                <Label>{t("page.profile.fields.email")}</Label>
                 <Input
                   type="text"
-                  placeholder="john.doe@example.com"
+                  placeholder={t("page.profile.placeholders.personalEmail")}
                   fontSize="12px"
                   height="30px"
                   onChange={onChangePersonalEmail}
@@ -483,10 +482,10 @@ export default function Profile() {
                 />
               </FieldWrapper>
               <FieldWrapper width="10%">
-                <Label>Job Title</Label>
+                <Label>{t("page.profile.fields.jobTitle")}</Label>
                 <Input
                   type="text"
-                  placeholder="Senior Engineer"
+                  placeholder={t("page.profile.placeholders.jobTitle")}
                   fontSize="12px"
                   height="30px"
                   onChange={onChangeJobTitle}
@@ -494,10 +493,10 @@ export default function Profile() {
                 />
               </FieldWrapper>
               <FieldWrapper width="10%">
-                <Label>Phone 1</Label>
+                <Label>{t("page.profile.fields.phone1")}</Label>
                 <Input
                   type="text"
-                  placeholder="(123) 456-7890"
+                  placeholder={t("page.profile.placeholders.phone1")}
                   fontSize="12px"
                   height="30px"
                   onChange={onChangePrimaryPhone}
@@ -505,10 +504,10 @@ export default function Profile() {
                 />
               </FieldWrapper>
               <FieldWrapper width="10%">
-                <Label>Phone 2</Label>
+                <Label>{t("page.profile.fields.phone2")}</Label>
                 <Input
                   type="text"
-                  placeholder="(123) 456-7890"
+                  placeholder={t("page.profile.placeholders.phone2")}
                   fontSize="12px"
                   height="30px"
                   onChange={onChangeSecondaryPhone}
@@ -516,10 +515,10 @@ export default function Profile() {
                 />
               </FieldWrapper>
               <FieldWrapper width="10%">
-                <Label>Birth Date</Label>
+                <Label>{t("page.profile.fields.birthDate")}</Label>
                 <Input
                   type="date"
-                  placeholder="MM/DD/YYYY"
+                  placeholder={t("page.profile.placeholders.birthDate")}
                   fontSize="12px"
                   height="30px"
                   onChange={onChangeBirthDate}
@@ -527,10 +526,10 @@ export default function Profile() {
                 />
               </FieldWrapper>
               <FieldWrapper width="10%">
-                <Label>Courtesy Title</Label>
+                <Label>{t("page.profile.fields.courtesyTitle")}</Label>
                 <Input
                   type="text"
-                  placeholder="Mr., Ms., Dr., etc."
+                  placeholder={t("page.profile.placeholders.courtesyTitle")}
                   fontSize="12px"
                   height="30px"
                   onChange={onChangeTitleOfCourtesy}
@@ -540,10 +539,10 @@ export default function Profile() {
             </FlexWrapWrapper>
             <FlexWrapWrapper>
               <FieldWrapper width="10%">
-                <Label>Address</Label>
+                <Label>{t("page.profile.fields.address")}</Label>
                 <Input
                   type="text"
-                  placeholder="123 Main St, City, Country"
+                  placeholder={t("page.profile.placeholders.address")}
                   fontSize="12px"
                   height="30px"
                   onChange={onChangeAddress}
@@ -551,10 +550,10 @@ export default function Profile() {
                 />
               </FieldWrapper>
               <FieldWrapper width="10%">
-                <Label>City</Label>
+                <Label>{t("page.profile.fields.city")}</Label>
                 <Input
                   type="text"
-                  placeholder="City"
+                  placeholder={t("page.profile.placeholders.city")}
                   fontSize="12px"
                   height="30px"
                   onChange={onChangeCity}
@@ -562,10 +561,10 @@ export default function Profile() {
                 />
               </FieldWrapper>
               <FieldWrapper width="10%">
-                <Label>Region</Label>
+                <Label>{t("page.profile.fields.region")}</Label>
                 <Input
                   type="text"
-                  placeholder="Region/State"
+                  placeholder={t("page.profile.placeholders.region")}
                   fontSize="12px"
                   height="30px"
                   onChange={onChangeRegion}
@@ -573,10 +572,10 @@ export default function Profile() {
                 />
               </FieldWrapper>
               <FieldWrapper width="10%">
-                <Label>Zip Code</Label>
+                <Label>{t("page.profile.fields.zipCode")}</Label>
                 <Input
                   type="text"
-                  placeholder="Zip Code"
+                  placeholder={t("page.profile.placeholders.zipCode")}
                   fontSize="12px"
                   height="30px"
                   onChange={onChangeZipCode}
@@ -584,10 +583,10 @@ export default function Profile() {
                 />
               </FieldWrapper>
               <FieldWrapper width="10%">
-                <Label>Country</Label>
+                <Label>{t("page.profile.fields.country")}</Label>
                 <Input
                   type="text"
-                  placeholder="Country"
+                  placeholder={t("page.profile.placeholders.country")}
                   fontSize="12px"
                   height="30px"
                   onChange={onChangeCountry}
@@ -596,13 +595,13 @@ export default function Profile() {
               </FieldWrapper>
             </FlexWrapWrapper>
             <SubmitBtn width="100%" fontSize="16px" marginTop="10px">
-              Update Profile
+              {t("page.profile.updateProfile")}
             </SubmitBtn>
           </Form>
         </ContentWrapper>
       </PageWrapper>
       <PageWrapper>
-        <Title>Authorities</Title>
+        <Title>{t("page.profile.authorities")}</Title>
         <ContentWrapper>
           <AuthList>
             {user?.authorities.map((auth, index) => (

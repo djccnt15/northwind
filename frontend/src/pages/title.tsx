@@ -16,6 +16,8 @@ import {
 import { randomId } from "@mui/x-data-grid-generator";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
+import { useTranslation } from "react-i18next";
+import type { TFunction } from "i18next";
 import type { ApiIfs, PageIfs } from "../entities/app";
 import type { TitleIfs } from "../entities";
 import {
@@ -29,12 +31,12 @@ import { PageWrapper, Title } from "../shared/ui";
 
 const Wrapper = styled(PageWrapper)``;
 
-const columns: GridColDef[] = [
-  { field: "title", headerName: "Title Name", flex: 1, editable: true },
+const createColumns = (t: TFunction): GridColDef[] => [
+  { field: "title", headerName: t("page.title.col.titleName"), flex: 1, editable: true },
   {
     field: "actions",
     type: "actions",
-    headerName: "Actions",
+    headerName: t("page.title.col.actions"),
     width: 100,
     cellClassName: "actions",
     renderCell: (params) => <ActionsCell {...params} />,
@@ -44,6 +46,7 @@ const columns: GridColDef[] = [
 const createTitle = async (
   updatedTitle: TitleIfs,
   originalTitle: TitleIfs,
+  t: TFunction,
 ): Promise<TitleIfs> => {
   return await privateApi
     .post("/v1/admin/titles", { title: updatedTitle.title })
@@ -53,9 +56,9 @@ const createTitle = async (
     })
     .catch((err) => {
       const data: ApiIfs<null> = err.response?.data;
-      const message = data?.result?.description || "Unknown error";
+      const message = data?.result?.description || t("page.title.unknownError");
       console.error("Failed to create title:", message);
-      alert(`Failed to create title: ${message}`);
+      alert(t("page.title.createFailed", { message }));
       return originalTitle;
     });
 };
@@ -63,6 +66,7 @@ const createTitle = async (
 const updateTitle = async (
   updatedTitle: TitleIfs,
   originalTitle: TitleIfs,
+  t: TFunction,
 ): Promise<TitleIfs> => {
   return await privateApi
     .put(`/v1/admin/titles/${updatedTitle.id}`, {
@@ -74,9 +78,9 @@ const updateTitle = async (
     })
     .catch((err) => {
       const data: ApiIfs<null> = err.response?.data;
-      const message = data?.result?.description || "Unknown error";
+      const message = data?.result?.description || t("page.title.unknownError");
       console.error("Failed to update title:", message);
-      alert(`Failed to update title: ${message}`);
+      alert(t("page.title.updateFailed", { message }));
       return originalTitle;
     });
 };
@@ -84,15 +88,16 @@ const updateTitle = async (
 const onEdit = async (
   updatedRow: TitleIfs,
   originalRow: TitleIfs,
+  t: TFunction,
 ): Promise<TitleIfs> => {
   if (updatedRow.isNew) {
-    return await createTitle(updatedRow, originalRow);
+    return await createTitle(updatedRow, originalRow, t);
   }
 
-  return await updateTitle(updatedRow, originalRow);
+  return await updateTitle(updatedRow, originalRow, t);
 };
 
-const onDelete = async (id: number): Promise<void> => {
+const onDelete = async (id: number, t: TFunction): Promise<void> => {
   await privateApi
     .delete(`/v1/admin/titles/${id}`)
     .then(() => {
@@ -100,14 +105,15 @@ const onDelete = async (id: number): Promise<void> => {
     })
     .catch((err) => {
       const data: ApiIfs<null> = err.response?.data;
-      const message = data?.result?.description || "Unknown error";
+      const message = data?.result?.description || t("page.title.unknownError");
       console.error("Failed to delete title:", message);
-      alert(`Failed to delete title: ${message}`);
+      alert(t("page.title.deleteFailed", { message }));
     });
 };
 
 function EditToolbar(props: GridSlotProps["toolbar"]) {
   const { setRows, setRowModesModel } = props;
+  const { t } = useTranslation();
 
   const handleClick = () => {
     const id = randomId();
@@ -123,7 +129,7 @@ function EditToolbar(props: GridSlotProps["toolbar"]) {
       <Typography sx={{ fontWeight: "medium", flex: 1, mx: 0.5 }}>
         {props.toolbarName}
       </Typography>
-      <Tooltip title="Add record">
+      <Tooltip title={t("page.title.addRecord")}>
         <ToolbarButton onClick={handleClick}>
           <AddIcon fontSize="small" />
         </ToolbarButton>
@@ -133,6 +139,8 @@ function EditToolbar(props: GridSlotProps["toolbar"]) {
 }
 
 export default function EmployeeTitle() {
+  const { t } = useTranslation();
+  const columns = createColumns(t);
   const [rows, setRows] = useState<TitleIfs[]>([]);
   const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
   const [rowCount, setRowCount] = useState(0);
@@ -153,12 +161,12 @@ export default function EmployeeTitle() {
       })
       .catch((error) => {
         console.error("Error fetching employee titles:", error);
-        alert("Failed to fetch employee titles. Please try again.");
+        alert(t("page.title.fetchFailed"));
       })
       .finally(() => {
         setLoading(false);
       });
-  }, []);
+  }, [t]);
 
   useEffect(() => {
     queueMicrotask(() => {
@@ -191,7 +199,7 @@ export default function EmployeeTitle() {
       },
       handleDeleteClick: (id: GridRowId) => {
         setRows((prevRows) => prevRows.filter((row) => row.id !== id));
-        void onDelete(Number(id)).then(() =>
+        void onDelete(Number(id), t).then(() =>
           fetchTitles(paginationModel.page, paginationModel.pageSize),
         );
       },
@@ -212,14 +220,14 @@ export default function EmployeeTitle() {
         });
       },
     }),
-    [fetchTitles, paginationModel.page, paginationModel.pageSize],
+    [fetchTitles, paginationModel.page, paginationModel.pageSize, t],
   );
 
   const processRowUpdate = async (
     updatedRow: TitleIfs,
     originalRow: TitleIfs,
   ): Promise<TitleIfs> => {
-    const savedRow = await onEdit(updatedRow, originalRow);
+    const savedRow = await onEdit(updatedRow, originalRow, t);
     const normalizedRow = { ...savedRow, isNew: false };
 
     setRows((prevRows) =>
@@ -239,7 +247,7 @@ export default function EmployeeTitle() {
 
   return (
     <Wrapper>
-      <Title>Admin - Title Management</Title>
+      <Title>{t("page.title.title")}</Title>
       <Box
         sx={{
           height: "100%",
@@ -273,7 +281,7 @@ export default function EmployeeTitle() {
             slots={{ toolbar: EditToolbar as GridSlots["toolbar"] }}
             slotProps={{
               toolbar: {
-                toolbarName: "Title Management",
+                toolbarName: t("page.title.toolbarName"),
                 setRows,
                 setRowModesModel,
               },

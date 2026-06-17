@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import { api } from "../shared/api";
 import {
@@ -44,6 +45,7 @@ const Label = styled.label`
 `;
 
 export default function Login() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
   const { setUser } = useAuth();
@@ -107,8 +109,8 @@ export default function Login() {
         console.error(data || err);
         const description = data?.result?.description;
         const message = description
-          ? `Login failed. ${description}`
-          : "Login failed. Please check your username and password.";
+          ? t("auth.login.failedWithReason", { reason: description })
+          : t("auth.login.failedDefault");
         setErrorMsg(message);
       })
       .finally(() => {
@@ -118,27 +120,29 @@ export default function Login() {
 
   return (
     <Wrapper>
-      <H1>Please Sign In</H1>
+      <H1>{t("auth.login.title")}</H1>
       <Form onSubmit={onSubmit}>
         <Input
           type="text"
-          placeholder="ID"
+          placeholder={t("auth.login.idPlaceholder")}
           value={username}
           onChange={onChangeUsername}
           required
         />
         <Input
           type="password"
-          placeholder="Password"
+          placeholder={t("auth.login.passwordPlaceholder")}
           value={password}
           onChange={onChangePassword}
           required
         />
         <SubmitBtnWrapper>
           <SubmitBtn disabled={isLoading}>
-            {isLoading ? "Loading..." : "Login"}
+            {isLoading ? t("auth.login.loading") : t("auth.login.submit")}
           </SubmitBtn>
-          {isLoading && <SubmitBtnHoverMsg>Signing in...</SubmitBtnHoverMsg>}
+          {isLoading && (
+            <SubmitBtnHoverMsg>{t("auth.login.submitting")}</SubmitBtnHoverMsg>
+          )}
         </SubmitBtnWrapper>
         <CheckBoxArea>
           <CheckBoxWrapper>
@@ -148,7 +152,7 @@ export default function Login() {
               checked={rememberMe}
               onChange={onChangeRememberMe}
             />
-            <Label htmlFor="rememberMe">Remember Me</Label>
+            <Label htmlFor="rememberMe">{t("auth.login.rememberMe")}</Label>
           </CheckBoxWrapper>
           <CheckBoxWrapper>
             <CheckBoxInput
@@ -157,13 +161,14 @@ export default function Login() {
               checked={rememberId}
               onChange={(e) => setRememberId(e.target.checked)}
             />
-            <Label htmlFor="rememberId">Remember ID</Label>
+            <Label htmlFor="rememberId">{t("auth.login.rememberId")}</Label>
           </CheckBoxWrapper>
         </CheckBoxArea>
       </Form>
       {errorMsg && <ErrorMsg>{errorMsg}</ErrorMsg>}
       <Switcher>
-        Don't have an account? <Link to="/signup">Create one &rarr;</Link>
+        {t("auth.login.noAccount")}{" "}
+        <Link to="/signup">{t("auth.login.createOne")}</Link>
       </Switcher>
     </Wrapper>
   );

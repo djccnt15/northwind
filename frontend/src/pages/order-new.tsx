@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import type { ApiIfs } from "../entities/app";
 import type {
@@ -56,6 +57,7 @@ const lineSubtotal = (unitPrice: number, quantity: number, discount: number) =>
 
 export default function OrderNew() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const [customers, setCustomers] = useState<CompanyOptionIfs[]>([]);
   const [shippers, setShippers] = useState<CompanyOptionIfs[]>([]);
@@ -81,10 +83,12 @@ export default function OrderNew() {
         const data: ApiIfs<CompanyTypeIfs[]> = res.data;
         const types = data?.body ?? [];
 
-        const customerType = types.find((t) =>
-          isCustomerType(t.companyType),
+        const customerType = types.find((type) =>
+          isCustomerType(type.companyType),
         );
-        const shipperType = types.find((t) => isSupplierType(t.companyType));
+        const shipperType = types.find((type) =>
+          isSupplierType(type.companyType),
+        );
 
         privateApi
           .get("/v1/orders/companies", {
@@ -172,21 +176,21 @@ export default function OrderNew() {
 
   const handleSubmit = () => {
     if (customerId === "") {
-      alert("Please select a customer.");
+      alert(t("page.orderNew.alerts.pleaseSelectCustomer"));
       return;
     }
     if (taxStatusId === "") {
-      alert("Please select a tax status.");
+      alert(t("page.orderNew.alerts.pleaseSelectTaxStatus"));
       return;
     }
     const validItems = items.filter((item) => item.productId !== "");
     if (validItems.length === 0) {
-      alert("Please add at least one order item.");
+      alert(t("page.orderNew.alerts.pleaseAddItem"));
       return;
     }
     for (const item of validItems) {
       if (!item.quantity || Number(item.quantity) < 1) {
-        alert("Each item quantity must be at least 1.");
+        alert(t("page.orderNew.alerts.minQty"));
         return;
       }
     }
@@ -211,7 +215,7 @@ export default function OrderNew() {
       .post("/v1/orders", body)
       .then((res) => {
         const data: ApiIfs<OrderIfs> = res.data;
-        alert("Order created successfully.");
+        alert(t("page.orderNew.alerts.createSuccess"));
         if (data?.body) {
           navigate(`/orders/${data.body.id}`);
         } else {
@@ -222,28 +226,30 @@ export default function OrderNew() {
         const data: ApiIfs<null> = err.response?.data;
         if (data?.result?.code === 1400) {
           const lines = Object.values(data?.body || {});
-          alert(`Invalid input:\n${lines.join("\n")}`);
+          alert(t("page.orderNew.alerts.invalidInput", { message: lines.join("\n") }));
           return;
         }
-        const message = data?.result?.description || "Unknown error";
-        alert(`Failed to create order: ${message}`);
+        const message = data?.result?.description ?? "";
+        alert(t("page.orderNew.alerts.createFailed", { message }));
       })
       .finally(() => setLoading(false));
   };
 
   return (
     <Wrapper>
-      <Title>New Order</Title>
+      <Title>{t("page.orderNew.title")}</Title>
       <Content>
         <Header>
-          <BackBtn onClick={() => navigate("/orders")}>← Back to list</BackBtn>
+          <BackBtn onClick={() => navigate("/orders")}>
+            {t("page.orderNew.back")}
+          </BackBtn>
         </Header>
 
         <Card>
-          <CardTitle>Order Information</CardTitle>
+          <CardTitle>{t("page.orderNew.orderInfo")}</CardTitle>
           <Grid>
             <FieldRow>
-              <Label>Customer *</Label>
+              <Label>{t("page.orderNew.customer")}</Label>
               <Select
                 value={customerId}
                 onChange={(e) =>
@@ -252,7 +258,7 @@ export default function OrderNew() {
                   )
                 }
               >
-                <option value="">Select customer</option>
+                <option value="">{t("page.orderNew.selectCustomer")}</option>
                 {customers.map((c) => (
                   <option key={c.id} value={c.id}>
                     {c.name}
@@ -261,7 +267,7 @@ export default function OrderNew() {
               </Select>
             </FieldRow>
             <FieldRow>
-              <Label>Shipper</Label>
+              <Label>{t("page.orderNew.shipper")}</Label>
               <Select
                 value={shipperId}
                 onChange={(e) =>
@@ -270,7 +276,7 @@ export default function OrderNew() {
                   )
                 }
               >
-                <option value="">Select shipper</option>
+                <option value="">{t("page.orderNew.selectShipper")}</option>
                 {shippers.map((s) => (
                   <option key={s.id} value={s.id}>
                     {s.name}
@@ -279,7 +285,7 @@ export default function OrderNew() {
               </Select>
             </FieldRow>
             <FieldRow>
-              <Label>Tax Status *</Label>
+              <Label>{t("page.orderNew.taxStatus")}</Label>
               <Select
                 value={taxStatusId}
                 onChange={(e) =>
@@ -288,16 +294,16 @@ export default function OrderNew() {
                   )
                 }
               >
-                <option value="">Select tax status</option>
-                {taxStatuses.map((t) => (
-                  <option key={t.id} value={t.id}>
-                    {t.status}
+                <option value="">{t("page.orderNew.selectTaxStatus")}</option>
+                {taxStatuses.map((status) => (
+                  <option key={status.id} value={status.id}>
+                    {status.status}
                   </option>
                 ))}
               </Select>
             </FieldRow>
             <FieldRow>
-              <Label>Required Date</Label>
+              <Label>{t("page.orderNew.requiredDate")}</Label>
               <Input
                 type="date"
                 value={requiredDate}
@@ -305,14 +311,14 @@ export default function OrderNew() {
               />
             </FieldRow>
             <FieldRow>
-              <Label>Payment Type</Label>
+              <Label>{t("page.orderNew.paymentType")}</Label>
               <Input
                 value={paymentType}
                 onChange={(e) => setPaymentType(e.target.value)}
               />
             </FieldRow>
             <FieldRow>
-              <Label>Shipping Fee</Label>
+              <Label>{t("page.orderNew.shippingFee")}</Label>
               <Input
                 type="number"
                 value={shippingFee}
@@ -321,17 +327,17 @@ export default function OrderNew() {
             </FieldRow>
           </Grid>
           <FieldRow>
-            <Label>Notes</Label>
+            <Label>{t("page.orderNew.notes")}</Label>
             <TextArea value={notes} onChange={(e) => setNotes(e.target.value)} />
           </FieldRow>
         </Card>
 
         <Card>
-          <CardTitle>Order Items</CardTitle>
+          <CardTitle>{t("page.orderNew.orderItems")}</CardTitle>
           <FieldRow>
-            <Label>Product Search</Label>
+            <Label>{t("page.orderNew.productSearch")}</Label>
             <Input
-              placeholder="Search products by name or code"
+              placeholder={t("page.orderNew.productSearchPlaceholder")}
               value={productKeyword}
               onChange={(e) => setProductKeyword(e.target.value)}
             />
@@ -339,11 +345,11 @@ export default function OrderNew() {
           <ItemTable>
             <thead>
               <tr>
-                <th>Product</th>
-                <th>Unit Price</th>
-                <th>Qty</th>
-                <th>Discount (%)</th>
-                <th>Subtotal</th>
+                <th>{t("page.orderNew.col.product")}</th>
+                <th>{t("page.orderNew.col.unitPrice")}</th>
+                <th>{t("page.orderNew.col.qty")}</th>
+                <th>{t("page.orderNew.col.discount")}</th>
+                <th>{t("page.orderNew.col.subtotal")}</th>
                 <th />
               </tr>
             </thead>
@@ -362,7 +368,7 @@ export default function OrderNew() {
                         )
                       }
                     >
-                      <option value="">Select product</option>
+                      <option value="">{t("page.orderNew.selectProduct")}</option>
                       {products.map((p) => (
                         <option key={p.id} value={p.id}>
                           {p.name}
@@ -421,7 +427,7 @@ export default function OrderNew() {
             <tfoot>
               <tr>
                 <td colSpan={4} style={{ textAlign: "right" }}>
-                  <strong>Total</strong>
+                  <strong>{t("page.orderNew.total")}</strong>
                 </td>
                 <td>
                   <strong>${totalAmount.toFixed(2)}</strong>
@@ -431,20 +437,20 @@ export default function OrderNew() {
             </tfoot>
           </ItemTable>
           <AddBtn type="button" onClick={addItem}>
-            + Add Item
+            {t("page.orderNew.addItem")}
           </AddBtn>
         </Card>
 
         <ActionBar>
           <PrimaryBtn type="button" onClick={handleSubmit} disabled={loading}>
-            Create Order
+            {t("page.orderNew.createOrder")}
           </PrimaryBtn>
           <SecondaryBtn
             type="button"
             onClick={() => navigate("/orders")}
             disabled={loading}
           >
-            Cancel
+            {t("page.orderNew.cancel")}
           </SecondaryBtn>
         </ActionBar>
       </Content>

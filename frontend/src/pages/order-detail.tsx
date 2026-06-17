@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import type { ApiIfs } from "../entities/app";
 import type {
@@ -46,6 +47,7 @@ const allowedNextStatuses = (
 export default function OrderDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const [order, setOrder] = useState<OrderIfs | null>(null);
   const [loading, setLoading] = useState(false);
@@ -65,7 +67,7 @@ export default function OrderDetail() {
       })
       .catch((err) => {
         console.error("Failed to fetch order:", err);
-        alert("Failed to fetch order. Please try again.");
+        alert(t("page.orderDetail.fetchFailed"));
       })
       .finally(() => setLoading(false));
   };
@@ -106,8 +108,8 @@ export default function OrderDetail() {
       })
       .catch((err) => {
         const data: ApiIfs<null> = err.response?.data;
-        const message = data?.result?.description || "Unknown error";
-        alert(`Failed to update order status: ${message}`);
+        const message = data?.result?.description ?? "";
+        alert(t("page.orderDetail.updateStatusFailed", { message }));
       })
       .finally(() => setLoading(false));
   };
@@ -123,8 +125,8 @@ export default function OrderDetail() {
       })
       .catch((err) => {
         const data: ApiIfs<null> = err.response?.data;
-        const message = data?.result?.description || "Unknown error";
-        alert(`Failed to update item status: ${message}`);
+        const message = data?.result?.description ?? "";
+        alert(t("page.orderDetail.updateItemFailed", { message }));
       })
       .finally(() => setLoading(false));
   };
@@ -132,10 +134,16 @@ export default function OrderDetail() {
   if (!order) {
     return (
       <Wrapper>
-        <Title>Order Detail</Title>
+        <Title>{t("page.orderDetail.title")}</Title>
         <Content>
-          <BackBtn onClick={() => navigate("/orders")}>← Back to list</BackBtn>
-          <ReadValue>{loading ? "Loading..." : "Order not found."}</ReadValue>
+          <BackBtn onClick={() => navigate("/orders")}>
+            {t("page.orderDetail.back")}
+          </BackBtn>
+          <ReadValue>
+            {loading
+              ? t("page.orderDetail.loading")
+              : t("page.orderDetail.notFound")}
+          </ReadValue>
         </Content>
       </Wrapper>
     );
@@ -145,11 +153,15 @@ export default function OrderDetail() {
 
   return (
     <Wrapper>
-      <Title>Order Detail</Title>
+      <Title>{t("page.orderDetail.title")}</Title>
       <Content>
         <Header>
-          <BackBtn onClick={() => navigate("/orders")}>← Back to list</BackBtn>
-          <HeaderTitle>Order #{order.id}</HeaderTitle>
+          <BackBtn onClick={() => navigate("/orders")}>
+            {t("page.orderDetail.back")}
+          </BackBtn>
+          <HeaderTitle>
+            {t("page.orderDetail.orderTitle", { id: order.id })}
+          </HeaderTitle>
           <BadgeBlue>{order.status.name}</BadgeBlue>
           {nextStatuses.length > 0 && (
             <StatusSelect
@@ -160,7 +172,7 @@ export default function OrderDetail() {
                   handleStatusChange(Number(e.target.value));
               }}
             >
-              <option value="">Change status…</option>
+              <option value="">{t("page.orderDetail.changeStatus")}</option>
               {nextStatuses.map((s) => (
                 <option key={s.id} value={s.id}>
                   {s.name}
@@ -171,42 +183,42 @@ export default function OrderDetail() {
         </Header>
 
         <Card>
-          <CardTitle>Basic Information</CardTitle>
+          <CardTitle>{t("page.orderDetail.basicInfo")}</CardTitle>
           <Grid>
             <FieldRow>
-              <Label>Customer</Label>
+              <Label>{t("page.orderDetail.customer")}</Label>
               <ReadValue>{order.customer.name}</ReadValue>
             </FieldRow>
             <FieldRow>
-              <Label>Shipper</Label>
+              <Label>{t("page.orderDetail.shipper")}</Label>
               <ReadValue>{order.shipper?.name ?? "-"}</ReadValue>
             </FieldRow>
             <FieldRow>
-              <Label>Order Date</Label>
+              <Label>{t("page.orderDetail.orderDate")}</Label>
               <ReadValue>{order.orderDate}</ReadValue>
             </FieldRow>
             <FieldRow>
-              <Label>Required Date</Label>
+              <Label>{t("page.orderDetail.requiredDate")}</Label>
               <ReadValue>{order.requiredDate ?? "-"}</ReadValue>
             </FieldRow>
             <FieldRow>
-              <Label>Shipped Date</Label>
+              <Label>{t("page.orderDetail.shippedDate")}</Label>
               <ReadValue>{order.shippedDate ?? "-"}</ReadValue>
             </FieldRow>
             <FieldRow>
-              <Label>Paid Date</Label>
+              <Label>{t("page.orderDetail.paidDate")}</Label>
               <ReadValue>{order.paidDate ?? "-"}</ReadValue>
             </FieldRow>
             <FieldRow>
-              <Label>Tax Status</Label>
+              <Label>{t("page.orderDetail.taxStatus")}</Label>
               <ReadValue>{order.taxStatus?.status ?? "-"}</ReadValue>
             </FieldRow>
             <FieldRow>
-              <Label>Payment Type</Label>
+              <Label>{t("page.orderDetail.paymentType")}</Label>
               <ReadValue>{order.paymentType ?? "-"}</ReadValue>
             </FieldRow>
             <FieldRow>
-              <Label>Shipping Fee</Label>
+              <Label>{t("page.orderDetail.shippingFee")}</Label>
               <ReadValue>
                 {order.shippingFee == null
                   ? "-"
@@ -214,23 +226,23 @@ export default function OrderDetail() {
               </ReadValue>
             </FieldRow>
             <FieldRow>
-              <Label>Notes</Label>
+              <Label>{t("page.orderDetail.notes")}</Label>
               <ReadValue>{order.notes ?? "-"}</ReadValue>
             </FieldRow>
           </Grid>
         </Card>
 
         <Card>
-          <CardTitle>Order Items</CardTitle>
+          <CardTitle>{t("page.orderDetail.orderItems")}</CardTitle>
           <ItemTable>
             <thead>
               <tr>
-                <th>Product</th>
-                <th>Unit Price</th>
-                <th>Qty</th>
-                <th>Discount</th>
-                <th>Subtotal</th>
-                <th>Item Status</th>
+                <th>{t("page.orderDetail.col.product")}</th>
+                <th>{t("page.orderDetail.col.unitPrice")}</th>
+                <th>{t("page.orderDetail.col.qty")}</th>
+                <th>{t("page.orderDetail.col.discount")}</th>
+                <th>{t("page.orderDetail.col.subtotal")}</th>
+                <th>{t("page.orderDetail.col.itemStatus")}</th>
               </tr>
             </thead>
             <tbody>
@@ -266,7 +278,7 @@ export default function OrderDetail() {
               <tr>
                 <td colSpan={4} />
                 <td>
-                  <strong>Total</strong>
+                  <strong>{t("page.orderDetail.total")}</strong>
                 </td>
                 <td colSpan={1}>
                   <strong>${Number(order.totalAmount).toFixed(2)}</strong>

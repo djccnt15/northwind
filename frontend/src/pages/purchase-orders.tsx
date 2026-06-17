@@ -2,6 +2,7 @@ import { Box } from "@mui/material";
 import { DataGrid, type GridColDef } from "@mui/x-data-grid";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import type { ApiIfs, PageIfs } from "../entities/app";
 import type {
@@ -105,6 +106,7 @@ const NewBtn = styled.button`
 
 export default function PurchaseOrders() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const [rows, setRows] = useState<PurchaseOrderListItemIfs[]>([]);
   const [rowCount, setRowCount] = useState(0);
@@ -122,10 +124,10 @@ export default function PurchaseOrders() {
   const isFirstFilterRun = useRef(true);
 
   const columns: GridColDef[] = [
-    { field: "id", headerName: "PO No.", width: 100 },
+    { field: "id", headerName: t("page.purchaseOrders.col.no"), width: 100 },
     {
       field: "vendorName",
-      headerName: "Vendor",
+      headerName: t("page.purchaseOrders.col.vendor"),
       flex: 1,
       minWidth: 180,
       valueGetter: (value) => value ?? "",
@@ -138,17 +140,17 @@ export default function PurchaseOrders() {
         </span>
       ),
     },
-    { field: "submittedDate", headerName: "Submitted Date", width: 150 },
+    { field: "submittedDate", headerName: t("page.purchaseOrders.col.submittedDate"), width: 150 },
     {
       field: "totalAmount",
-      headerName: "Total",
+      headerName: t("page.purchaseOrders.col.total"),
       width: 130,
       valueGetter: (value) =>
         value == null ? "" : `$${Number(value).toFixed(2)}`,
     },
     {
       field: "status",
-      headerName: "Status",
+      headerName: t("page.purchaseOrders.col.status"),
       width: 150,
       valueGetter: (_value, row) => row.status?.name ?? "",
     },
@@ -213,7 +215,7 @@ export default function PurchaseOrders() {
 
   return (
     <Wrapper>
-      <Title>Purchase Order Management</Title>
+      <Title>{t("page.purchaseOrders.title")}</Title>
       <Box
         sx={{
           height: "100%",
@@ -226,7 +228,7 @@ export default function PurchaseOrders() {
         <Toolbar>
           <Input
             type="text"
-            placeholder="Search by vendor name"
+            placeholder={t("page.purchaseOrders.searchPlaceholder")}
             value={keyword}
             onChange={(e) => setKeyword(e.target.value)}
           />
@@ -246,7 +248,7 @@ export default function PurchaseOrders() {
             type="button"
             onClick={() => navigate("/purchase-orders/new")}
           >
-            + New Purchase Order
+            {t("page.purchaseOrders.newPO")}
           </NewBtn>
         </Toolbar>
         <Toolbar>
@@ -256,7 +258,7 @@ export default function PurchaseOrders() {
               $active={statusFilter === ""}
               onClick={() => setStatusFilter("")}
             >
-              All
+              {t("page.purchaseOrders.all")}
             </Tab>
             {statuses.map((status) => (
               <Tab

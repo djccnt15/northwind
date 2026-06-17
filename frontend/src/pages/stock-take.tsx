@@ -5,6 +5,7 @@ import {
   type GridRenderCellParams,
 } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import type { ApiIfs, PageIfs, StockTakeRowIfs } from "../entities";
 import { dataGridInitialState } from "../features/data-grid";
@@ -137,6 +138,7 @@ const currentActual = (
 };
 
 export default function StockTake() {
+  const { t } = useTranslation();
   const [rows, setRows] = useState<StockTakeRowIfs[]>([]);
   const [rowCount, setRowCount] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -158,11 +160,11 @@ export default function StockTake() {
   };
 
   const columns: GridColDef<StockTakeRowIfs>[] = [
-    { field: "productCode", headerName: "상품코드", width: 130 },
-    { field: "productName", headerName: "상품명", flex: 1, minWidth: 200 },
+    { field: "productCode", headerName: t("page.stockTake.col.productCode"), width: 130 },
+    { field: "productName", headerName: t("page.stockTake.col.productName"), flex: 1, minWidth: 200 },
     {
       field: "expectedQuantity",
-      headerName: "전산재고",
+      headerName: t("page.stockTake.col.systemQty"),
       width: 120,
       type: "number",
       align: "right",
@@ -170,7 +172,7 @@ export default function StockTake() {
     },
     {
       field: "actualQuantity",
-      headerName: "실사재고",
+      headerName: t("page.stockTake.col.actualQty"),
       width: 140,
       sortable: false,
       align: "right",
@@ -194,7 +196,7 @@ export default function StockTake() {
     },
     {
       field: "difference",
-      headerName: "차이",
+      headerName: t("page.stockTake.col.diff"),
       width: 110,
       sortable: false,
       align: "right",
@@ -289,17 +291,17 @@ export default function StockTake() {
           return next;
         });
         setIsError(false);
-        setMessage(`${saved.length}개 항목이 저장되었습니다.`);
+        setMessage(t("page.stockTake.savedCount", { count: saved.length }));
       })
       .catch((err) => {
         const data: ApiIfs<Record<string, string> | null> = err.response?.data;
         setIsError(true);
         if (data?.result?.code === 1400 && data.body) {
           const fieldMsgs = Object.values(data.body).join(", ");
-          setMessage(fieldMsgs || "입력값을 확인해 주세요.");
+          setMessage(fieldMsgs || t("page.stockTake.validationError"));
         } else {
           setMessage(
-            data?.result?.description ?? "저장 중 오류가 발생했습니다.",
+            data?.result?.description ?? t("page.stockTake.saveError"),
           );
         }
       })
@@ -308,7 +310,7 @@ export default function StockTake() {
 
   return (
     <Wrapper>
-      <Title>재고 실사</Title>
+      <Title>{t("page.stockTake.title")}</Title>
       <Box
         sx={{
           height: "100%",
@@ -320,17 +322,17 @@ export default function StockTake() {
       >
         <FilterBar>
           <FieldWrapper width="240px">
-            <Label>Keyword</Label>
+            <Label>{t("page.stockTake.keywordLabel")}</Label>
             <Input
               type="text"
-              placeholder="상품명 또는 상품코드 검색"
+              placeholder={t("page.stockTake.searchPlaceholder")}
               value={keyword}
               onChange={(e) => setKeyword(e.target.value)}
               onKeyDown={onKeywordKeyDown}
             />
           </FieldWrapper>
           <SearchBtn type="button" onClick={handleSearch}>
-            Search
+            {t("page.stockTake.search")}
           </SearchBtn>
           <Spacer />
           <SaveBtn
@@ -338,7 +340,7 @@ export default function StockTake() {
             onClick={handleSaveClick}
             disabled={saving || changedItems.length === 0}
           >
-            실사 결과 저장 및 재고 조정
+            {t("page.stockTake.saveBtn")}
             {changedItems.length > 0 ? ` (${changedItems.length})` : ""}
           </SaveBtn>
         </FilterBar>

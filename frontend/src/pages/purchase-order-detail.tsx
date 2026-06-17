@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import type { ApiIfs } from "../entities/app";
 import type { PurchaseOrderIfs, PurchaseOrderStatusIfs } from "../entities";
@@ -31,29 +32,40 @@ const TERMINAL_CODES = ["PAID", "REJECTED"];
 // REJECTED is only reachable from DRAFT or PENDING_APPROVAL.
 const REJECTABLE_CODES = ["DRAFT", "PENDING_APPROVAL"];
 
-const LABEL_BY_CODE: Record<string, string> = {
-  PENDING_APPROVAL: "Request Approval",
-  APPROVED: "Approve",
-  RECEIVED: "Receive",
-  PAID: "Mark as Paid",
-  REJECTED: "Reject",
+// Maps status code to the action translation key suffix under page.purchaseOrderDetail.actions.
+const ACTION_KEY_BY_CODE: Record<string, string> = {
+  PENDING_APPROVAL: "requestApproval",
+  APPROVED: "approve",
+  RECEIVED: "receive",
+  PAID: "markAsPaid",
+  REJECTED: "reject",
 };
 
 // Action buttons available from the current header status.
 const allowedActions = (
   current: { code: string },
   all: PurchaseOrderStatusIfs[],
-): { id: number; label: string; code: string }[] => {
+): { id: number; actionKey: string | null; name: string; code: string }[] => {
   if (TERMINAL_CODES.includes(current.code)) return [];
 
   const currentRank = STATUS_RANK[current.code];
-  const actions: { id: number; label: string; code: string }[] = [];
+  const actions: {
+    id: number;
+    actionKey: string | null;
+    name: string;
+    code: string;
+  }[] = [];
 
   for (const s of all) {
     if (s.code === current.code) continue;
     if (s.code === "REJECTED") {
       if (REJECTABLE_CODES.includes(current.code)) {
-        actions.push({ id: s.id, label: LABEL_BY_CODE.REJECTED, code: s.code });
+        actions.push({
+          id: s.id,
+          actionKey: ACTION_KEY_BY_CODE.REJECTED,
+          name: s.name,
+          code: s.code,
+        });
       }
       continue;
     }
@@ -63,7 +75,8 @@ const allowedActions = (
     if (targetRank === currentRank + 1) {
       actions.push({
         id: s.id,
-        label: LABEL_BY_CODE[s.code] ?? s.name,
+        actionKey: ACTION_KEY_BY_CODE[s.code] ?? null,
+        name: s.name,
         code: s.code,
       });
     }
@@ -75,6 +88,7 @@ const allowedActions = (
 export default function PurchaseOrderDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const [order, setOrder] = useState<PurchaseOrderIfs | null>(null);
   const [loading, setLoading] = useState(false);
@@ -100,7 +114,7 @@ export default function PurchaseOrderDetail() {
       })
       .catch((err) => {
         console.error("Failed to fetch purchase order:", err);
-        alert("Failed to fetch purchase order. Please try again.");
+        alert(t("page.purchaseOrderDetail.fetchFailed"));
       })
       .finally(() => setLoading(false));
   };
@@ -134,8 +148,8 @@ export default function PurchaseOrderDetail() {
       })
       .catch((err) => {
         const data: ApiIfs<null> = err.response?.data;
-        const message = data?.result?.description || "Unknown error";
-        alert(`Failed to update status: ${message}`);
+        const message = data?.result?.description ?? "";
+        alert(t("page.purchaseOrderDetail.updateFailed", { message }));
       })
       .finally(() => setLoading(false));
   };
@@ -155,7 +169,7 @@ export default function PurchaseOrderDetail() {
     }
     if (
       target?.code === "REJECTED" &&
-      !window.confirm("Reject this purchase order?")
+      !window.confirm(t("page.purchaseOrderDetail.rejectConfirm"))
     ) {
       return;
     }
@@ -176,13 +190,15 @@ export default function PurchaseOrderDetail() {
   if (!order) {
     return (
       <Wrapper>
-        <Title>Purchase Order Detail</Title>
+        <Title>{t("page.purchaseOrderDetail.title")}</Title>
         <Content>
           <BackBtn onClick={() => navigate("/purchase-orders")}>
-            ← Back to list
+            {t("page.purchaseOrderDetail.back")}
           </BackBtn>
           <ReadValue>
-            {loading ? "Loading..." : "Purchase order not found."}
+            {loading
+              ? t("page.purchaseOrderDetail.loading")
+              : t("page.purchaseOrderDetail.notFound")}
           </ReadValue>
         </Content>
       </Wrapper>
@@ -193,23 +209,28 @@ export default function PurchaseOrderDetail() {
 
   return (
     <Wrapper>
-      <Title>Purchase Order Detail</Title>
+      <Title>{t("page.purchaseOrderDetail.title")}</Title>
       <Content>
         <Header>
           <BackBtn onClick={() => navigate("/purchase-orders")}>
-            ← Back to list
+            {t("page.purchaseOrderDetail.back")}
           </BackBtn>
-          <HeaderTitle>Purchase Order #{order.id}</HeaderTitle>
+          <HeaderTitle>
+            {t("page.purchaseOrderDetail.poTitle", { id: order.id })}
+          </HeaderTitle>
           <BadgeBlue>{order.status.name}</BadgeBlue>
-          {actions.map((action) =>
-            action.code === "REJECTED" ? (
+          {actions.map((action) => {
+            const label = action.actionKey
+              ? t(`page.purchaseOrderDetail.actions.${action.actionKey}`)
+              : action.name;
+            return action.code === "REJECTED" ? (
               <RejectBtn
                 key={action.id}
                 type="button"
                 disabled={loading}
                 onClick={() => handleAction(action.id)}
               >
-                {action.label}
+                {label}
               </RejectBtn>
             ) : (
               <ActionBtn
@@ -218,41 +239,41 @@ export default function PurchaseOrderDetail() {
                 disabled={loading}
                 onClick={() => handleAction(action.id)}
               >
-                {action.label}
+                {label}
               </ActionBtn>
-            ),
-          )}
+            );
+          })}
         </Header>
 
         <Card>
-          <CardTitle>Basic Information</CardTitle>
+          <CardTitle>{t("page.purchaseOrderDetail.basicInfo")}</CardTitle>
           <Grid>
             <FieldRow>
-              <Label>Vendor</Label>
+              <Label>{t("page.purchaseOrderDetail.vendor")}</Label>
               <ReadValue>{order.vendor?.name ?? "-"}</ReadValue>
             </FieldRow>
             <FieldRow>
-              <Label>Status</Label>
+              <Label>{t("page.purchaseOrderDetail.status")}</Label>
               <ReadValue>{order.status.name}</ReadValue>
             </FieldRow>
             <FieldRow>
-              <Label>Submitted Date</Label>
+              <Label>{t("page.purchaseOrderDetail.submittedDate")}</Label>
               <ReadValue>{order.submittedDate}</ReadValue>
             </FieldRow>
             <FieldRow>
-              <Label>Approved Date</Label>
+              <Label>{t("page.purchaseOrderDetail.approvedDate")}</Label>
               <ReadValue>{order.approvedDate ?? "-"}</ReadValue>
             </FieldRow>
             <FieldRow>
-              <Label>Received Date</Label>
+              <Label>{t("page.purchaseOrderDetail.receivedDate")}</Label>
               <ReadValue>{order.receivedDate ?? "-"}</ReadValue>
             </FieldRow>
             <FieldRow>
-              <Label>Payment Date</Label>
+              <Label>{t("page.purchaseOrderDetail.paymentDate")}</Label>
               <ReadValue>{order.paymentDate ?? "-"}</ReadValue>
             </FieldRow>
             <FieldRow>
-              <Label>Submitted By</Label>
+              <Label>{t("page.purchaseOrderDetail.submittedBy")}</Label>
               <ReadValue>
                 {order.submittedBy
                   ? `${order.submittedBy.firstName} ${order.submittedBy.lastName}`
@@ -260,7 +281,7 @@ export default function PurchaseOrderDetail() {
               </ReadValue>
             </FieldRow>
             <FieldRow>
-              <Label>Approved By</Label>
+              <Label>{t("page.purchaseOrderDetail.approvedBy")}</Label>
               <ReadValue>
                 {order.approvedBy
                   ? `${order.approvedBy.firstName} ${order.approvedBy.lastName}`
@@ -268,7 +289,7 @@ export default function PurchaseOrderDetail() {
               </ReadValue>
             </FieldRow>
             <FieldRow>
-              <Label>Shipping Fee</Label>
+              <Label>{t("page.purchaseOrderDetail.shippingFee")}</Label>
               <ReadValue>
                 {order.shippingFee == null
                   ? "-"
@@ -276,7 +297,7 @@ export default function PurchaseOrderDetail() {
               </ReadValue>
             </FieldRow>
             <FieldRow>
-              <Label>Tax Amount</Label>
+              <Label>{t("page.purchaseOrderDetail.taxAmount")}</Label>
               <ReadValue>
                 {order.taxAmount == null
                   ? "-"
@@ -284,7 +305,7 @@ export default function PurchaseOrderDetail() {
               </ReadValue>
             </FieldRow>
             <FieldRow>
-              <Label>Payment Amount</Label>
+              <Label>{t("page.purchaseOrderDetail.paymentAmount")}</Label>
               <ReadValue>
                 {order.paymentAmount == null
                   ? "-"
@@ -292,25 +313,25 @@ export default function PurchaseOrderDetail() {
               </ReadValue>
             </FieldRow>
             <FieldRow>
-              <Label>Payment Method</Label>
+              <Label>{t("page.purchaseOrderDetail.paymentMethod")}</Label>
               <ReadValue>{order.paymentMethod ?? "-"}</ReadValue>
             </FieldRow>
             <FieldRow>
-              <Label>Notes</Label>
+              <Label>{t("page.purchaseOrderDetail.notes")}</Label>
               <ReadValue>{order.note ?? "-"}</ReadValue>
             </FieldRow>
           </Grid>
         </Card>
 
         <Card>
-          <CardTitle>Purchase Order Items</CardTitle>
+          <CardTitle>{t("page.purchaseOrderDetail.poItems")}</CardTitle>
           <ItemTable>
             <thead>
               <tr>
-                <th>Product</th>
-                <th>Unit Price</th>
-                <th>Qty</th>
-                <th>Subtotal</th>
+                <th>{t("page.purchaseOrderDetail.col.product")}</th>
+                <th>{t("page.purchaseOrderDetail.col.unitPrice")}</th>
+                <th>{t("page.purchaseOrderDetail.col.qty")}</th>
+                <th>{t("page.purchaseOrderDetail.col.subtotal")}</th>
               </tr>
             </thead>
             <tbody>
@@ -327,7 +348,7 @@ export default function PurchaseOrderDetail() {
               <tr>
                 <td colSpan={2} />
                 <td>
-                  <strong>Total</strong>
+                  <strong>{t("page.purchaseOrderDetail.total")}</strong>
                 </td>
                 <td>
                   <strong>${Number(order.totalAmount).toFixed(2)}</strong>
@@ -341,9 +362,13 @@ export default function PurchaseOrderDetail() {
       {paymentModalOpen && (
         <ModalOverlay onClick={() => setPaymentModalOpen(false)}>
           <Modal onClick={(e) => e.stopPropagation()}>
-            <CardTitle>Payment Information</CardTitle>
+            <CardTitle>
+              {t("page.purchaseOrderDetail.paymentModal.title")}
+            </CardTitle>
             <FieldRow>
-              <Label>Payment Date</Label>
+              <Label>
+                {t("page.purchaseOrderDetail.paymentModal.paymentDate")}
+              </Label>
               <Input
                 type="date"
                 value={paymentDate}
@@ -351,7 +376,9 @@ export default function PurchaseOrderDetail() {
               />
             </FieldRow>
             <FieldRow>
-              <Label>Payment Amount</Label>
+              <Label>
+                {t("page.purchaseOrderDetail.paymentModal.paymentAmount")}
+              </Label>
               <Input
                 type="number"
                 value={paymentAmount}
@@ -359,7 +386,9 @@ export default function PurchaseOrderDetail() {
               />
             </FieldRow>
             <FieldRow>
-              <Label>Payment Method</Label>
+              <Label>
+                {t("page.purchaseOrderDetail.paymentModal.paymentMethod")}
+              </Label>
               <Input
                 value={paymentMethod}
                 onChange={(e) => setPaymentMethod(e.target.value)}
@@ -371,14 +400,14 @@ export default function PurchaseOrderDetail() {
                 disabled={loading}
                 onClick={handlePaymentSubmit}
               >
-                Confirm Payment
+                {t("page.purchaseOrderDetail.paymentModal.confirm")}
               </ActionBtn>
               <SecondaryBtn
                 type="button"
                 disabled={loading}
                 onClick={() => setPaymentModalOpen(false)}
               >
-                Cancel
+                {t("page.purchaseOrderDetail.paymentModal.cancel")}
               </SecondaryBtn>
             </ModalActions>
           </Modal>
