@@ -105,6 +105,7 @@ cd frontend; npm run dev   # http://localhost:5173
 | 2026-06-10 | 각 서브 에이전트 전용 스킬 4종 신설(`northwind-backend-scaffold`, `northwind-frontend-admin-crud`, `northwind-qa-boundary-check`, `northwind-doc-storyboard-sync`) — 레이어 템플릿/체크리스트/StoryBoard 갱신 패턴을 스킬로 분리. 각 에이전트 `.md`와 오케스트레이터 프롬프트의 중복 설명(체크리스트, tsc 빌드 검증 주의사항 등)을 스킬 참조로 축약 | northwind-backend-scaffold, northwind-frontend-admin-crud, northwind-qa-boundary-check, northwind-doc-storyboard-sync, northwind-backend, northwind-frontend, northwind-qa, northwind-doc, northwind-orchestrator | S-40/41/42(주문 관리) 등 다음 작업에서 반복될 i18n(`*ModelConst`/`*ErrorConst`)·DataGrid CRUD·경계면 비교·StoryBoard 동기화 작업의 일관성 확보, 동일 설명이 여러 파일에 중복되어 유지보수가 어려운 문제 해소 |
 | 2026-06-12 | "사전 설계 분기 (ad-hoc)" 섹션 추가 — 기존 패턴이 없는 큰 구조 변경 요청은 `northwind-dev` 호출 전 `northwind-architect` 에이전트로 설계 합의를 거치도록 명시 | CLAUDE.md | 파이프라인에 상시 architecture agent를 추가하는 대신, Phase 1(계획 수립)을 오케스트레이터가 대화 맥락을 유지한 채 직접 수행하는 기존 구조를 깨지 않고 큰 구조 변경 시에만 ad-hoc으로 설계 검토를 끼워넣기 위함 |
 | 2026-06-12 | `_workspace/task_*/` 산출물 생성 위치를 main의 `_workspace/`에서 worktree 내부 `{WORKTREE_PATH}/_workspace/{TASK_NAME}/`로 변경, Phase 1.5(worktree 생성)를 Phase 1에 통합 | SKILL.md | 산출물이 main에 남아 PR 머지 후 별도 커밋(`work: commit task doc of ...`)으로 수동 반영해야 했던 문제 해소 — feature 브랜치 커밋에 자연스럽게 포함되도록 함 |
+| 2026-06-17 | 커밋 메시지 컨벤션을 `task(domain): description` 형식으로 명확화 — 특정 도메인 작업은 scope 표기, 프로젝트 전반 변경은 domain 생략 | CLAUDE.md | 여러 도메인을 관리하면서 커밋만으로 변경 대상 도메인을 식별하기 위함 |
 
 ---
 
@@ -112,11 +113,12 @@ cd frontend; npm run dev   # http://localhost:5173
 
 - **Git**
     - Git Flow 브랜칭 모델을 사용합니다. `main`은 항상 배포 가능한 상태로 유지하고, 기능 개발은 `feature/*` 브랜치에서 진행한 후 PR로 병합합니다.
-    - 모든 커밋 메시지는 명확하고 간결해야 합니다. 예: `feat: Add user authentication API` 또는 `fix: Resolve issue with product listing`.
+    - 모든 커밋 메시지는 명확하고 간결해야 합니다. 특정 도메인 작업은 `task(domain): description` 형식을 사용합니다. 예: `feat(auth): add user authentication API`, `fix(product): resolve product listing error`, `refactor(order): simplify order status converter`. 여러 도메인에 걸친 변경이거나 프로젝트 전반에 해당하는 경우 domain 표기를 생략합니다. 예: `feat: add global error handler`, `refactor: unify API response format`.
+    - 지원하는 타입: `feat`, `fix`, `bugfix`, `refactor`, `doc`, `test`, `git`.
     - 브랜치 이름은 `feature/`, `bugfix/`, `hotfix/` 등으로 시작해야 하며, 작업 내용을 간략히 설명해야 합니다. 예: `feature/user-authentication` 또는 `bugfix/product-listing-error`.
 
 ## Key Patterns (핵심 패턴)
 
 - **테스트 주도 개발(TDD)**: 단위 테스트와 통합 테스트를 작성하여 코드의 안정성과 품질을 보장합니다. 백엔드는 JUnit/Mockito, 프론트엔드는 React Testing Library를 사용합니다.
-- **컨벤셔널 커밋**: 일관된 커밋 메시지 형식을 사용하여 변경 사항을 명확하게 기록합니다.
+- **컨벤셔널 커밋**: `task(domain): description` 형식으로 커밋 메시지를 작성하여 변경 도메인을 명확하게 기록합니다. 프로젝트 전반 변경은 domain 없이 `task: description`.
 - **코드 리뷰**: PR을 통해 모든 변경 사항이 검토되고 승인되도록 하여 코드 품질과 팀 내 지식 공유를 촉진합니다.
