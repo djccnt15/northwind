@@ -12,6 +12,7 @@ import com.djccnt15.northwind.domain.order.converter.OrderStatusConverter;
 import com.djccnt15.northwind.domain.order.converter.ProductOptionConverter;
 import com.djccnt15.northwind.domain.order.model.CompanyOptionRes;
 import com.djccnt15.northwind.domain.order.model.OrderCreateReq;
+import com.djccnt15.northwind.domain.order.model.OrderDetailCreateReq;
 import com.djccnt15.northwind.domain.order.model.OrderDetailStatusRes;
 import com.djccnt15.northwind.domain.order.model.OrderDetailStatusUpdateReq;
 import com.djccnt15.northwind.domain.order.model.OrderListRes;
@@ -97,8 +98,11 @@ public class OrderBusiness {
         var order = orderConverter.toEntity(request, customer, shipper, taxStatus, orderStatus, appUser);
 
         var defaultDetailStatus = orderDetailStatusService.getFirstOrderDetailStatus();
+        var productIds = request.getOrderDetails().stream()
+            .map(OrderDetailCreateReq::getProductId).toList();
+        var productMap = productService.getProducts(productIds);
         request.getOrderDetails().forEach(detailReq -> {
-            var product = productService.getProduct(detailReq.getProductId());
+            var product = productMap.get(detailReq.getProductId());
             var detail = orderDetailConverter.toEntity(detailReq, product, defaultDetailStatus, order);
             order.getOrderDetails().add(detail);
         });

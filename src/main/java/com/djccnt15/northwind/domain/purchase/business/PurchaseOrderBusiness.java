@@ -13,6 +13,7 @@ import com.djccnt15.northwind.domain.purchase.converter.VendorOptionConverter;
 import com.djccnt15.northwind.domain.purchase.model.CompanyOptionRes;
 import com.djccnt15.northwind.domain.purchase.model.ProductCostOptionRes;
 import com.djccnt15.northwind.domain.purchase.model.PurchaseOrderCreateReq;
+import com.djccnt15.northwind.domain.purchase.model.PurchaseOrderDetailCreateReq;
 import com.djccnt15.northwind.domain.purchase.model.PurchaseOrderListRes;
 import com.djccnt15.northwind.domain.purchase.model.PurchaseOrderRes;
 import com.djccnt15.northwind.domain.purchase.model.PurchaseOrderStatusRes;
@@ -89,8 +90,11 @@ public class PurchaseOrderBusiness {
 
         var purchaseOrder = purchaseOrderConverter.toEntity(request, vendor, submittedBy, status);
 
+        var productIds = request.getPurchaseOrderDetails().stream()
+            .map(PurchaseOrderDetailCreateReq::getProductId).toList();
+        var productMap = productService.getProducts(productIds);
         request.getPurchaseOrderDetails().forEach(detailReq -> {
-            var product = productService.getProduct(detailReq.getProductId());
+            var product = productMap.get(detailReq.getProductId());
             var detail = purchaseOrderDetailConverter.toEntity(detailReq, product, purchaseOrder);
             purchaseOrder.getPurchaseOrderDetails().add(detail);
         });

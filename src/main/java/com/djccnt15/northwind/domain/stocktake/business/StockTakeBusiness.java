@@ -55,17 +55,19 @@ public class StockTakeBusiness {
      */
     @Transactional(rollbackFor = Exception.class)
     public List<StockTakeRowRes> saveStockTakes(StockTakeSaveReq request) {
+        var productIds = request.getItems().stream()
+            .map(StockTakeItemReq::getProductId).toList();
+        var productMap = productService.getProducts(productIds);
+        // product lookup is batched; upsert stays per-item due to existence-based branching
         return request.getItems().stream()
-            .map(item -> saveItem(request, item)).toList();
-    }
-
-    private StockTakeRowRes saveItem(StockTakeSaveReq request, StockTakeItemReq item) {
-        var product = productService.getProduct(item.getProductId());
-        var saved = stockTakeService.upsert(product, request.getStockTakeDate(), item.getQuantityOnHand());
-        return stockTakeConverter.toRowResponse(
-            product,
-            saved.getExpectedQuantity(),
-            saved.getQuantityOnHand()
-        );
+            .map(item -> {
+                var product = productMap.get(item.getProductId());
+                var saved = stockTakeService.upsert(product, request.getStockTakeDate(), item.getQuantityOnHand());
+                return stockTakeConverter.toRowResponse(
+                    product,
+                    saved.getExpectedQuantity(),
+                    saved.getQuantityOnHand()
+                );
+            }).toList();
     }
 }
