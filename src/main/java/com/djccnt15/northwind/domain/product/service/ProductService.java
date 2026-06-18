@@ -13,6 +13,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
 import static com.djccnt15.northwind.global.code.StatusCode.BAD_REQUEST;
 import static com.djccnt15.northwind.global.code.StatusCode.NOT_FOUND;
 import static com.djccnt15.northwind.domain.product.validation.ProductErrorConst.*;
@@ -29,6 +34,19 @@ public class ProductService {
     public ProductEntity getProduct(Long id) {
         return repository.findWithCategoryById(id)
             .orElseThrow(() -> new ApiException(NOT_FOUND, messageUtil.getMessage(NOT_FOUND_ERR_MSG)));
+    }
+
+    /**
+     * Batch lookup keyed by product id. Resolves all ids in a single query to avoid N+1.
+     * Throws {@code NOT_FOUND} when any requested id is missing, matching {@link #getProduct(Long)}.
+     */
+    public Map<Long, ProductEntity> getProducts(List<Long> ids) {
+        var products = repository.findAllById(ids).stream()
+            .collect(Collectors.toMap(ProductEntity::getId, Function.identity()));
+        if (products.size() != ids.stream().distinct().count()) {
+            throw new ApiException(NOT_FOUND, messageUtil.getMessage(NOT_FOUND_ERR_MSG));
+        }
+        return products;
     }
 
     public void validateProduct(ProductCreateReq request) {

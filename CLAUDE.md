@@ -106,6 +106,7 @@ cd frontend; npm run dev   # http://localhost:5173
 | 2026-06-12 | "사전 설계 분기 (ad-hoc)" 섹션 추가 — 기존 패턴이 없는 큰 구조 변경 요청은 `northwind-dev` 호출 전 `northwind-architect` 에이전트로 설계 합의를 거치도록 명시 | CLAUDE.md | 파이프라인에 상시 architecture agent를 추가하는 대신, Phase 1(계획 수립)을 오케스트레이터가 대화 맥락을 유지한 채 직접 수행하는 기존 구조를 깨지 않고 큰 구조 변경 시에만 ad-hoc으로 설계 검토를 끼워넣기 위함 |
 | 2026-06-12 | `_workspace/task_*/` 산출물 생성 위치를 main의 `_workspace/`에서 worktree 내부 `{WORKTREE_PATH}/_workspace/{TASK_NAME}/`로 변경, Phase 1.5(worktree 생성)를 Phase 1에 통합 | SKILL.md | 산출물이 main에 남아 PR 머지 후 별도 커밋(`work: commit task doc of ...`)으로 수동 반영해야 했던 문제 해소 — feature 브랜치 커밋에 자연스럽게 포함되도록 함 |
 | 2026-06-17 | 커밋 메시지 컨벤션을 `task(domain): description` 형식으로 명확화 — 특정 도메인 작업은 scope 표기, 프로젝트 전반 변경은 domain 생략 | CLAUDE.md | 여러 도메인을 관리하면서 커밋만으로 변경 대상 도메인을 식별하기 위함 |
+| 2026-06-18 | N+1 쿼리·호출 방지 패턴 추가 — 백엔드(루프 내 개별 쿼리 금지), 프론트엔드(N번 개별 API 호출 금지), QA 체크리스트에 N+1 검증 항목 추가 | src/CLAUDE.md, frontend/CLAUDE.md, northwind-qa-boundary-check | 목록·배치 처리에서 루프 내 개별 쿼리/API 호출로 인한 성능 저하 및 DB 락 경합 방지 |
 
 ---
 

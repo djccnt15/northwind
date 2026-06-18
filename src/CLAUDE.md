@@ -95,6 +95,38 @@ Controller → Business → Service → Repository
 
 ---
 
+## N+1 쿼리 방지
+
+Business/Service 레이어에서 **루프 내 개별 쿼리 호출은 금지**한다. 모든 목록·배치 처리는 1회 조회 후 메모리 매핑으로 해결한다.
+
+```java
+// ❌ 금지: 루프 내 개별 쿼리
+for (var orderId : orderIds) {
+    var order = orderRepo.findById(orderId);  // N번 쿼리
+}
+
+// ✅ 올바른 패턴: 1회 조회 + 메모리 매핑
+var orders = orderRepo.findAllById(orderIds);  // 1번 쿼리
+var orderMap = orders.stream()
+    .collect(Collectors.toMap(OrderEntity::getId, Function.identity()));
+```
+
+엔티티 관계 페칭에서의 N+1은 `@EntityGraph` 또는 `JOIN FETCH`로 해결한다 (리포지토리 패턴 참고).
+
+Converter에서 LAZY 관계 필드를 접근하면 변환 루프 안에서 N+1이 발생한다. 목록 조회 시 Converter가 사용하는 관계 필드는 반드시 Repository 메서드에서 `@EntityGraph` 또는 `JOIN FETCH`로 pre-fetch해야 한다.
+
+```java
+// ❌ 위험: toResponse()에서 getTeam()을 호출하는데 team이 pre-fetch 안 됨
+var entities = someRepo.findAll();  // team LAZY
+entities.stream().map(converter::toResponse);  // getTeam() → N+1
+
+// ✅ 올바른 패턴: @EntityGraph로 관계를 함께 조회
+@EntityGraph(attributePaths = {"team"})
+List<SomeEntity> findAllWithTeam();
+```
+
+---
+
 ## API 응답 패턴
 
 모든 엔드포인트는 `ResponseEntity<Api<T>>`를 반환한다.

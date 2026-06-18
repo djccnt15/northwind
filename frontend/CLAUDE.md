@@ -258,6 +258,24 @@ api.post("/v1/login", params, {
 
 ---
 
+## N+1 API 호출 방지
+
+컴포넌트에서 **forEach/map으로 동일 API를 N번 개별 호출하는 것은 금지**한다. 배치 API 1회 호출로 대체한다.
+
+```typescript
+// ❌ 금지: N번 개별 API 호출
+orderIds.forEach((id) => {
+  privateApi.get(`/v1/orders/${id}`);  // N번 요청
+});
+
+// ✅ 올바른 패턴: 배치 API 1회 호출
+privateApi.get("/v1/orders", { params: { ids: orderIds.join(",") } });  // 1번 요청
+```
+
+배치 API가 없으면 백엔드에 배치 엔드포인트 추가를 요청한다. 프론트엔드 단독으로 `Promise.all`로 N개 요청을 병렬 발사하는 것은 근본 해결이 아니며, DB 락 경합을 유발하므로 금지한다.
+
+---
+
 ## 스타일링 패턴
 
 ### styled-components 기본
