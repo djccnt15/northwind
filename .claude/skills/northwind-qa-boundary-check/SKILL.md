@@ -24,6 +24,8 @@ description: >
 - [ ] 모든 엔드포인트가 `ResponseEntity<Api<T>>` 반환
 - [ ] 예외는 `ApiException` + `StatusCode`만 사용
 - [ ] i18n: `*ModelConst`/`*ErrorConst` 분리, 테스트 프로파일 `messages.basename` 동일 설정, `@WebMvcTest`에 `@MockitoBean MessageUtil`
+- [ ] N+1 쿼리 방지: Business/Service 레이어에서 루프 내 개별 쿼리 호출 없음 (1회 조회 + 메모리 매핑)
+- [ ] N+1 lazy loading 방지: 목록 조회 Converter가 접근하는 관계 필드가 Repository 메서드에서 `@EntityGraph` 또는 `JOIN FETCH`로 pre-fetch되는지 교차 확인
 - [ ] 신규 기능에 테스트 존재 + 통과
 
 ## 프론트엔드 체크리스트 (`frontend/CLAUDE.md`)
@@ -32,6 +34,7 @@ description: >
 - [ ] `entities/` 외부에 `~Ifs` 인터페이스 정의 없음
 - [ ] 미사용 변수/파라미터 없음, `as` 강제 캐스팅 없음, `import type` 사용
 - [ ] API 호출이 `.then().catch().finally()` 체이닝
+- [ ] N+1 API 호출 방지: useEffect/이벤트 핸들러에서 forEach/map으로 동일 API를 N번 호출하는 패턴 없음 (배치 API 1회 호출)
 
 ## 검증 실행
 
