@@ -16,7 +16,7 @@ springdoc.swagger-ui:
 app:
   remember-me:
     key: northwind-remember-me-key
-    tokenValiditySeconds: 1209600  # 14 days
+    token-validity-seconds: 1209600  # 14 days
   schedule:
     cron:
-      superAdminRefresh: "0 0 * * * *"  # runs every hour
+      super-admin-refresh: "0 0 * * * *"  # runs every hour

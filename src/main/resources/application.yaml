@@ -25,5 +25,5 @@ logging:
     console: "%clr(%d{yyyy-MM-dd'T'HH:mm:ss.SSSXXX}){faint} %clr(%5p) %clr(${PID}){magenta} --- [%clr(${spring.application.name:-unknown}){yellow}] [%t] [%X{traceId:-}] %clr(%-40.40logger{39}){cyan} : %m%n%ex"
     file: "%d{yyyy-MM-dd'T'HH:mm:ss.SSSXXX} %5p ${PID} --- [${spring.application.name:-unknown}] [%t] [%X{traceId:-}] %-40.40logger{39} : %m%n%ex"
 app:
-  defaultPw: 1234
-  loginFailureLimit: 6
+  default-pw: 1234
+  login-failure-limit: 6

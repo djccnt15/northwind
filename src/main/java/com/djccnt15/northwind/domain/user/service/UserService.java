@@ -34,7 +34,7 @@ public class UserService {
     private final PasswordEncoder encoder;
     private final MessageUtil messageUtil;
     
-    @Value("${app.defaultPw:1234}")
+    @Value("${app.default-pw:1234}")
     private String defaultPw;
     
     public void validateUserId(UserSession userSession, Long userId) {

@@ -31,7 +31,7 @@ public class DataLoader {
         dataCacheStorage.updateData(superAdmins);
     }
 
-    @Scheduled(cron = "${app.schedule.cron.superAdminRefresh:0 0 * * * *}") // default: every hour
+    @Scheduled(cron = "${app.schedule.cron.super-admin-refresh:0 0 * * * *}") // default: every hour
     public void refreshSuperAdminCache() {
         log.info("Scheduled task: Refreshing super admin cache...");
         var superAdmins = appUserRepo.findIdsByRoleName(SUPERADMIN);

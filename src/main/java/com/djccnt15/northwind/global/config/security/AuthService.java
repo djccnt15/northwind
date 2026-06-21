@@ -34,7 +34,7 @@ public class AuthService implements UserDetailsService {
     private final AppUserRepo repository;
     private final MessageUtil messageUtil;
 
-    @Value("${app.loginFailureLimit:6}")
+    @Value("${app.login-failure-limit:6}")
     private int loginFailureLimit;
     
     @Override
