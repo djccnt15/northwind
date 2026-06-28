@@ -7,3 +7,6 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: { username }
     password: { password }
+management:
+  endpoint:
+    shutdown.enabled: true  # default is false for security reason, enable it for testing purpose

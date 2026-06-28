@@ -11,6 +11,10 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: { username }
     password: { password }
+management:
+  server.port: 9999
+  endpoint:
+    shutdown.enabled: false
 springdoc:
   api-docs.enabled: false
   swagger-ui.enable: false
