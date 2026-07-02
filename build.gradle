@@ -59,7 +59,7 @@ dependencies {
 tasks.named('test') {
     useJUnitPlatform()
     finalizedBy jacocoTestReport
-    jvmArgs += "-javaagent:${configurations.mockitoAgent.asPath}"
+    jvmArgs += "-javaagent:${configurations.mockitoAgent.asPath}"  // enable @MockitoBean for @WebMvcTest
 }
 
 jacoco {
