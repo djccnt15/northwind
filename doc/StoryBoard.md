@@ -269,10 +269,10 @@
   - 로그인 / `check-session` 응답(`SessionInfoRes`)에 `preferredLang`(언어 코드) 필드 추가됨(구현 완료) → 프론트엔드는 이 값으로 i18n 언어를 전환
   - 백엔드는 인증된 사용자의 `preferred_lang_id`를 `Accept-Language`보다 우선 적용하는 커스텀 `UserLocaleResolver`를 `global/config`에 추가함(구현 완료, `WebConfig`의 `@Bean localeResolver()`로 등록). 비인증/미설정 시 기본 `AcceptHeaderLocaleResolver`로 폴백
 
-**선호 언어 변경 (프로필 화면)**:
-- `Language` 드롭다운 옵션: `GET /api/v1/lang` (신규)로 조회한 `supported_lang` 전체 목록(`id`, `lang` 코드). 현재 선택값은 `userInfo.preferredLang`
-- `[Change]` 클릭 → `PATCH /api/v1/user/{userId}/lang` (신규, `{ preferredLangId }`) → 성공 시 `UserInfoRes.preferredLang` 갱신 + 프론트엔드 i18n 언어 즉시 전환
-- 영향받는 응답 모델: `SessionInfoRes`, `UserInfoRes`에 `preferredLang`(언어 코드) 필드 추가 필요
+**선호 언어 변경 (프로필 화면)** (구현 완료):
+- `Language` 드롭다운 옵션: `GET /api/v1/lang`로 조회한 `supported_lang` 전체 목록(`id`, `lang` 코드)을 표시하며, 현재 선택값은 `userInfo.preferredLang`에 매칭되는 `id`로 초기화됨(구현 완료)
+- `[Change]` 클릭 → `PATCH /api/v1/user/{userId}/lang` (`{ preferredLangId }`) → 성공 시 `UserInfoRes.preferredLang` 갱신 + 프론트엔드 i18n 언어(`i18n.changeLanguage`) 즉시 전환됨(구현 완료)
+- 응답 모델 `SessionInfoRes`, `UserInfoRes`에 `preferredLang`(언어 코드) 필드가 추가되어 있으며, 로그인/`check-session` 시점에 이 값으로 i18n 언어를 동기화해 새로고침 후에도 서버 저장 언어가 유지됨(구현 완료)
 - 회원가입(S-03) 시 저장된 `preferred_lang_id`는 위 "로그인 이후" 정책에 따라 최초 로그인 시점부터 화면·응답 언어 결정에 사용됨
 
 ---
@@ -734,6 +734,5 @@ S-21/S-22와 동일한 DataGrid CRUD 패턴 적용.
 
 | 화면 | 미구현 기능 | 비고 |
 |------|------------|------|
-| S-11 내 프로필 (프론트엔드) | 선호 언어 변경 UI (드롭다운 + `[Change]` 연동) | 백엔드 API(`GET /api/v1/lang`, `PATCH /api/v1/user/{userId}/lang`) 및 인증 사용자용 커스텀 `UserLocaleResolver`는 구현 완료(feature/backend-i18n). 프론트엔드 드롭다운/i18n 전환 연동은 미구현 |
 | S-02 로그인 | 소셜 로그인 버튼 (Google / GitHub / Kakao / Naver) | `spring-boot-starter-oauth2-client` 의존성 추가 + `AuthConfig` oauth2Login 설정 + `OAuth2UserService` 구현 필요. Kakao/Naver는 커스텀 provider 설정 필요 |
 | S-11 내 프로필 | 소셜 계정 연동 관리 (연동 추가 / 해제) | `user_oauth_provider` 신규 테이블 + `DELETE /api/v1/user/{userId}/oauth/{provider}` API. 이메일 기반 기존 계정과의 자동 연동 여부는 설계 결정 필요 |

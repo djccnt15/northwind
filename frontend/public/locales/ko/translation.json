@@ -105,11 +105,17 @@
         "city": "도시",
         "region": "지역",
         "zipCode": "우편번호",
-        "country": "국가"
+        "country": "국가",
+        "language": "언어"
+      },
+      "languages": {
+        "ko": "한국어",
+        "en": "English"
       },
       "placeholders": {
         "id": "아이디",
         "email": "email@example.com",
+        "language": "언어를 선택하세요",
         "firstName": "John",
         "lastName": "Doe",
         "personalEmail": "john.doe@example.com",
@@ -143,7 +149,10 @@
         "employeeMissing": "직원 정보가 없습니다.",
         "personalUpdated": "개인 정보가 성공적으로 수정되었습니다.",
         "invalidInput": "입력값이 올바르지 않습니다. 정보를 확인하고 다시 시도해 주세요.",
-        "personalUpdateFailed": "개인 정보 수정 중 오류가 발생했습니다."
+        "personalUpdateFailed": "개인 정보 수정 중 오류가 발생했습니다.",
+        "langEmpty": "언어를 선택해 주세요.",
+        "langUpdated": "선호 언어가 성공적으로 변경되었습니다.",
+        "langUpdateFailed": "선호 언어 변경 중 오류가 발생했습니다."
       }
     },
     "adminUser": {

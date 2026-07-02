@@ -13,8 +13,9 @@ import {
 import { useAuth } from "../features/auth";
 import { useEffect, useState } from "react";
 import { privateApi } from "../shared/api";
+import i18n from "../shared/i18n";
 import type { ApiIfs } from "../entities/app";
-import type { EmployeeIfs, UserIfs } from "../entities";
+import type { EmployeeIfs, LangIfs, UserIfs } from "../entities";
 import { convertEmptyStringToNull } from "../shared/utils";
 
 const Wrapper = styled.div`
@@ -85,6 +86,20 @@ const Input = styled.input<{ fontSize?: string; height?: string }>`
   }
 `;
 
+const Select = styled.select<{ fontSize?: string; height?: string }>`
+  ${commBorderRadius}
+  border: 1px solid #ccc;
+  font-size: ${(props) => props.fontSize || "16px"};
+  width: 100%;
+  height: ${(props) => props.height || "40px"};
+  background-color: white;
+  cursor: pointer;
+  &:focus {
+    outline: none;
+    ${commBtnSkyBlueBoxShadow}
+  }
+`;
+
 const SubmitBtn = styled.button<{
   width?: string;
   fontSize?: string;
@@ -144,9 +159,13 @@ export default function Profile() {
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
 
+  const [langs, setLangs] = useState<LangIfs[]>([]);
+  const [preferredLangId, setPreferredLangId] = useState<number | "">("");
+
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isPasswordLoading, setIsPasswordLoading] = useState<boolean>(false);
   const [isInfoLoading, setIsInfoLoading] = useState<boolean>(false);
+  const [isLangLoading, setIsLangLoading] = useState<boolean>(false);
 
   const onChangeUsername = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUsername(e.target.value);
@@ -220,6 +239,34 @@ export default function Profile() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user?.id]);
 
+  useEffect(() => {
+    const fetchLangs = async () => {
+      privateApi
+        .get("/v1/lang")
+        .then((res) => {
+          const data: ApiIfs<LangIfs[]> = res.data;
+          setLangs(data.body || []);
+        })
+        .catch((err) => {
+          console.error("Failed to fetch languages:", err);
+        });
+    };
+
+    fetchLangs();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    const currentLang = langs.find(
+      (lang) => lang.lang === userInfo?.preferredLang
+    );
+    setPreferredLangId(currentLang?.id ?? "");
+  }, [langs, userInfo?.preferredLang]);
+
+  const onChangePreferredLang = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setPreferredLangId(e.target.value === "" ? "" : Number(e.target.value));
+  };
+
   const onSubmitProfile = (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!user || isLoading) return;
@@ -290,6 +337,40 @@ export default function Profile() {
       })
       .finally(() => {
         setIsPasswordLoading(false);
+      });
+  };
+
+  const onSubmitLang = (e: React.SubmitEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!user || isLangLoading) return;
+
+    if (preferredLangId === "") {
+      alert(t("page.profile.alerts.langEmpty"));
+      return;
+    }
+
+    setIsLangLoading(true);
+
+    privateApi
+      .patch(`/v1/user/${user.id}/lang`, { preferredLangId })
+      .then((res) => {
+        const data: ApiIfs<UserIfs> = res.data;
+        setUserInfo(data.body || null);
+        const updatedLang = data.body?.preferredLang;
+        if (updatedLang) {
+          i18n.changeLanguage(updatedLang);
+        }
+        alert(t("page.profile.alerts.langUpdated"));
+      })
+      .catch((err) => {
+        console.error(err);
+        const data: ApiIfs<null> = err.response?.data;
+        const description = data?.result?.description;
+        const message = description || t("page.profile.alerts.langUpdateFailed");
+        alert(message);
+      })
+      .finally(() => {
+        setIsLangLoading(false);
       });
   };
 
@@ -386,6 +467,28 @@ export default function Profile() {
                   onChange={onChangeConfirmPassword}
                   required
                 />
+              </FieldWrapper>
+              <SubmitBtn>{t("page.profile.change")}</SubmitBtn>
+            </FlexWrapper>
+          </Form>
+          <Form onSubmit={onSubmitLang}>
+            <FlexWrapper>
+              <FieldWrapper width="100%">
+                <Label>{t("page.profile.fields.language")}</Label>
+                <Select
+                  value={preferredLangId}
+                  onChange={onChangePreferredLang}
+                  required
+                >
+                  <option value="" disabled>
+                    {t("page.profile.placeholders.language")}
+                  </option>
+                  {langs.map((lang) => (
+                    <option key={lang.id} value={lang.id}>
+                      {t(`page.profile.languages.${lang.lang}`, lang.lang)}
+                    </option>
+                  ))}
+                </Select>
               </FieldWrapper>
               <SubmitBtn>{t("page.profile.change")}</SubmitBtn>
             </FlexWrapper>
