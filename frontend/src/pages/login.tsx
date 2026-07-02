@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import { api } from "../shared/api";
+import i18n from "../shared/i18n";
 import {
   ErrorMsg,
   Form,
@@ -93,7 +94,11 @@ export default function Login() {
       .then((res) => {
         const data: ApiIfs<SessionIfs> = res.data;
         console.log("login response:", data);
-        setUser(responseToUser(data));
+        const sessionUser = responseToUser(data);
+        setUser(sessionUser);
+        if (sessionUser.preferredLang && i18n.language !== sessionUser.preferredLang) {
+          i18n.changeLanguage(sessionUser.preferredLang);
+        }
 
         if (rememberId) {
           localStorage.setItem("rememberedId", username);

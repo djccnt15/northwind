@@ -10,6 +10,11 @@ export interface TeamIfs {
   isNew?: boolean;
 }
 
+export interface LangIfs {
+  id: number;
+  lang: string;
+}
+
 export interface UserIfs {
   id: number;
   username: string;
@@ -21,6 +26,7 @@ export interface UserIfs {
   loginFailedCount: number;
   lastLoginAt: string;
   team: string;
+  preferredLang: string;
   employee: EmployeeIfs | null;
 }
 

@@ -105,11 +105,17 @@
         "city": "City",
         "region": "Region",
         "zipCode": "Zip Code",
-        "country": "Country"
+        "country": "Country",
+        "language": "Language"
+      },
+      "languages": {
+        "ko": "한국어",
+        "en": "English"
       },
       "placeholders": {
         "id": "ID",
         "email": "email@example.com",
+        "language": "Select a language",
         "firstName": "John",
         "lastName": "Doe",
         "personalEmail": "john.doe@example.com",
@@ -143,7 +149,10 @@
         "employeeMissing": "Employee information is missing.",
         "personalUpdated": "Personal information updated successfully.",
         "invalidInput": "Invalid input. Please check your information and try again.",
-        "personalUpdateFailed": "An error occurred while updating personal information."
+        "personalUpdateFailed": "An error occurred while updating personal information.",
+        "langEmpty": "Please select a language.",
+        "langUpdated": "Preferred language updated successfully.",
+        "langUpdateFailed": "An error occurred while updating the preferred language."
       }
     },
     "adminUser": {

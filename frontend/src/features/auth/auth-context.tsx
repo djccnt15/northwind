@@ -21,6 +21,7 @@ export const responseToUser = (data: ApiIfs<SessionIfs>): SessionIfs => {
     authorities: Array.isArray(data.body?.authorities)
       ? data.body.authorities.map(String)
       : [],
+    preferredLang: String(data.body?.preferredLang) || "",
     loggedIn: true,
   };
 };

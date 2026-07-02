@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import type { ChildNodeIfs, SessionIfs, ApiIfs } from "../../entities/app";
 import { privateApi } from "../../shared/api";
 import { AuthContext, responseToUser } from "../../features/auth";
+import i18n from "../../shared/i18n";
 
 export default function AuthProvider({ children }: ChildNodeIfs) {
   const [user, setUser] = useState<SessionIfs | null>(null);
@@ -15,7 +16,12 @@ export default function AuthProvider({ children }: ChildNodeIfs) {
           const data: ApiIfs<SessionIfs> = res.data;
           console.log("Session check response:", data);
           if (data.result.code === 1200) {
-            setUser(responseToUser(data));
+            const sessionUser = responseToUser(data);
+            setUser(sessionUser);
+            const preferredLang = sessionUser.preferredLang;
+            if (preferredLang && i18n.language !== preferredLang) {
+              i18n.changeLanguage(preferredLang);
+            }
           } else {
             setUser(null);
           }
