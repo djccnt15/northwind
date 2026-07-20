@@ -84,6 +84,14 @@ description: >
    ```
 
    생성된 worktree 경로(`C:/projects/northwind/.worktree/feature/<name>`)를 `WORKTREE_PATH`로 확정한다. **이후 모든 sub-agent에게는 이 경로를 `[프로젝트 루트]`로 전달한다. `C:/projects/northwind`를 직접 전달하지 않는다.**
+
+   `git worktree add`는 git이 추적하는 파일만 복사하므로 `frontend/node_modules`가 worktree에 존재하지 않는다 — Windows junction으로 main의 `node_modules`를 연결한다 (심볼릭 링크는 관리자 권한이 필요하지만 junction은 불필요):
+
+   ```powershell
+   New-Item -ItemType Junction -Path "{WORKTREE_PATH}/frontend/node_modules" -Target "C:/projects/northwind/frontend/node_modules"
+   ```
+
+   junction이므로 worktree 삭제(`git worktree remove`) 시에도 main의 `node_modules` 원본은 영향받지 않는다.
 7. `{WORKTREE_PATH}/_workspace/{TASK_NAME}/00_requirements.md`, `01_plan.md`를 작성한다 (즉 `{TASK_DIR}/00_requirements.md`, `01_plan.md`).
 
 "수정/보완" 요청(Phase 0에서 기존 worktree/`TASK_NAME` 재사용)인 경우, 6단계(worktree 생성)는 생략하고 기존 `00_requirements.md`/`01_plan.md`를 읽어 변경 범위만큼만 갱신한다.
