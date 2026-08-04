@@ -15,7 +15,6 @@ public class TimeTraceAop {
     @Around("""
         AopPointcut.applicationTarget()
         && AopPointcut.businessLayer()
-        && AopPointcut.excludeConverter()
         """)
     public Object executeBusiness(ProceedingJoinPoint joinPoint) throws Throwable {
         // log.info("START: {}", joinPoint);
