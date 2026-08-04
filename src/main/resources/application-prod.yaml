@@ -17,7 +17,7 @@ management:
     shutdown.enabled: false
 springdoc:
   api-docs.enabled: false
-  swagger-ui.enable: false
+  swagger-ui.enabled: false
 app:
   remember-me:
     key: { remember-me-key }
