@@ -1,5 +1,7 @@
 server:
   shutdown: graceful
+  tomcat:
+    mbeanregistry.enabled: true  # enable Tomcat MBean for monitoring
 spring:
   application.name: northwind
   output.ansi.enabled: always
@@ -15,6 +17,11 @@ spring:
     basename: messages,errors  # setting for spring boot message source
     encoding: UTF-8
     fallback-to-system-locale: false
+  security:
+    user:
+      name: ${PROMETHEUS_USER:prometheus}       # username for prometheus
+      password: ${PROMETHEUS_PASSWORD:default}  # password for prometheus
+      roles: METRICS                            # (optional) roles assigned to the account
 logging:
   level:
     root: info
@@ -25,9 +32,10 @@ logging:
     console: "%clr(%d{yyyy-MM-dd'T'HH:mm:ss.SSSXXX}){faint} %clr(%5p) %clr(${PID}){magenta} --- [%clr(${spring.application.name:-unknown}){yellow}] [%t] [%X{traceId:-}] %clr(%-40.40logger{39}){cyan} : %m%n%ex"
     file: "%d{yyyy-MM-dd'T'HH:mm:ss.SSSXXX} %5p ${PID} --- [${spring.application.name:-unknown}] [%t] [%X{traceId:-}] %-40.40logger{39} : %m%n%ex"
 management:
-  endpoints.web.exposure.include: "*"
+  server.port: 9999
+  endpoints.web.exposure.include: health,prometheus,info  # prod-safe default, dev widens to "*"
   endpoint:
-    health.show-details: always  # default is never, show health details for all users
+    health.show-details: always  # base/dev default, prod overrides to never
   info:
     env.enabled: true  # default is false, enable it for testing purpose
     java.enabled: true  # default is false, enable it for testing purpose
@@ -38,7 +46,7 @@ management:
       mode: full  # default is simple, show full git info for testing purpose
 info:
   app: # value for management.info.env endpoints
-    name: study_spring
+    name: northwind
     description: A Spring Boot application for study purpose
     version: 0.0.1
 app:

@@ -10,3 +10,4 @@ spring:
 management:
   endpoint:
     shutdown.enabled: true  # default is false for security reason, enable it for testing purpose
+  endpoints.web.exposure.include: "*"  # wide exposure for local debugging only

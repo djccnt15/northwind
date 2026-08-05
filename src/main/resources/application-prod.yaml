@@ -12,9 +12,9 @@ spring:
     username: { username }
     password: { password }
 management:
-  server.port: 9999
   endpoint:
     shutdown.enabled: false
+    health.show-details: never  # prevent detailed health info leakage in prod
 springdoc:
   api-docs.enabled: false
   swagger-ui.enabled: false
