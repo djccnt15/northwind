@@ -51,7 +51,7 @@ npm install
 
 ## ERD
 
-[ERD](./doc/EDR.md)
+[ERD](./doc/ERD.md)
 
 ## Reference
 
