@@ -8,6 +8,16 @@ spring:
     username: { username }
     password: { password }
 management:
+  server.address: 127.0.0.1
   endpoint:
     shutdown.enabled: true  # default is false for security reason, enable it for testing purpose
+    health.show-details: always  # base/dev default, prod overrides to never
   endpoints.web.exposure.include: "*"  # wide exposure for local debugging only
+  info:
+    env.enabled: true  # default is false, enable it for testing purpose
+    java.enabled: true  # default is false, enable it for testing purpose
+    os.enabled: true  # default is false, enable it for testing purpose
+    build.enabled: true  # default is false, enable it for testing purpose
+    git:
+      enabled: true  # default is false, enable it for testing purpose
+      mode: full  # default is simple, show full git info for testing purpose

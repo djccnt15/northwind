@@ -12,9 +12,13 @@ spring:
     username: { username }
     password: { password }
 management:
+  server:
+    address: 0.0.0.0
+    ssl.enabled: false  # 메인 서버(443)의 server.ssl 상속 방지 — actuator(9999)는 평문 HTTP 유지
   endpoint:
     shutdown.enabled: false
     health.show-details: never  # prevent detailed health info leakage in prod
+  endpoints.web.exposure.include: health,info,prometheus  # prod-safe default, dev widens to "*"
 springdoc:
   api-docs.enabled: false
   swagger-ui.enabled: false
