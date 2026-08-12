@@ -21,7 +21,7 @@ public class ActuatorSecurityProdConfig {
     
     @Bean
     @Order(0)
-    public SecurityFilterChain actuatorSecurityFilterChain(
+    SecurityFilterChain actuatorSecurityFilterChain(
         HttpSecurity http,
         SecurityProperties securityProperties,
         PasswordEncoder passwordEncoder

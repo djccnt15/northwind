@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 public class ActuatorConfig {
     
     @Bean
-    public InMemoryHttpExchangeRepository inMemoryHttpExchangeRepository() {
+    InMemoryHttpExchangeRepository inMemoryHttpExchangeRepository() {
         return new InMemoryHttpExchangeRepository();
     }
 }

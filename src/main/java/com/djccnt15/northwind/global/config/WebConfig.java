@@ -14,7 +14,7 @@ import static java.lang.Integer.MIN_VALUE;
 public class WebConfig implements WebMvcConfigurer {
 
     @Bean
-    public LocaleResolver localeResolver() {
+    LocaleResolver localeResolver() {
         return new UserLocaleResolver();
     }
 

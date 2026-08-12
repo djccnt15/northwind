@@ -52,7 +52,7 @@ public class AuthConfig {
     
     @Bean
     @Order(1)
-    public SecurityFilterChain apiSecurityFilterChain(
+    SecurityFilterChain apiSecurityFilterChain(
         HttpSecurity http,
         CorsConfigurationSource corsConfig,
         CsrfTokenRepository csrfTokenRepository
@@ -102,7 +102,7 @@ public class AuthConfig {
     
     @Bean
     @Order(2)
-    public SecurityFilterChain spaSecurityFilterChain(
+    SecurityFilterChain spaSecurityFilterChain(
         HttpSecurity http, CorsConfigurationSource corsConfig
     ) throws Exception {
         http
