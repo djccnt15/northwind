@@ -11,6 +11,11 @@ spring:
       format_sql: true
       highlight_sql: true
       use_sql_comment: true
+logging:
+  level:
+    org.hibernate:
+      SQL: debug
+      orm.jdbc.bind: trace
 app:
   defaultPw: 1234
   loginFailureLimit: 6
