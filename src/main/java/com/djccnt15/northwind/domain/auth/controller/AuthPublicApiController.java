@@ -28,18 +28,17 @@ public class AuthPublicApiController {
     private final AuthBusiness business;
     private final MessageUtil messageUtil;
 
-    @PostMapping("/login/fail")
-    public ResponseEntity<Api<?>> loginFail(HttpServletRequest request) {
+    @RequestMapping("/login/fail")
+    public void loginFail(HttpServletRequest request) {
         business.handleLoginFailureInController(request);
-        throw new ApiException(SERVER_ERROR);  // This line will never be reached, but it's required to satisfy the return type
     }
 
-    @GetMapping("/unauthorized")
+    @RequestMapping("/unauthorized")
     public ResponseEntity<Api<?>> unauthorized() {
         throw new ApiException(UNAUTHORIZED, messageUtil.getMessage(AUTHENTICATION_REQUIRED_ERR_MSG));
     }
 
-    @PostMapping("/forbidden")
+    @RequestMapping("/forbidden")
     public ResponseEntity<Api<?>> forbidden() {
         throw new ApiException(FORBIDDEN, messageUtil.getMessage(ACCESS_DENIED_ERR_MSG));
     }
