@@ -15,7 +15,7 @@ import java.lang.annotation.Target;
 @Target({ElementType.TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 @EnabledIf(expression = "#{environment['spring.profiles.active'] == 'dev'}", loadContext = true)
-@ActiveProfiles("dev")
+// @ActiveProfiles("dev")
 public @interface DevTest {
     
     String value() default "";
