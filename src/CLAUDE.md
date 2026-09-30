@@ -173,7 +173,7 @@ throw new ApiException(StatusCode.UNAUTHORIZED, "Authentication is required");
 
 | 클래스 | Order | 처리 대상 |
 |--------|-------|---------|
-| `ApiExceptionHandler` | `MIN_VALUE` | `ApiException`, `MethodArgumentNotValidException` |
+| `ApiExceptionHandler` | `MIN_VALUE` | `ApiException`, `MethodArgumentNotValidException`, `MethodArgumentTypeMismatchException`, `HttpMessageNotReadableException` |
 | `AuthExceptionHandler` | `MIN_VALUE + 1` | `AccessDeniedException` |
 | `GlobalExceptionHandler` | `MAX_VALUE` | `Exception` (폴백) |
 
