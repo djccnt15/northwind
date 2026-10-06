@@ -34,12 +34,12 @@ public class AuthPublicApiController {
         business.handleLoginFailureInController(request);
     }
 
-    @RequestMapping(value = "/unauthorized", method = {GET, POST, PUT, DELETE})
+    @RequestMapping(value = "/unauthorized", method = {GET, POST, PUT, PATCH, DELETE})
     public ResponseEntity<Api<?>> unauthorized() {
         throw new ApiException(UNAUTHORIZED, messageUtil.getMessage(AUTHENTICATION_REQUIRED_ERR_MSG));
     }
 
-    @RequestMapping(value = "/forbidden", method = {GET, POST, PUT, DELETE})
+    @RequestMapping(value = "/forbidden", method = {GET, POST, PUT, PATCH, DELETE})
     public ResponseEntity<Api<?>> forbidden() {
         throw new ApiException(FORBIDDEN, messageUtil.getMessage(ACCESS_DENIED_ERR_MSG));
     }
